@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('CSYMB',
                  doc="""
-This class is used for generating and modifying colored symbol objects.
-Symbol fills are assigned colors based on their Z values and a zone, Aggregate
-or :class:`ITR` file which defines what colors are associated with different ranges
-of Z values. The position of a symbol is defined by its X,Y coordinates.
-""")
+                 This class is used for generating and modifying colored symbol objects.
+                 Symbol fills are assigned colors based on their Z values and a zone, Aggregate
+                 or :class:`ITR` file which defines what colors are associated with different ranges
+                 of Z values. The position of a symbol is defined by its X,Y coordinates.
+                 """)
 
 
 gx_defines = [
@@ -51,6 +51,11 @@ gx_methods = {
                Associate symbol edge or fill colors with Z data
                and color transform.
                """,
+               notes="""
+               Use this method after a call to :func:`SetStaticCol_CSYMB`. This method
+               reestablishes the symbol color association with their Z data
+               values and color transform.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="CSYMB",
@@ -73,6 +78,14 @@ gx_methods = {
         Method('_SetNumber_CSYMB', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the symbol number.",
+               notes="""
+               The lower 16 bits of the number is interpreted as UTF-16 with a valid Unicode character
+               code point. GFN fonts wil produce valid symbols depending on the font for 0x01-0x7f and the degree,
+               plus-minus and diameter symbol(latin small letter o with stroke) for 0xB0, 0xB1 and 0xF8 respectively.
+               
+               It is possible to check if a character is valid using :func:`iIsValidUTF16Char_UNC`. The high 16-bits are reserved
+               for future use. Also see: :func:`iValidSymbol_UNC` and :func:`ValidateSymbols_UNC`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="CSYMB",
@@ -146,6 +159,11 @@ gx_methods = {
         Method('SetStaticCol_CSYMB', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a static color for the symbol edge or fill.",
+               notes="""
+               Use this method to set a STATIC color for symbol edge or fill.
+               By default, both edge and fill colors vary according to their
+               Z data values and a color transform.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="CSYMB",

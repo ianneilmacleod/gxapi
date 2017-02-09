@@ -2,19 +2,19 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('META',
                  doc="""
-A :class:`META` object contains hierarchical organized metadata
-of any type, including other objects.  :class:`META` information
-is organized in an XML-like structure based on a data
-schema that describes the data hierarchy.   :class:`META` objects
-are used by many entities that need to store metadata
-specific to the entities or to the application.
-
-Metadata can be saved in databases and maps, as well as in
-channels, lines, views and groups.  Oasis montaj objects
-can be queried for their associated metadata, and if it
-exists, the metadata can be retrieved and utilized by
-other Oasis montaj processes.
-""")
+                 A :class:`META` object contains hierarchical organized metadata
+                 of any type, including other objects.  :class:`META` information
+                 is organized in an XML-like structure based on a data
+                 schema that describes the data hierarchy.   :class:`META` objects
+                 are used by many entities that need to store metadata
+                 specific to the entities or to the application.
+                 
+                 Metadata can be saved in databases and maps, as well as in
+                 channels, lines, views and groups.  Oasis montaj objects
+                 can be queried for their associated metadata, and if it
+                 exists, the metadata can be retrieved and utilized by
+                 other Oasis montaj processes.
+                 """)
 
 
 gx_defines = [
@@ -378,6 +378,12 @@ gx_methods = {
         Method('ImportTableCSV_META', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Import a CSV into a class as items.",
+               notes="""
+               Field names in the CSV file that match attribute names in the class will be
+               imported into table entries in the class.  Usually this will be used with
+               a class created using the hCreateTable_SCHEMA method so that the contents of
+               class can be viewed as a table.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="META"),
@@ -592,6 +598,7 @@ gx_methods = {
         Method('hCopyAcrossClass_META', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Copy a Class from one :class:`META` to another",
+               notes="This will copy all parent classes as well.",
                return_type="META_TOKEN",
                return_doc="""
                x                  - Handle of Class
@@ -643,6 +650,7 @@ gx_methods = {
         Method('hCopyAcrossType_META', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Copy a Type from one :class:`META` to another",
+               notes="Classes and parent types will also be copied.",
                return_type="META_TOKEN",
                return_doc="""
                x                  - Handle of type

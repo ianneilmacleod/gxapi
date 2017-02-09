@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('FFT',
                  doc="""
-This class allows for the application of predefined
-filters to data in an OASIS database. The system uses
-the Winograd algorithm to transform data in the spatial
-domain to the wavenumber or Fourier domain.
-""")
+                 This class allows for the application of predefined
+                 filters to data in an OASIS database. The system uses
+                 the Winograd algorithm to transform data in the spatial
+                 domain to the wavenumber or Fourier domain.
+                 """)
 
 
 gx_defines = [
@@ -43,6 +43,10 @@ gx_methods = {
         Method('AppSusc_FFT', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Apparent susceptiblity filter",
+               notes="""
+               Reduction to magnetic pole (:func:`RedPol_FFT`) and downward continuation
+               (:func:`Contin_FFT`) should be called BEFORE using :func:`AppSusc_FFT`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="FFT",
@@ -125,6 +129,10 @@ gx_methods = {
         Method('Create_FFT', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Create a New :class:`FFT` with detrend options.",
+               notes="""
+               The detrending options control the removal of a trend from the data
+               before the :class:`FFT` is applied. The default data expansion is 10% before :class:`FFT`.
+               """,
                return_type="FFT",
                return_doc=":class:`FFT` Object",
                parameters = [
@@ -139,6 +147,11 @@ gx_methods = {
         Method('CreateEx_FFT', module='geogxx', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Create a New :class:`FFT` with detrend and expansion options.",
+               notes="""
+               The detrending options control the removal of a trend from the data
+               before the :class:`FFT` is applied. The expansion options control the minimum
+               data expansion before the :class:`FFT` is applied.
+               """,
                return_type="FFT",
                return_doc=":class:`FFT` Object",
                parameters = [
@@ -158,6 +171,10 @@ gx_methods = {
                Create :class:`FFT` object with detrend options from reference (original) channel,
                but no :class:`FFT` process.
                """,
+               notes="""
+               This just creates an object.  It is intended to be called
+               immediately after with :func:`SetVV_FFT`.
+               """,
                return_type="FFT",
                return_doc=":class:`FFT` Object",
                parameters = [
@@ -174,6 +191,10 @@ gx_methods = {
                doc="""
                Create :class:`FFT` object with detrend and expansion options from reference (original) channel,
                but no :class:`FFT` process.
+               """,
+               notes="""
+               This just creates an object.  It is intended to be called
+               immediately after with :func:`SetVV_FFT`.
                """,
                return_type="FFT",
                return_doc=":class:`FFT` Object",
@@ -328,6 +349,10 @@ gx_methods = {
         Method('SetVV_FFT', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Sets real and imaginary VVs in :class:`FFT`.",
+               notes="""
+               The :class:`VV` must have been obtained from the same :class:`FFT`
+               using the :func:`SetVV_FFT` method.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="FFT"),

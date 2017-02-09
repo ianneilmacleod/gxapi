@@ -2,32 +2,32 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ST',
                  doc="""
-Mono-variate statistics. The :class:`ST` class is used to accumulate statistical
-information about a set of data. This class is usually used in conjunction
-with others. For instance, :func:`Stat_DU` (see :class:`DU`) will add a channel's
-data to the :class:`ST` object, and sComputeST_IMG (see :class:`IMG`) will compute
-statistics for a grid.
-""",
+                 Mono-variate statistics. The :class:`ST` class is used to accumulate statistical
+                 information about a set of data. This class is usually used in conjunction
+                 with others. For instance, :func:`Stat_DU` (see :class:`DU`) will add a channel's
+                 data to the :class:`ST` object, and sComputeST_IMG (see :class:`IMG`) will compute
+                 statistics for a grid.
+                 """,
                  notes="""
-*** Histogram ranges and colour zone ranges ***
-
-Histogram bins are defined with inclusive minima and exclusive maxima;
-for instance if Min = 0 and Inc = 1, then the second bin would include
-all values z such that  0 >= z > 1 (the first bin has all values < 0).
-
-Colour zones used in displaying grids (:class:`ITR`, ZON etc...) are the
-opposite, with exclusive minima and inclusive maxima.
-For instance, if a zone is defined from 0 to 1, then it would
-contain all values of z such that 0 > z >= 1.
-
-These definitions mean that it is impossible to perfectly assign
-:class:`ITR` colours to individual bars of a histogram. The best work-around
-when the data values are integers is to define the colour zones using
-0.5 values between the integers. A general work-around is to make the
-number of histogram bins much larger than the number of colour zones.
-
-See also  :class:`ST2` (bi-variate statistics)
-""")
+                 *** Histogram ranges and colour zone ranges ***
+                 
+                 Histogram bins are defined with inclusive minima and exclusive maxima;
+                 for instance if Min = 0 and Inc = 1, then the second bin would include
+                 all values z such that  0 >= z > 1 (the first bin has all values < 0).
+                 
+                 Colour zones used in displaying grids (:class:`ITR`, ZON etc...) are the
+                 opposite, with exclusive minima and inclusive maxima.
+                 For instance, if a zone is defined from 0 to 1, then it would
+                 contain all values of z such that 0 > z >= 1.
+                 
+                 These definitions mean that it is impossible to perfectly assign
+                 :class:`ITR` colours to individual bars of a histogram. The best work-around
+                 when the data values are integers is to define the colour zones using
+                 0.5 values between the integers. A general work-around is to make the
+                 number of histogram bins much larger than the number of colour zones.
+                 
+                 See also  :class:`ST2` (bi-variate statistics)
+                 """)
 
 
 gx_defines = [
@@ -120,6 +120,11 @@ gx_methods = {
         Method('GetHistogramBins_ST', module='geoengine.core', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Retrieve number of items in each hostogram bin",
+               notes="""
+               The length of the returned :class:`VV` is set to the total
+               number of bins. If a histogram is not defined in
+               the :class:`ST`, then the returned length is zero.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ST",
@@ -131,6 +136,12 @@ gx_methods = {
         Method('GetHistogramInfo_ST', module='geoengine.core', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Retrieve number of bins, min and max value in histogram",
+               notes="""
+               The items correspond to those in :func:`Histogram2_ST`.
+               If a histogram is not defined in
+               the :class:`ST`, then the returned number of bins is zero, and
+               the min and max values will be dummies.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ST",
@@ -146,6 +157,21 @@ gx_methods = {
         Method('Histogram_ST', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="This method prepares :class:`ST` for recording histogram.",
+               notes="""
+               The Number of bins includes the one before the minimum
+               and the one after the maximum, so it must be a value >2.
+               
+               IMPORTANT: This function gets the histogram minimum and
+               maximum from the current min and max values stored in the :class:`ST`,
+               so this is equivalent to calling
+               
+               :func:`Histogram2_ST`( #bins, Min, (Max-Min)/(# bins -2));
+               
+               You should already have the data loaded in order to call this
+               function.
+               
+               See the note above "Histogram ranges and colour zone ranges"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ST",
@@ -157,6 +183,13 @@ gx_methods = {
         Method('Histogram2_ST', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="This method prepares :class:`ST` for recording histogram.",
+               notes="""
+               The Number of bins includes the one before the minimum
+               and the one after the maximum, so it must be a value >2.
+               The width of the individual bins will be (Min-Max)/(# - 2)
+               
+               See the note above "Histogram ranges and colour zone ranges"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ST",
@@ -172,6 +205,10 @@ gx_methods = {
         Method('rEquivalentPercentile_ST', module='geoengine.core', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Return corresponding Percentile for a Value.",
+               notes="""
+               Statistics and histogram must have been calculated prior to
+               calling this method
+               """,
                return_type=Type.DOUBLE,
                return_doc="The percentile at the given value (0 - 100)",
                parameters = [
@@ -183,6 +220,10 @@ gx_methods = {
         Method('rEquivalentValue_ST', module='geoengine.core', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Return corresponding Value for a Percentile",
+               notes="""
+               Statistics and histogram must have been calculated prior to
+               calling this method
+               """,
                return_type=Type.DOUBLE,
                return_doc="The value at the given percentile.",
                parameters = [
@@ -205,6 +246,13 @@ gx_methods = {
                doc="""
                This method allows you to retrieve (and compute) the
                information from the :class:`ST` object.
+               """,
+               notes="""
+               The following can only be determined if the :class:`ST` has recorded
+               a histogram: :def_val:`ST_MEDIAN`, :def_val:`ST_MODE`
+               
+               :def_val:`ST_MINPOS` can be used to retrieve the smallest value greater
+               than zero, but not from :class:`ST` objects recovered from serialized object.
                """,
                return_type=Type.DOUBLE,
                return_doc="""
@@ -251,6 +299,17 @@ gx_methods = {
         Method('rNormalTest_ST', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc='Test the "normality" of the histogram distribution',
+               notes="""
+               This function compares the histogram to a normal curve with the
+               same mean and standard deviation. The individual counts are normalized
+               by the total counts, the bin width and the standard deviation.
+               For each bin, the rms difference between the expected probability and
+               the normalized count is summed, and the final result is normalized by
+               the total number of bins. In this way histograms with different means,
+               standard deviations, number of bins and counts can be compared.
+               If the histogram were perfectly normal, then a value of 0 would be returned.
+               The more "non-normal", the higher the statistic.
+               """,
                return_type=Type.DOUBLE,
                return_doc="""
                The normality statistic.

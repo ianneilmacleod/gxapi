@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IMU',
                  doc="""
-Not a class. This is a catch-all group of functions working
-on :class:`IMG` objects (see :class:`IMG`). Grid operations include masking,
-trending, windowing, expanding and grid stitching.
-""")
+                 Not a class. This is a catch-all group of functions working
+                 on :class:`IMG` objects (see :class:`IMG`). Grid operations include masking,
+                 trending, windowing, expanding and grid stitching.
+                 """)
 
 
 gx_defines = [
@@ -184,6 +184,7 @@ gx_methods = {
         Method('AggToGeoColor_IMU', module='geoengine.core', version='5.1.6',
                availability=Availability.LICENSED, 
                doc="Create a geosoft color grid from an aggregate.",
+               notes="This consumes a very small amount of memory",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG",
@@ -227,6 +228,10 @@ gx_methods = {
                number of bits of floats/doubles to drop so that the CRC
                will be same even of this are changed.
                """,
+               notes="""
+               Very usefull for testing where the last bits of accuracy
+               are not as important.
+               """,
                return_type="CRC",
                return_doc="CRC value",
                parameters = [
@@ -246,6 +251,10 @@ gx_methods = {
                Computes a CRC Checksum on an image and allows you to specify
                number of bits of floats/doubles to drop so that the CRC
                will be same even of this are changed.
+               """,
+               notes="""
+               Very usefull for testing where the last bits of accuracy
+               are not as important.
                """,
                return_type="CRC",
                return_doc="CRC value",
@@ -333,6 +342,10 @@ gx_methods = {
                Same as :func:`GetZVV_IMU`, but find the closest peak value to the input locations, and return
                				             the peak value and peak value location.
                """,
+               notes="""
+               The returned locations will always be a grid point location; no interpolation is performed when locating the peaks. A simple search is
+               				done of all neighbouring points from the starting point, and once no neighbours can be located with a higher value, the search stops.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -348,6 +361,10 @@ gx_methods = {
         Method('GridAdd_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Adds two Grid images together point-by-point.",
+               notes="""
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_DOUBLE`!
+               If not, the method will terminate.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -365,6 +382,10 @@ gx_methods = {
         Method('GridAGC_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Automatic Gain Compensation of a grid.",
+               notes="""
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_FLOAT`!
+               If not, the method will terminate.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -384,6 +405,10 @@ gx_methods = {
                doc="""
                Mask one grid against another using boolean logic
                operations.
+               """,
+               notes="""
+               The :class:`IMG` parameters must be of type :def_val:`GS_DOUBLE`!
+               If not, the method will terminate.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -417,6 +442,10 @@ gx_methods = {
         Method('GridEdgePLY_IMU', module='geoengine.core', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Get grid edge points",
+               notes="""
+               Unlike :func:`GridPLY_IMU` and GridPlyEx_IMU, the image is not
+               altered. It just gives the :class:`PLY`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -432,6 +461,10 @@ gx_methods = {
                doc="""
                Expand a grid and place dummies in the area
                beyond the original edges.
+               """,
+               notes="""
+               The :class:`IMG` parameter MUST be of type :def_val:`GS_FLOAT`!
+               If not, the method will terminate.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -467,6 +500,10 @@ gx_methods = {
         Method('GridFill_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Interpolates to fill dummies, generates an output grid.",
+               notes="""
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_FLOAT`!
+               If not, the method will terminate.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -498,6 +535,10 @@ gx_methods = {
                doc="""
                Applies a filter to a grid any number
                of passes.
+               """,
+               notes="""
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_FLOAT`!
+               If not, the method will terminate.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -562,6 +603,14 @@ gx_methods = {
                coordinates defined in a separate file, then
                masking the polygon over an input grid.
                """,
+               notes="""
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_DOUBLE`!
+               If not, the method will terminate.
+               
+               The :class:`PLY` will contain more than one polygon
+               if it was loaded from a file containing
+               coordinates of more than one polygon.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -577,6 +626,12 @@ gx_methods = {
         Method('GridPeak_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Pick grid peaks.",
+               notes="""
+               Peak test directions defines how grid peaks are to be found.
+               For example, with the 1, a grid point will be picked if its
+               value is greater than it's two neighbors in at least one
+               direction.  Up to 4 directions can be tested.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -594,6 +649,15 @@ gx_methods = {
         Method('GridPLY_IMU', module='geoengine.core', version='5.1.0',
                availability=Availability.LICENSED, 
                doc="Get the grid edge in a :class:`PLY`",
+               notes="""
+               This will optionally refresh the grid boundary :class:`PLY` and return
+               the :class:`PLY`.
+               
+               If the boundary is not refreshed and has never been calculated,
+               the boundary will be the bounding rectangle of the grid.
+               
+               The grid :class:`PLY` will be added to existing ploygons in the passed :class:`PLY`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -607,6 +671,15 @@ gx_methods = {
         Method('GridPLYEx_IMU', module='geoengine.core', version='5.1.6',
                availability=Availability.LICENSED, 
                doc="Get the grid edge in a :class:`PLY` (with min points)",
+               notes="""
+               This will optionally refresh the grid boundary :class:`PLY` and return
+               the :class:`PLY`.
+               
+               If the boundary is not refreshed and has never been calculated,
+               the boundary will be the bounding rectangle of the grid.
+               
+               The grid :class:`PLY` will be added to existing ploygons in the passed :class:`PLY`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -643,6 +716,7 @@ gx_methods = {
         Method('GridResample_IMU', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Create a new grid by resampling an existing grid",
+               notes="Works only for un rotated grids.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -677,6 +751,10 @@ gx_methods = {
         Method('GridShad_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a shadded relief image.",
+               notes="""
+               Pass :def_val:`GS_R8DM` as parameters to obtain default values.
+               The default values are returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -694,6 +772,12 @@ gx_methods = {
         Method('GridST_IMU', module='geoengine.core', version='5.1.2',
                availability=Availability.LICENSED, 
                doc="Update an :class:`ST` object using a grid.",
+               notes="""
+               The input :class:`ST` object is not initialized by :func:`GridST_IMU`,
+               so this function can be used to accumulate statistical
+               info on more than a single grid.
+               See :class:`ST`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -705,6 +789,7 @@ gx_methods = {
         Method('GridStat_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reports statistics contained in a grid header.",
+               notes="Statistics are returned in the parameter set",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -736,6 +821,7 @@ gx_methods = {
         Method('GridStatComp_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reports statistics contained in a grid header.",
+               notes="Statistics are returned in the parameter set",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -769,6 +855,11 @@ gx_methods = {
         Method('GridStatExt_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reports statistics of a grid's elements.",
+               notes="""
+               If the :def:`IMU_STAT_FORCED` value is set, the
+               statistics will be recalculated.
+               Statistics are returned in the parameter set.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -792,6 +883,7 @@ gx_methods = {
         Method('GridStatTrend_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Reports Trend Info of a grid (for first order coef only).",
+               notes="Trend Info are returned in the parameter set",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -809,6 +901,7 @@ gx_methods = {
         Method('GridStatTrendExt_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Reports Extended Trend Info of a grid (for upto third order coef).",
+               notes="Trend Info are returned in the parameter set",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -828,6 +921,16 @@ gx_methods = {
         Method('rSlopeStandardDeviation_IMU', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="Return the standard deviation of the slopes.",
+               notes="""
+               This method calculates the standard dev. of the horizontal
+               differences in the X and Y directions for the supplied
+               image.  This is useful for shading routines.  A good
+               default scaling factor is 2.5 / standard deviation.
+               
+               The image will be sub-sampled to a statistically meaningful number.
+               
+               The cell sizes are used to determine the slopes.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Standard devation of grid slopes",
                parameters = [
@@ -871,6 +974,11 @@ gx_methods = {
         Method('GridStitchCtl_IMU', module='geoengine.core', version='5.1.4',
                availability=Availability.LICENSED, 
                doc="Stitches together two grids - control file for options.",
+               notes="""
+               Data validation is done internally, not in the GX.
+               This is simply a way of avoiding writing a new GX wrapper
+               every time an option is added.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -880,6 +988,11 @@ gx_methods = {
         Method('GridTiff_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Generate a Tiff (Tagged-Image file format) file with up to 16 grids.",
+               notes="""
+               The background colour can be either selected
+               from one of 8 settings, or can be specified
+               as a combination of Reg,Green, and Blue values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -905,6 +1018,24 @@ gx_methods = {
         Method('GridTrnd_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Remove a trend surface from a grid.",
+               notes="""
+               Both Images must be of type :def_val:`GS_DOUBLE`.
+               The :class:`VM` parameter must be of type REAL,
+               and be of size 10 at most.
+               
+               The number of coefficients must be
+               compatible with the order of the
+               trend removed. Following is the
+               number of coefficients which should
+               be present for a given order
+               
+               Order            Number of Coefficients
+               -----            ----------------------
+               0                 1
+               1                 3
+               2                 6
+               3                 10
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -928,6 +1059,11 @@ gx_methods = {
                doc="""
                Transpose a grid by swapping the grid rows with
                the grid columns.
+               """,
+               notes="""
+               If the grid has a line orientation that does NOT
+               match the :def:`IMU_TRANS` value, this method will
+               not succeed.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -953,6 +1089,15 @@ gx_methods = {
                doc="""
                Calculates the grid volumes above and below a
                reference base.
+               """,
+               notes="""
+               Volumes are calculated above and below a
+               reference base level, and reported as positive
+               integers. A multiplier is applied to the final
+               volume (to correct for units).
+               
+               The :class:`IMG` parameters MUST be of type :def_val:`GS_FLOAT`!
+               If not, the method will terminate.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -1009,6 +1154,13 @@ gx_methods = {
         Method('GridWind2_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Window a grid.",
+               notes="""
+               To change the cell size or work in a different projection,
+               first inherit the :class:`IMG` by calling
+               
+               The windowed grid will be adjusted/expanded to include the
+               defined area and line up on an even grid cell.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1034,6 +1186,11 @@ gx_methods = {
         Method('GridXYZ_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export a Grid image to an XYZ file.",
+               notes="""
+               The :class:`IMG` (image) of the grid to export must
+               be of type :def_val:`GS_FLOAT`. If not, this method will
+               terminate with an error.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1090,6 +1247,11 @@ gx_methods = {
         Method('Mosaic_IMU', module='geoengine.core', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Create a mosaic image of an image list.",
+               notes="""
+               The images are simply placed on the output image, starting with
+               the first image. Note that this function may require very large
+               amounts of virtual memory.
+               """,
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -1106,6 +1268,19 @@ gx_methods = {
         Method('PeakSize_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Define the sizes of all the peaks in an image.",
+               notes="""
+               Extending from the peak location of an anomaly to the inflection
+               points of the grid values along each of the 8 directions results in
+               8 radii. Anomaly size is defined as the 2*mediam of the 8 radii.
+               
+               Precision factor is used to control definition of an inflection point.
+               For points A,B, and C, B is an inflection point if (A+C)/2.0 > B. With
+               the precision factor, B is an inflection point only when
+               (A+C)/2.0 > B*(1.0+Precision factor).
+               This factor must be within (-1.0,1.0).
+               
+               Note: :func:`PeakSize2_IMU` is probably a better routine...
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1125,6 +1300,20 @@ gx_methods = {
         Method('PeakSize2_IMU', module='geoengine.core', version='5.1.4',
                availability=Availability.LICENSED, 
                doc="Define the sizes of all the peaks in an image - new algorithm",
+               notes="""
+               Extending from the peak location of an anomaly to the inflection
+               points of the grid values along each of the 8 directions results in
+               8 radii. Anomaly size is defined as the 2*mediam of the 8 radii.
+               
+               This algorithm uses 4 successive points d1, d2, d3 and d4 in any
+               direction. Given slopes m1 = d2-d1, m2 = d3-d2 and m3 = d4-d3,
+               an inflection point occurs between d2 and d3 if m1>m2 and m2<m3.
+               The location index is given as i3 - s2/(s2-s1), where i3 is the index
+               of d3, and s1=m2-m1 and s2=m3-m2.
+               
+               This algorithm tends to give much smaller (and more reasonable)
+               results than :func:`PeakSize_IMU`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1142,6 +1331,19 @@ gx_methods = {
         Method('PigeonHole_IMU', module='geoengine.core', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Pigeon-hole and count points by location into a grid.",
+               notes="""
+               X and Y location VVs are input. If a point (X, Y) is located within
+               one-half cell width from a location in the grid, then the value of
+               the grid at that location is incremented by 1.
+               The cells are inclusive at the minima, and exclusive at the maxima:
+               e.g. if dDx = dDy = 1, and dXo = dYo = 0, then the corner cell would
+               accept values  -0.5 <= X < 0.5 and -0.5 <= Y < 0.5.
+               The grid values should be set to 0 before calling this function.
+               
+               The number of points "pigeon-holed" is returned to the user.
+               This function is useful, for instance, in determining the density of
+               sample locations in a survey area.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1157,6 +1359,10 @@ gx_methods = {
         Method('Profile_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Extract a profile from a grid.",
+               notes="""
+               Returned :class:`VV` will start at X1,Y1 and will sample
+               up to X2,Y2 at the specified separation.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1178,6 +1384,7 @@ gx_methods = {
         Method('ProfileVV_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Extract a :class:`VV` profile from a grid.",
+               see_also="iGetPolyLine_DBE",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1193,6 +1400,13 @@ gx_methods = {
         Method('RangeGrids_IMU', module='geoengine.core', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Determine bounding rectangle for a set of grids",
+               notes="""
+               If an :class:`IPJ` is IPJ_CS_UNKNOWN, the
+               :class:`IPJ` of the first grid in the list will be used and
+               the :class:`IPJ` will be returned in this setting.
+               Otherwise, the range in the requested :class:`IPJ` will be
+               determined.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1212,6 +1426,16 @@ gx_methods = {
         Method('RangeLL_IMU', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Determine the range in lat. and long. of a projected grid",
+               notes="""
+               This routine determines the latitude and longitudes along the
+               edge of a grid and returns the minimal and maximal values.
+               It scans each row and and column and finds the first non-dummy
+               position at the start and end, and then determines the coordinates
+               at those points.
+               If the grid has no data, no :class:`IPJ` object, or if the Source Type of
+               the :class:`IPJ` is not :def_val:`IPJ_TYPE_PCS` (projected coordinate system), then the
+               returned values are dummies (:def_val:`GS_R8DM`).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1229,6 +1453,13 @@ gx_methods = {
         Method('StatWindow_IMU', module='geoengine.core', version='5.0.5',
                availability=Availability.LICENSED, 
                doc="Calculate grid statistics in a window",
+               notes="""
+               The maximum values needed will beused to
+               decimate the sampling of the grid in order to
+               improve performance.  100000 is often a good
+               number when absolute precision is not
+               required.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -1250,6 +1481,14 @@ gx_methods = {
         Method('UpdatePLY_IMU', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Update the grid boundary in the grid metadata",
+               notes="""
+               You can call the GridEdgePLY function to get an edge,
+               perhaps alter the edge, such as thin it to a reasonable
+               resolution, then put set it as the grid boundary by
+               calling this funtion.  This is similar to the
+               GridPLYEx function except that you get to alter the
+               :class:`PLY` before it is placed back in the :class:`IMG`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",

@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IGRF',
                  doc="""
-International Geomagnetic Reference Field
-Methods to work with :class:`IGRF` objects. The :class:`IGRF` object
-contains data for the :class:`IGRF` model of the geomagnetic
-reference field.
-""")
+                 International Geomagnetic Reference Field
+                 Methods to work with :class:`IGRF` objects. The :class:`IGRF` object
+                 contains data for the :class:`IGRF` model of the geomagnetic
+                 reference field.
+                 """)
 
 
 
@@ -18,6 +18,11 @@ gx_methods = {
         Method('Calc_IGRF', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate :class:`IGRF` data for a given :class:`IGRF` model.",
+               notes="""
+               Calculate :class:`IGRF` data (total field, inclination, and declination)
+               for a given :class:`IGRF` model. The model used will be the same as that
+               obtained with :func:`Create_IGRF`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IGRF",
@@ -39,6 +44,19 @@ gx_methods = {
         Method('CalcVV_IGRF', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate :class:`IGRF` data :class:`VV`'s for a given :class:`IGRF` model.",
+               notes="""
+               Calculate :class:`IGRF` data (total field, inclination, and declination)
+               for a given :class:`IGRF` model. The model used will be the same as that
+               obtained with :func:`Create_IGRF`.
+               All of the :class:`VV`'s should be the same length. The function
+               will abort if they are not.
+               
+               No assumption is made on what data types are contained by
+               any of the :class:`VV`'s. However, all total field, inclination, and
+               declination values are internally calculated as real data.
+               These values will be converted to the types contained in the
+               output :class:`VV`'s.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IGRF",
@@ -60,6 +78,11 @@ gx_methods = {
         Method('Create_IGRF', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create an :class:`IGRF`.",
+               notes="""
+               If the year of the :class:`IGRF` model is dummy, then
+               the :class:`IGRF` year nearest to the line's date will
+               be used. Otherwise, the specified year is used.
+               """,
                return_type="IGRF",
                return_doc=":class:`IGRF` Object",
                parameters = [
@@ -74,6 +97,11 @@ gx_methods = {
         Method('DateRange_IGRF', module='geoengine.core', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Determine the range of years covered by an :class:`IGRF` or DGRF file",
+               notes="""
+               This is useful when using a DGRF file, because the system is set
+               up only to calculate for years within the date range, and will
+               return an error otherwise.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

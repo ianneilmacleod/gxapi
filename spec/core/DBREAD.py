@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DBREAD',
                  doc="""
-The :class:`DBREAD` class is used to open and read from databases. Very large lines
-  are split into blocks and served up sequentially to prevent the over-use of virtual memory when channels are read into VVs or VAs.
-  Individual data blocks are limited by default to 1 MB (which is user-alterable). Single lines smaller than the block size
-  are served up whole, one block per line.
-""")
+                 The :class:`DBREAD` class is used to open and read from databases. Very large lines
+                   are split into blocks and served up sequentially to prevent the over-use of virtual memory when channels are read into VVs or VAs.
+                   Individual data blocks are limited by default to 1 MB (which is user-alterable). Single lines smaller than the block size
+                   are served up whole, one block per line.
+                 """)
 
 
 
@@ -87,6 +87,11 @@ gx_methods = {
         Method('GetVV_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the :class:`VV` handle for a channel.",
+               notes="""
+               Call only for single-column (regular) channels. You can call the :func:`iGetChanArraySize_DBREAD`
+               			 function to find the number fo columns in a given channel.
+               		    The :class:`VV` is filled anew for each block served up.
+               """,
                return_type="VV",
                return_doc=":class:`VV` handle",
                parameters = [
@@ -99,6 +104,11 @@ gx_methods = {
         Method('GetVA_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the :class:`VA` handle for an array channel.",
+               notes="""
+               Call only for array (multi-column) channels. You can call the :func:`iGetChanArraySize_DBREAD`
+               function to find the number fo columns in a given channel, or you can call :func:`iCol_VA` on the returned :class:`VA` handle.
+               The :class:`VA` is filled anew for each block served up.
+               """,
                return_type="VA",
                return_doc=":class:`VA` handle",
                parameters = [
@@ -111,6 +121,10 @@ gx_methods = {
         Method('GetVVx_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the X channel :class:`VV` handle.",
+               notes="""
+               Only available for the CreateXY or CreateXYZ methods.
+               The :class:`VV` is filled anew for each block served up.
+               """,
                return_type="VV",
                return_doc=":class:`VV` handle",
                parameters = [
@@ -121,6 +135,10 @@ gx_methods = {
         Method('GetVVy_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the Y channel :class:`VV` handle.",
+               notes="""
+               Only available for the CreateXY or CreateXYZ methods.
+               The :class:`VV` is filled anew for each block served up.
+               """,
                return_type="VV",
                return_doc=":class:`VV` handle",
                parameters = [
@@ -131,6 +149,11 @@ gx_methods = {
         Method('GetVVz_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the Z channel :class:`VV` handle.",
+               notes="""
+               Only available for the CreateXY or CreateXYZ methods.
+               The :class:`VV` is filled anew for each block served up.
+               If the Z channel is an array channel, the returned :class:`VV` is the "base" :class:`VV` of the :class:`VA` and contains all items sequentially.
+               """,
                return_type="VV",
                return_doc=":class:`VV` handle",
                parameters = [
@@ -141,6 +164,11 @@ gx_methods = {
         Method('iGetChanArraySize_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the number of columns of data in a channel.",
+               notes="""
+               Regular channels have one column of data. Array channels have more than one column of data.
+               This function should be called to determine whether to use :func:`GetVV_DBREAD` or :func:`GetVA_DBREAD` to access data
+               for a channel.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of columns (array size) for a channel",
                parameters = [
@@ -153,6 +181,11 @@ gx_methods = {
         Method('iGetNumberOfBlocksToProcess_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the number of blocks to be served up.",
+               notes="""
+               The selected lines are scanned. All lines where the served up data is less than the maximum block size for
+               all channels are served as a single block. Any lines where any channel's data exceeds the maximum block size are split up into blocks.
+               The value returned can be used as the progress message maximum iteration value.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of blocks to process in the selected lines.",
                parameters = [
@@ -165,6 +198,10 @@ gx_methods = {
         Method('iGetNextBlock_DBREAD', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Get the next block of data.",
+               notes="""
+               The next block of data is read and copied into the channel :class:`VV` and/or :class:`VA` objects, accessed using
+               the :func:`GetVV_DBREAD` and :func:`GetVA_DBREAD` functions.
+               """,
                return_type=Type.INT32_T,
                return_doc="Returns the current block index, or -1 if at end of file (no new data returned).",
                parameters = [

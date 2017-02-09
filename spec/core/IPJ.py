@@ -2,20 +2,20 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IPJ',
                  doc="""
-The :class:`IPJ` class describes a single spatial reference in the world,
-defined under a coordinate system, an orientation,
-and a warp (which can be used to distort the projected object
-to a particular shape or boundary).
-""",
+                 The :class:`IPJ` class describes a single spatial reference in the world,
+                 defined under a coordinate system, an orientation,
+                 and a warp (which can be used to distort the projected object
+                 to a particular shape or boundary).
+                 """,
                  notes="""
-:class:`IPJ` objects may be attached to channels or views. Two IPJs taken
-together are used to create a :class:`PJ` object, which allows for the
-conversion of positions from one projection to the other.
-See also the :class:`LL2` class, which creates Datum correction lookups.
-
-See also          :class:`PJ`    Converts coordinates between projections
-:class:`LL2`   Creates Datum correction lookups.
-""")
+                 :class:`IPJ` objects may be attached to channels or views. Two IPJs taken
+                 together are used to create a :class:`PJ` object, which allows for the
+                 conversion of positions from one projection to the other.
+                 See also the :class:`LL2` class, which creates Datum correction lookups.
+                 
+                 See also          :class:`PJ`    Converts coordinates between projections
+                 :class:`LL2`   Creates Datum correction lookups.
+                 """)
 
 
 gx_defines = [
@@ -259,6 +259,7 @@ gx_methods = {
         Method('_MakeGeographic_IPJ', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Remove a projected coordinate system from an :class:`IPJ`",
+               notes="This function does nothing if the :class:`IPJ` is not a projected coordinate system.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -364,6 +365,17 @@ gx_methods = {
         Method('AddWarp_IPJ', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Add a warp to :class:`IPJ`.",
+               notes="""
+               There must be at least "warp type" points in the
+               warp point :class:`VV`'s.
+               All point :class:`VV`'s must have the same number of points.
+               If there are more points than required by the warp,
+               the warp will be determined by least-square fitting
+               to the warp surface for all but the 4-point warp.
+               The 4-point ward requires exactly 4 points.
+               
+               Cannot be used with WARP_MATRIX or WARP_LOG
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -383,6 +395,10 @@ gx_methods = {
         Method('ClearCoordinateSystem_IPJ', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Clear coordinate sytsem, except for units",
+               notes="""
+               Clears the Datum, Local Datum and Projection info.
+               Leaves units, any warp or orientation warp unchanged.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ")
@@ -428,6 +444,10 @@ gx_methods = {
         Method('CopyProjection_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Copy the projection from one :class:`IPJ` to another",
+               notes="""
+               Copies the projection parameters, while leaving the rest
+               (e.g. Datum, Local Datum Transform) unchanged.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -473,6 +493,7 @@ gx_methods = {
         Method('Get3DView_IPJ', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Get 3D orientation parameters",
+               notes="The view must have a 3D orientation",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -500,6 +521,7 @@ gx_methods = {
         Method('Get3DViewEx_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Get 3D orientation parameters with new flags",
+               notes="The view must have a 3D orientation",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -531,6 +553,7 @@ gx_methods = {
         Method('GetCrookedSectionViewVVs_IPJ', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Get the crooked section path.",
+               notes="Returns the orignal VVs used to set up the crooked section path.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -548,6 +571,10 @@ gx_methods = {
         Method('GetList_IPJ', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a list of parameters.",
+               notes="""
+               The datum filter string, if specified, will limit the requested
+               list to those valid for the spacified datum.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -561,6 +588,25 @@ gx_methods = {
         Method('GetOrientationInfo_IPJ', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Get :class:`IPJ` orientation parameters.",
+               notes="""
+               IPJ_ORIENT_TYPE:
+               :def_val:`IPJ_ORIENT_DEFAULT` - no special orientation - plan view.
+               This is equivalent to :def_val:`IPJ_ORIENT_PLAN` with
+               dXo = dYo = dZo = dRotation = 0.0.
+               
+               :def_val:`IPJ_ORIENT_PLAN`      Azimuth = Rotation CCW degrees
+               The plan differs from the default view in that
+               a reference level is set, and the axes can be
+               rotated and offset from the local X,Y.
+               
+               :def_val:`IPJ_ORIENT_SECTION`   Azimuth - CW degrees from North
+               -360 <= azimuth <= 360
+               Swing - degrees bottom towards viewer
+               -90 < swing < 90
+               The section view projects all plotted objects
+               HORIZONTALLY onto the viewing plan in order to
+               preserve elevations, even if the section has a swing.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -580,6 +626,13 @@ gx_methods = {
         Method('GetPlaneEquation_IPJ', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Get the equation of a plane",
+               notes="""
+               Two opposite corners of the plane are required.
+               Because the origin of the plane does not necessarily
+               have a stable back-projection into true 3d coordinates.
+               In practice, use the current view extents, or the corners
+               of a grid.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -615,6 +668,19 @@ gx_methods = {
         Method('GetPlaneEquation2_IPJ', module='geoengine.core', version='6.4.1',
                availability=Availability.PUBLIC, 
                doc="Get the equation of a plane with reprojection.",
+               notes="""
+               This is the same as :func:`GetPlaneEquation_IPJ`, but the
+               input projected coordinate system (PCS) may
+               be different from that of the :class:`IPJ` you want the
+               plane equation values described in. This may be
+               required, for instance, when a 3D view has been created
+               in one PCS, and an oriented grid from a different PCS is
+               to be displayed in that view.
+               
+               If the two input IPJs share the same PCS (determined
+               using the :func:`iSame_IPJ` function), then the :func:`GetPlaneEquation_IPJ`
+               function is called directly, using the input :class:`IPJ`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -652,6 +718,15 @@ gx_methods = {
         Method('iCompareDatums_IPJ', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Compare the datums of two coordinate systems?",
+               notes="""
+               To transform between different datums requires the use of a local
+               datum transform.  The local datum transform can be defined when
+               a coordinate system is created, but the definition is optional.
+               This function will test that the local datum transforms are defined.
+               Note that a coordinate transformation between datums without a
+               local datum transform is still possible, but only the effect of
+               ellipsoid shape will be modelled in the transform.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Datums are different
@@ -702,6 +777,7 @@ gx_methods = {
         Method('iCoordinateSystemsAreTheSame_IPJ', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Are these two coordinate systems the same?",
+               notes="This does not compare LDT information (use :func:`iCompareDatums_IPJ` for that).",
                return_type=Type.INT32_T,
                return_doc="""
                0 - No
@@ -745,6 +821,10 @@ gx_methods = {
         Method('IGetESRI_IPJ', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Store coordinate system in an ESRI prj coordinate string",
+               notes="""
+               If the projection is not supported in ESRI, the projection
+               string will be empty.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -758,6 +838,11 @@ gx_methods = {
         Method('IGetGXF_IPJ', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Store coordinate system in GXF style strings.",
+               notes="""
+               See GXF revision 3 for string descriptions
+               All strings must be the same length, 160 (:def_val:`STR_GXF`) recommended.
+               Strings too short will be truncated.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -811,6 +896,10 @@ gx_methods = {
         Method('iGetOrientation_IPJ', module='geoengine.core', version='5.1.4',
                availability=Availability.PUBLIC, 
                doc="Get :class:`IPJ` orientation in space.",
+               notes="""
+               Projections can be created oriented horizontally (e.g. in plan maps)
+               or vertically (in section maps - Wholeplot and :class:`IP`).
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`IPJ_ORIENT`",
                parameters = [
@@ -943,6 +1032,21 @@ gx_methods = {
         Method('iHasSectionOrientation_IPJ', module='geoengine.core', version='8.3.0',
                availability=Availability.PUBLIC, 
                doc="Does this projection contain an orientation used by section plots?",
+               notes="""
+               Returns     1 if there is a section orientation
+               
+               The following orientations can be used to orient sections or section views:
+               
+               :def_val:`IPJ_ORIENT_SECTION` - Target-type sections with Z projection horizontally
+               :def_val:`IPJ_ORIENT_SECTION_NORMAL` - Like :def_val:`IPJ_ORIENT_SECTION`, but Z projects
+               perpendicular to the secton plane.
+               :def_val:`IPJ_ORIENT_SECTION_CROOKED` - Crooked sections
+               :def_val:`IPJ_ORIENT_3D` - Some Sections extracted from a voxel - e.g. VoxelToGrids,
+               as the voxel can have any orientation in 3D.
+               
+               It is sometimes important to ignore the section orientation, for instance
+               when rendering a grid in 3D where it has been located on a plane.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - No
@@ -955,6 +1059,13 @@ gx_methods = {
         Method('iProjectionTypeIsFullySupported_IPJ', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Is the projection type fully supported?",
+               notes="""
+               This function checks only the projected coordinated system
+               in the :class:`IPJ` object, so should only be used with projections
+               of type :def_val:`IPJ_TYPE_PCS`.
+               This function does not test the validity of datums or local
+               datum transforms.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - No
@@ -967,6 +1078,11 @@ gx_methods = {
         Method('iSetGXF_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Same as :func:`SetGXF_IPJ`, but fails gracefully.",
+               notes="""
+               :func:`SetGXF_IPJ` will fail and terminate the GX if anything goes wrong (e.g. having a wrong
+               parameter). If this function fails, it simply returns 0 and leaves the
+               :class:`IPJ` unchanged.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - error in setting :class:`IPJ`, input :class:`IPJ` unchanged.
@@ -1000,6 +1116,15 @@ gx_methods = {
         Method('iSupportDatumTransform_IPJ', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Can we transform between these two datums?",
+               notes="""
+               To transform between different datums requires the use of a local
+               datum transform.  The local datum transform can be defined when
+               a coordinate system is created, but the definition is optional.
+               This function will test that the local datum transforms are defined.
+               Note that a coordinate transformation between datums without a
+               local datum transform is still possible, but only the effect of
+               ellipsoid shape will be modelled in the transform.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - No
@@ -1082,6 +1207,14 @@ gx_methods = {
         Method('MakeProjected_IPJ', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Create a default projected coordinate system from lat-long ranges.",
+               notes="""
+               Terminates with invalid or unsupported ranges.
+               If the map crosses the equator, or if map is within 20 degrees of the
+               equator, uses an equatorial mercator projection centered at the central
+               longitude. Otherwise, uses a Lambert Conic Conformal (1SP) projection
+               for the map. Global maps outside of +/- 70 degrees latitude are not
+               supported.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1099,6 +1232,11 @@ gx_methods = {
         Method('NewBoxResolution_IPJ', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Determine a data resolution in a new coordinate system",
+               notes="""
+               if there are any problems reprojecting, new resolutions will
+               dummy.  The conversion to new resolution is based on measurements
+               along the four edges and two diagonals.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1155,6 +1293,10 @@ gx_methods = {
         Method('rGetNorthAzimuth_IPJ', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Return the azimuth of geographic North at a point.",
+               notes="""
+               If the :class:`IPJ` is not a projected coordinate system
+               then the returned azimuth is :def_val:`GS_R8DM`;
+               """,
                return_type=Type.DOUBLE,
                return_doc="Azimuth (degrees CW) of geographic north from grid north at a location.",
                parameters = [
@@ -1169,6 +1311,7 @@ gx_methods = {
         Method('rUnitScale_IPJ', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a unit scale (m/unit) given a name",
+               notes="If name cannot be found, returns default.",
                return_type=Type.DOUBLE,
                return_doc="Scale factor m/unit",
                parameters = [
@@ -1245,6 +1388,10 @@ gx_methods = {
         Method('Set3DView_IPJ', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Set 3D orientation parameters",
+               notes="""
+               Sets up translation, scaling and rotation in all three directions
+               for 3D objects.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1272,6 +1419,10 @@ gx_methods = {
         Method('Set3DViewEx_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Set 3D orientation parameters with new flags",
+               notes="""
+               Sets up translation, scaling and rotation in all three directions
+               for 3D objects.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1303,6 +1454,10 @@ gx_methods = {
         Method('Set3DViewFromAxes_IPJ', module='geoengine.core', version='9.0.0',
                availability=Availability.PUBLIC, 
                doc="Set 3D orientation parameters",
+               notes="""
+               Sets up translation, scaling and rotation in all three directions
+               for 3D objects, based on input origin and X and Y axis vectors.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1336,6 +1491,10 @@ gx_methods = {
         Method('SetCrookedSectionView_IPJ', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Set up the crooked section view.",
+               notes="""
+               A non-plane section. It is a vertical section which curves along a path in
+               (X, Y).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1364,6 +1523,10 @@ gx_methods = {
         Method('SetESRI_IPJ', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Set coordinate system from an ESRI prj coordinate string",
+               notes="""
+               If the projection is not supported in Geosoft, the
+               :class:`IPJ` will be unknown.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1375,6 +1538,122 @@ gx_methods = {
         Method('SetGXF_IPJ', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set coordinate system from GXF style strings.",
+               notes="""
+               Simplest Usage:
+               
+               The coordinate system can be resolved from the "coordinate system name"
+               if the name is specified using an EPSG number or naming convention such as:
+               
+               "datum / projection"  (example: "Arc 1960 / UTM zone 37S")
+               
+               Where:
+               "datum" is the EPSG datum name (eg. NAD83).  All supported datums are
+               listed in ...usercsvdatum.csv.
+               "projection" is the EPSG coordinate system map projection.
+               datum name (eg. "UTM zone 10N").  All supported coordinate
+               system projections are listed in ...user/csv/transform.csv.
+               All EPSG known combined coordinate systems of the earth are
+               listed in ...user/csv/ipj_pcs.csv.
+               
+               To define a geographic (longitude, latitude) oordinate system, specify
+               the datum name alone (ie "Arc 1960").  EPSG numbers can also be used, so in
+               the example above the name can be "21037".
+               
+               The coordinate system may also be oriented arbitrarily in 3D relative to
+               the base coordinate system by specifying the orientation as a set of
+               6 comma-separated values between angled brackets after the coordinate system name:
+               
+               "datum / projection"<oX,oY,oZ,rX,rY,rZ>
+               21037<oX,oY,oZ,rX,rY,rZ>
+               
+               where:
+               oX,oY,oZ    is the location of the local origin on the CS
+               rX,rY,rZ    are rotations in degrees azimuth (clockwise) of
+               the local axis frame around the X, Y and Z axis
+               respectively.  A simple plane rotation will only have
+               a rotation around Z.  For example:
+               "Arc 1960 / UTM zone 37S"<525000,2500000,0,0,0,15>
+               defines a local system with origin at (525000,2500000)
+               with a rotation of 15 degrees azimuth.
+               
+               Orientation parameters not defined will default to align with the
+               base CS,  Note that although allowed, it does not make sense to have
+               an orientation on a geographic coordinate system (long,lat).
+               
+               Complete usage:
+               
+               A coordinate system can also be fully described by providing an additional
+               four strings that define the datum, map projection, length units and
+               prefered local datum transform.  Refer to GXF revision 3 for further detail:
+               http://www.geosoft.com/resources/goto/GXF-Grid-eXchange-File
+               
+               Note that coordinate system reference tables sre maintained in csv files
+               located in the .../user/csv folder found with the Geosoft installation files,
+               which will usually be located here:
+               C:\\Program Files (x86)\\Geosoft\\Oasis montaj\\user\\csv
+               
+               The "datum" string can use a datum name defined in the "datum.csv" file,
+               or the local datum name from datumtrf.csv, or the local datum description
+               from ldatum.csv.
+               For a non-EPSG datum, you can define your own datum parameters in the
+               Datum stringfield as follows:
+               
+               "*YourDatumName",major_axis,flattening(or eccentricity)[,prime_meridian]
+               
+               where
+               The * before "YourDatumName" indicates this is a non-EPSG name.
+               major_axis is in metres.
+               flattening less than 0 is interpreted as eccentricity (0 indicates a sphere).
+               prime_meridian is optional, specified in degrees of longitude relative to
+               Greenwich.
+               
+               The "Projection" can contain a projection system defined in the
+               "transform.csv" file, or the name of a projection type followed by projection
+               parameters.  Geographic coordinates systems (long/lat only) must leave
+               "projection" blank.
+               
+               Projection names not defined in "transform.csv" can be defined in the
+               "projection" string as follows:
+               
+               method,length_units,P1,P2,...
+               
+               where:
+               
+               "method" is a method from the table "transform_parameters.csv".
+               "length_units" is a "Unit_length" from units.csv.
+               P1 through P8 (or fewer) are the projection parameters for the method
+               as defined in "transform_parameters.csv", and in the order defined.
+               Parameters that are blank in "transform_parameters.csv" are omitted
+               from the list so that each method will have a minimum list of
+               parameters.
+               
+               Angular parameters must always be degrees, and may be defined a
+               decimal degree fromat, or "DEG.MM.SS.ssss".
+               Distance parameters (False Northing and False Easting) must be
+               defined in the "length_units" (string 4).
+               
+               Examples:
+               
+               Geographic long,lat on datum "Arc 1960":
+               "4210","","","",""
+               "Arc 1960","","","",""
+               "","Arc 1960","","",""
+               
+               Projected Coordinate System, UTM zone 37S
+               "21037","","","",""
+               "","4210","16137","",""
+               ""Arc 1960 / UTM zone 37S"","","","",""
+               "",""Arc 1960"","UTM zone 37S","",""
+               "",""Arc 1960"","UTM zone 37S","m",""
+               "",""Arc 1960"","UTM zone 37S","m,1.0",""
+               "",""Arc 1960"","UTM zone 37S","m,1.0","");
+               "",""Arc 1960"","UTM zone 37S","m","Arc 1960 to WGS 84 (1)"
+               
+               Locally oriented coordinate system (origin at 525000,2500000, rotated 15 deg):
+               "21037<525000,2500000,0,0,0,15>","","","",""
+               "<525000,2500000,0,0,0,15>","4210","16137","",""
+               ""Arc 1960 / UTM zone 37S"<525000,2500000,0,0,0,15>","","","",""
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1394,6 +1673,7 @@ gx_methods = {
         Method('SetMethodParm_IPJ', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set projection method parameter",
+               notes="If parameter is not valid, nothing happens.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1420,6 +1700,11 @@ gx_methods = {
         Method('SetNormalSectionView_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Set normal section orientation parameters",
+               notes="""
+               This section is the type where values are projected
+               normal to the section, and the "Y" values in a grid
+               do not necessarily correspond to the elvations for a swung section.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1439,6 +1724,15 @@ gx_methods = {
         Method('SetPlanView_IPJ', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Set plan orientation parameters.",
+               notes="""
+               This sets up the orientation of an :class:`IPJ` for plan view plots,
+               for instance in Wholeplot. These differ from regular plan
+               map views in that the elevation of the view plane is set, and
+               the view may be rotated. In addition, when viewed in a map,
+               a view with this :class:`IPJ` will give a status bar location (X, Y, Z)
+               of the actual location in space, as opposed to just the X, Y of
+               the view plane itself.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1456,6 +1750,20 @@ gx_methods = {
         Method('SetSectionView_IPJ', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Set section orientation parameters",
+               notes="""
+               This sets up the orientation of an :class:`IPJ` for section view plots,
+               for instance in Wholeplot. In addition, when viewed in a map,
+               a view with this :class:`IPJ` will give a status bar location (X, Y, Z)
+               of the actual location in space, as opposed to just the X, Y of
+               the view plane itself.
+               Swung sections are tricky because they are set up for section
+               plots in such a way that the vertical axis remains "true"; points
+               are projected horizontally to the viewing plane, independent of the
+               swing angle. In other words, all locations in 3D space viewed using this
+               projection will plot on the same horizontal line in the map view.
+               This function is NOT suitable for simply creating
+               an orientation for a dipping grid or view.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1475,6 +1783,30 @@ gx_methods = {
         Method('SetWMSCoordSys_IPJ', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Set coordinate system from a WMS coordsys string.",
+               notes="""
+               WMS coordinate strings supported:
+               
+               
+               EPSG:code
+               
+               where "code" is the EPSG code number
+               "EPSG:4326"  is geographic "WGS 84" (see datum.csv)
+               "EPSG:25834" is projected "ETRS89 / UTM zone 34N"
+               (see ipj_pcs.csv)
+               
+               The bounding box for EPSG systems must be defined in the
+               EPSG coordinate system.  If a bounding box is provided,
+               it will not be changed.
+               
+               
+               AUTO:wm_id,epsg_units,lon,lat (see OGC documentation)
+               
+               for "AUTO" coordinates, the "epsg_units" is the units
+               of the bounding box.  This procedure will transform
+               the supplied bounding box from these units to the
+               units of the projection.  Normally, this is from
+               long/lat (9102) to metres (9001).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1587,6 +1919,10 @@ gx_methods = {
         Method('ReprojectSectionGrid_IPJ', module='geoengine.core', version='9.0.0',
                availability=Availability.PUBLIC, 
                doc="Reproject a section grid",
+               notes="""
+               Reproject a section grid to a new :class:`IPJ`, adjusting its orientation and registration so that
+               it remains in the same location.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1613,6 +1949,10 @@ gx_methods = {
         Method('ClearProjection_IPJ', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Clear a projection except for units",
+               notes="""
+               Clears the Datum, Local Datum and Projection info.
+               Leaves units, any warp or orientation warp unchanged.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",
@@ -1658,6 +1998,13 @@ gx_methods = {
         Method('iSupported_IPJ', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Is this coordinate system fully supported?",
+               notes="""
+               This function checks only the projected coordinated system
+               in the :class:`IPJ` object, so should only be used with projections
+               of type :def_val:`IPJ_TYPE_PCS`.
+               This function does not test the validity of datums or local
+               datum transforms.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - No

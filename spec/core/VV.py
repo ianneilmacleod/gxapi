@@ -2,21 +2,21 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VV',
                  doc="""
-The :class:`VV` class stores very long vector (array) data (such
-as channel data from an OASIS database) in memory and
-performs specific actions on the data. This set of
-functions is similar to the :class:`VM` functions except that
-you cannot access data directly and therefore you cannot
-use a :class:`VV` to pass data to an external (non-Geosoft)
-Dynamic Link Library (DLL) object function.
-
-If you want to pass data to a DLL, you must move a subset
-of the data stored in memory to a small vector object and
-then use the :func:`GetPtrVM_GEO` function to pass a pointer to the
-data on to the external function.
-
-See :class:`VVU` for more utility methods.
-""")
+                 The :class:`VV` class stores very long vector (array) data (such
+                 as channel data from an OASIS database) in memory and
+                 performs specific actions on the data. This set of
+                 functions is similar to the :class:`VM` functions except that
+                 you cannot access data directly and therefore you cannot
+                 use a :class:`VV` to pass data to an external (non-Geosoft)
+                 Dynamic Link Library (DLL) object function.
+                 
+                 If you want to pass data to a DLL, you must move a subset
+                 of the data stored in memory to a small vector object and
+                 then use the :func:`GetPtrVM_GEO` function to pass a pointer to the
+                 data on to the external function.
+                 
+                 See :class:`VVU` for more utility methods.
+                 """)
 
 
 gx_defines = [
@@ -170,6 +170,13 @@ gx_methods = {
         Method('_Copy2_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Copy part of a vector into part of another vector.",
+               notes="""
+               1. Unlike Copy_VV destination :class:`VV` is not reallocated, nor is
+               the length changed. The caller must make any desired changes.
+               
+               2. All :class:`VV` types are supported and will be converted using
+               Convert_GS if necessary.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -187,6 +194,10 @@ gx_methods = {
         Method('_Log_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Apply log to the vv.",
+               notes="""
+               Minimum value will be defaulted to 1.0 if it is 0.0 or
+               less than 0.0
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -202,6 +213,17 @@ gx_methods = {
         Method('_LogLinear_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Take the log10 or original value of a :class:`VV`.",
+               notes="""
+               If the data is in the range +/- minimum value,
+               it is left alone. Otherwise, the result is calculated as
+               
+               d = dMin * (log10(fabs(d)/dMin)+1.0)
+               
+               Sign is reapplied to d.
+               
+               Minimum value will be defaulted to 1.0 if it is negative
+               or 0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -213,6 +235,14 @@ gx_methods = {
         Method('_Mask_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Mask one :class:`VV` against another.",
+               notes="""
+               All elements in the mask :class:`VV` that are dummies will replace
+               the value in the original :class:`VV` with a dummy.
+               
+               The modified :class:`VV` will always be the same length as the mask
+               :class:`VV` after this call.  If the mask is longer than the target,
+               the target will be lengthenned with dummies.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -242,6 +272,7 @@ gx_methods = {
         Method('_Trans_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Translate (:class:`VV` + base ) * mult",
+               notes="All :class:`VV` types now supported.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -276,6 +307,7 @@ gx_methods = {
         Method('Add2_VV', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Add two VVs with linear factors: VV_A*f1 + VV_B*f2 = VV_C",
+               notes="The multipliers must be defined and within the :def_val:`GS_R8MN` :def_val:`GS_R8MX` range.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -303,6 +335,7 @@ gx_methods = {
         Method('CopyVMtoVV_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Copy :class:`VM` data to a :class:`VV`.",
+               notes="The :class:`VV` will be resized to the length of the :class:`VM`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -314,6 +347,10 @@ gx_methods = {
         Method('CopyVVtoVM_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Copy :class:`VV` data to a :class:`VM`.",
+               notes="""
+               The :class:`VM` will be resized to the length of the :class:`VV`.
+               The pointer to data in the :class:`VM` may move.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VM",
@@ -340,6 +377,10 @@ gx_methods = {
                number of bits of floats/doubles to drop so that the CRC
                will be same even of this are changed.
                """,
+               notes="""
+               Very usefull for testing where the last bits of accuracy
+               are not as important.
+               """,
                return_type="CRC",
                return_doc="CRC Value",
                parameters = [
@@ -355,6 +396,20 @@ gx_methods = {
         Method('Create_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`VV`.",
+               notes="""
+               To set the fiducial start and increment for the data in the :class:`VV`
+               you need to call :func:`SetFidStart_VV` and :func:`SetFidIncr_VV`.
+               
+               If you are basing the :class:`VV` data on fiducial information from a
+               different :class:`VV`, call GetFidStart_VV and GetFidIncr_VV to obtain
+               that :class:`VV`'s fiducial information. Do this prior to setting the
+               new :class:`VV`'s fiducial start and increment.
+               
+               If you do not know the required length for a :class:`VV`, use 0
+               and the :class:`VV` length will be adjusted as needed.  This is
+               a bit less efficient than setting the length when you
+               know it.
+               """,
                return_type="VV",
                return_doc=":class:`VV` Object",
                parameters = [
@@ -367,6 +422,13 @@ gx_methods = {
         Method('CreateExt_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`VV`, using one of the :def:`GS_TYPES` special data types.",
+               notes="""
+               See :func:`Create_VV`
+               
+               Do not use data type flags: :def_val:`GS_INT` or :def_val:`GS_REAL` on CreateExt(),
+               this will result in a respective data type of unsigned byte or
+               short for the :class:`VV`.
+               """,
                return_type="VV",
                return_doc=":class:`VV` Object",
                parameters = [
@@ -397,6 +459,12 @@ gx_methods = {
         Method('Diff_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate differences.",
+               notes="""
+               Differences with dummies result in dummies.
+               An even number of differences locates data accurately.
+               An odd number of differences locates result 1/2 element lower
+               in the :class:`VV`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -421,6 +489,11 @@ gx_methods = {
         Method('FidNorm_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Re-sample a pair of :class:`VV`'s to match each other.",
+               notes="""
+               Both :class:`VV`'s will return with the same start
+               fid and fid increment.  The smaller start fid
+               and fid increment will be used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -464,6 +537,15 @@ gx_methods = {
         Method('GetVM_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Get :class:`VV` data and place it in a :class:`VM`. (OBSOLETE)",
+               notes="""
+               See :func:`CopyVVtoVM_VV`, which is a prefered method to move :class:`VV` data
+               into a :class:`VM`.  This method is mainly provided for old compatibility.
+               
+               The :class:`VM` will be lengthened if required.
+               
+               If the :class:`VM` is longer than required, extra data past the end
+               of the :class:`VV` will be set to dummy in the :class:`VM`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -491,6 +573,11 @@ gx_methods = {
         Method('iFindDum_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Finds the first dummy or non-dummy value in a :class:`VV`",
+               notes="""
+               If a decreasing order search is performed, it will start
+               at the highest element specified. (Conversely, an increasing
+               order starts at the lowest element specified.)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                The index of the first dummy or non-dummy value.
@@ -535,6 +622,13 @@ gx_methods = {
         Method('IGetString_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a string element from a :class:`VV`.",
+               notes="""
+               Returns Element wanted, or blank string
+               if the value is dummy or outside of the range of data.
+               
+               Type conversions are performed if necessary.  Dummy values
+               are converted to "*" string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -549,6 +643,10 @@ gx_methods = {
         Method('iIndexMax_VV', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Get the index where the maximum value occurs.",
+               notes="""
+               If more than one value has the same maximum value, the index of the
+               first is returned.
+               """,
                return_type=Type.INT32_T,
                return_doc="Index of the maximum value, :def_val:`iDUMMY` if no valid data.",
                parameters = [
@@ -570,6 +668,24 @@ gx_methods = {
         Method('IndexInsert_VV', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Insert items into a :class:`VV` using an index :class:`VV`.",
+               notes="""
+               The items in the input data :class:`VV` are inserted into
+               the output :class:`VV` using the indices in the index :class:`VV`.
+               Values not referenced are not altered, so the output
+               :class:`VV` should be pre-initialized. The output :class:`VV` length
+               will NOT be changed, and index values referencing
+               beyond the end of the output :class:`VV` data will return an
+               error.
+               
+               This function is useful when working with channel data that include
+               dummies, but where the dummies must be removed before processing.
+               Create and initialize an index (0, 1, 2...) :class:`VV`, using the :func:`InitIndex_VV`
+               function, and when you remove
+               the dummies, remove the corresponding index values as well.
+               After processing, init a :class:`VV` to dummies, then use :func:`IndexInsert_VV` to
+               put the processed values at the correct locations in the data :class:`VV`
+               before you write it back to the channel.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -583,6 +699,10 @@ gx_methods = {
         Method('IndexOrder_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Reorder a :class:`VV`.",
+               notes="""
+               Given an index :class:`VV` (of type INT), this method reorders a
+               :class:`VV`. Please make sure that the index holds valid information.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -594,6 +714,11 @@ gx_methods = {
         Method('InitIndex_VV', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Initialize an index :class:`VV` to values 0, 1, 2, etc...",
+               notes="""
+               Populates a :class:`VV` with the values 0, 1, 2, 3, 4 etc., to be
+               used for various indexing functions, such as :func:`IndexInsert_VV` or
+               :func:`IndexOrder_VV`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -605,6 +730,18 @@ gx_methods = {
         Method('InvLog_VV', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Inverse of the Log_VV function.",
+               notes="""
+               This is the inverse function for Log_VV, with the same inputs.
+               
+               NEGATIVE_NO    - will not return values smaller than the input minimum
+               NEGATIVE_YES   - if the data is in the range +/- minimum,
+               it is left alone.  Otherwise, the sign is removed,
+               the minimum is subtracted, the log of the minimum is added,
+               and the exponential (base e or base 10) is taken of the
+               sum. The sign is then reapplied.
+               Minimum value will be defaulted to 1.0 if it is 0.0 or
+               less than 0.0
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -632,6 +769,14 @@ gx_methods = {
         Method('LinesToXY_VV', module='geoengine.core', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Convert a 2D Line segment :class:`VV` into X and Y VVs.",
+               notes="""
+               Some GX functions (such as :func:`GetVoronoiEdges_TIN`) return
+               a special :class:`VV` where each element contains the start and end
+               points of lines, (X_1, Y_1) and (X_2, Y_2).
+               This GX dumps the individual X and Y values into individual
+               X and Y VVs of type :def_val:`GS_DOUBLE` (REAL). N lines produces 2*N
+               X and Y values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -645,6 +790,16 @@ gx_methods = {
         Method('LookupIndex_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Lookup a :class:`VV` from another :class:`VV` using an index :class:`VV`.",
+               notes="""
+               This method assigns index values of 0.0, 1.0, 2.0 etc. to the individual
+               values in the input Data :class:`VV`, and uses linear interpolation to calculate the values of
+               Result :class:`VV` at the input indices contained in the Index :class:`VV`.
+               
+               If the input Data :class:`VV` is string type, then only values at the integral index values
+               are returned.
+               
+               See also :func:`SetupIndex_VV` for an example of how this can be implemented.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -658,6 +813,24 @@ gx_methods = {
         Method('MakeMemBased_VV', module='geoengine.core', version='5.1.2',
                availability=Availability.PUBLIC, 
                doc="Make this :class:`VV` use regular instead of virtual memory.",
+               notes="""
+               This function should be called immediately aftter
+               :func:`Create_VV`.
+               
+               Normal VVs are optimised to prevent thrashing, and to
+               efficiently support many extremely large VVs, although
+               there is a small performance penalty.
+               This function is intended for :class:`VV`'s that you know can be
+               handled by the operating system virtual memory manager,
+               and will be used heavily.  By using a memory based :class:`VV`, you
+               can achieve some performance improvements provided your
+               application does not cause the memory manager to "thrash".
+               
+               External programs that use the GX API may prefer to use
+               memory-based :class:`VV`'s because you can get direct access to
+               the :class:`VV` through the :func:`GetPtrVV_GEO` function (see gx_extern.h).
+               """,
+               see_also=":func:`GetPtrVV_GEO` in gx_extern.h",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV")
@@ -666,6 +839,7 @@ gx_methods = {
         Method('MaskAND_VV', module='geoengine.core', version='5.1.2',
                availability=Availability.LICENSED, 
                doc="Create mask from logical AND of two VVs.",
+               notes="If both values are non-dummies, then result is 1, else dummy.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -679,6 +853,7 @@ gx_methods = {
         Method('MaskOR_VV', module='geoengine.core', version='5.1.2',
                availability=Availability.LICENSED, 
                doc="Create mask from logical OR of two VVs.",
+               notes="If either values is non-dummy, then result is 1, else dummy.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -692,6 +867,14 @@ gx_methods = {
         Method('MaskStr_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Mask one :class:`VV` against another using a string.",
+               notes="""
+               All elements in the mask :class:`VV` that are same as string will replace
+               the original :class:`VV` with a 1.
+               
+               The modified :class:`VV` will always be expanded to the MaskVV size but
+               not shortened after this call.  If the mask is longer than the target,
+               the target will be lengthenned with dummies before applying the mask.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -733,6 +916,7 @@ gx_methods = {
         Method('PolygonMask_VV', module='geoengine.core', version='5.1.3',
                availability=Availability.LICENSED, 
                doc="Mask a :class:`VV` using XY data and a polygon",
+               notes="The VVs has to be the same length",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -750,6 +934,7 @@ gx_methods = {
         Method('Project_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="This method projects an X and Y :class:`VV`.",
+               notes="This function is equivalent to :func:`ConvertVV_PJ`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PJ"),
@@ -762,6 +947,7 @@ gx_methods = {
         Method('Project3D_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="This method projects an X,Y,Z :class:`VV`.",
+               notes="This function is equivalent to :func:`ConvertVV3_PJ`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PJ"),
@@ -776,6 +962,7 @@ gx_methods = {
         Method('RangeDouble_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the min. and max. values of a :class:`VV` while ignoring dummies.",
+               notes="Minimum and maximum become :def_val:`GS_R8DM` if entire :class:`VV` is dummy.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -803,6 +990,10 @@ gx_methods = {
         Method('ReFidVV_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Re-sample a :class:`VV` to match another :class:`VV`.",
+               notes="""
+               This method will honor the :class:`VV` FID Expansion and will expand/contract
+               :class:`VV`'s based on this flag if it is used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -853,6 +1044,10 @@ gx_methods = {
         Method('rGetReal_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a real element from a :class:`VV`.",
+               notes="""
+               Type conversions are performed if necessary.  Dummy values
+               are converted to "*" string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="""
                Element wanted, or :def_val:`rDUMMY`
@@ -867,6 +1062,7 @@ gx_methods = {
         Method('rSum_VV', module='geoengine.core', version='7.2.0',
                availability=Availability.LICENSED, 
                doc="Calculate the sum of the values in a :class:`VV`.",
+               notes="Dummy value is treated as Zero(0)",
                return_type=Type.DOUBLE,
                return_doc="The sum of the elements.",
                parameters = [
@@ -877,6 +1073,7 @@ gx_methods = {
         Method('rWeightedMean_VV', module='geoengine.core', version='7.2.0',
                availability=Availability.LICENSED, 
                doc="Calculate the weighted average of the values.",
+               notes="Dummy values are ignored.",
                return_type=Type.DOUBLE,
                return_doc="The weighted average of the values.",
                parameters = [
@@ -921,6 +1118,17 @@ gx_methods = {
         Method('SetInt_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set an integer element in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               It is good practice to set the length ahead of time to the
+               expected maximum value, as some :class:`VV` processes rely on the
+               current maximum length of the :class:`VV` when you pass it in as an
+               argument, and unexpected results may occur if the length is
+               not what you expect it to be because of dynamic allocation at
+               an earlier time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -933,6 +1141,11 @@ gx_methods = {
         Method('SetIntN_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set N integer elements in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -947,6 +1160,16 @@ gx_methods = {
         Method('SetLen_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the length of a :class:`VV`.",
+               notes="""
+               If increasing the :class:`VV` size, new elements are set to dummies.
+               
+               It is good practice to set the length ahead of time to the
+               expected maximum value, as some :class:`VV` processes rely on the
+               current maximum length of the :class:`VV` when you pass it in as an
+               argument, and unexpected results may occur if the length is
+               not what you expect it to be because of dynamic allocation at
+               an earlier time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -958,6 +1181,17 @@ gx_methods = {
         Method('SetReal_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a real element in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               It is good practice to set the length ahead of time to the
+               expected maximum value, as some :class:`VV` processes rely on the
+               current maximum length of the :class:`VV` when you pass it in as an
+               argument, and unexpected results may occur if the length is
+               not what you expect it to be because of dynamic allocation at
+               an earlier time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -970,6 +1204,11 @@ gx_methods = {
         Method('SetRealN_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set N real elements in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -984,6 +1223,17 @@ gx_methods = {
         Method('SetString_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a string element in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               It is good practice to set the length ahead of time to the
+               expected maximum value, as some :class:`VV` processes rely on the
+               current maximum length of the :class:`VV` when you pass it in as an
+               argument, and unexpected results may occur if the length is
+               not what you expect it to be because of dynamic allocation at
+               an earlier time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -996,6 +1246,11 @@ gx_methods = {
         Method('SetStringN_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set N string elements in a :class:`VV`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VV` length, the :class:`VV` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -1010,6 +1265,34 @@ gx_methods = {
         Method('SetupIndex_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Setup an index :class:`VV` from VV1 to VV2.",
+               notes="""
+               The input reference :class:`VV` must be in ascending numerical order.
+               If your reference data is NOT ordered, then use the the
+               :func:`SortIndex1_VV` function to create an order index, then sort
+               both the reference and data VVs using this index :class:`VV` before
+               you call :func:`SetupIndex_VV`.
+               
+               Example: You have a reference data set taken at specific times, hVVt, hVVy
+               and you want to calculate/estimate/interpolate the values hVVy2 at a second set
+               of times hVVt2
+               
+               Step 1: Create an index, hVVi, type :def_val:`GS_DOUBLE`, and call :func:`SetupIndex_VV`.
+               
+               e.g. : :func:`SetupIndex_VV`(hVVt, hVVt2, hVVi, VV_LOOKUP_XXX, rSpacing);
+               
+               Internally, this assigns index values of 0.0, 1.0, 2.0 etc. to the individual
+               values in hVVt, then, depending on the lookup method chosen, assigns
+               fractional index values to the input values in hVVt2.
+               
+               Step 2: To determine what the lookup values hVVy2 should be at times hVVt2,
+               call the sLookupIndex_VV function:
+               
+               e.g. : :func:`LookupIndex_VV`(hVVy, hVVi, hVVy2);
+               
+               Internally, this assigns index values of 0.0, 1.0, 2.0 etc. to the individual
+               values in hVVy, and uses linear interpolation to calculate the values of
+               hVVy2 at the input indices contained in hVVi.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1027,6 +1310,15 @@ gx_methods = {
         Method('SetVM_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Set :class:`VV` data from a :class:`VM`. (OBSOLETE)",
+               notes="""
+               See :func:`CopyVMtoVV_VV`, which is a prefered method to move :class:`VM` data
+               into a :class:`VV`.  This method is mainly provided for old compatibility.
+               
+               The :class:`VM` will be lengthened if required to hold the entire :class:`VV`.
+               
+               If the :class:`VM` is longer than required, extra data past the end
+               of the :class:`VV` will be set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1051,6 +1343,11 @@ gx_methods = {
         Method('SortIndex_VV', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Sort index :class:`VV` based on a data :class:`VV`.",
+               notes="""
+               Create an Index :class:`VV` (of type :def_val:`GS_LONG`) based on a data :class:`VV`.
+               This index vv can then be used by the IndexOrder method
+               to order a group of :class:`VV`'s.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1062,6 +1359,15 @@ gx_methods = {
         Method('SortIndex1_VV', module='geoengine.core', version='5.0.2',
                availability=Availability.LICENSED, 
                doc="Sort index :class:`VV` based on 1 data :class:`VV` - set orders.",
+               notes="""
+               Create an Index :class:`VV` (of type :def_val:`GS_LONG`) based on a data :class:`VV`.
+               This index vv can then be used by the IndexOrder method
+               to order a group of :class:`VV`'s. The individual VVs may be ordered
+               in ascending or descending order.
+               If the primary :class:`VV` values of two indices are the same, then
+               the secondary :class:`VV` values are compared. If the secondary values
+               are the same, the ternary values are compared, etc.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1075,6 +1381,15 @@ gx_methods = {
         Method('SortIndex2_VV', module='geoengine.core', version='5.0.2',
                availability=Availability.LICENSED, 
                doc="Sort index :class:`VV` based on 2 data VVs - set orders.",
+               notes="""
+               Create an Index :class:`VV` (of type :def_val:`GS_LONG`) based on a data :class:`VV`.
+               This index vv can then be used by the IndexOrder method
+               to order a group of :class:`VV`'s. The individual VVs may be ordered
+               in ascending or descending order.
+               If the primary :class:`VV` values of two indices are the same, then
+               the secondary :class:`VV` values are compared. If the secondary values
+               are the same, the ternary values are compared, etc
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1092,6 +1407,15 @@ gx_methods = {
         Method('SortIndex3_VV', module='geoengine.core', version='5.0.2',
                availability=Availability.LICENSED, 
                doc="Sort index :class:`VV` based on 3 data VVs - set orders.",
+               notes="""
+               Create an Index :class:`VV` (of type :def_val:`GS_LONG`) based on a data :class:`VV`.
+               This index vv can then be used by the IndexOrder method
+               to order a group of :class:`VV`'s. The individual VVs may be ordered
+               in ascending or descending order.
+               If the primary :class:`VV` values of two indices are the same, then
+               the secondary :class:`VV` values are compared. If the secondary values
+               are the same, the third values are compared, etc
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1113,6 +1437,15 @@ gx_methods = {
         Method('SortIndex4_VV', module='geoengine.core', version='5.0.2',
                availability=Availability.LICENSED, 
                doc="Sort index :class:`VV` based on 4 data VVs - set orders.",
+               notes="""
+               Create an Index :class:`VV` (of type :def_val:`GS_LONG`) based on a data :class:`VV`.
+               This index vv can then be used by the IndexOrder method
+               to order a group of :class:`VV`'s. The individual VVs may be ordered
+               in ascending or descending order.
+               If the primary :class:`VV` values of two indices are the same, then
+               the secondary :class:`VV` values are compared. If the secondary values
+               are the same, the third values are compared, etc
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",

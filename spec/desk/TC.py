@@ -2,13 +2,13 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('TC',
                  doc="""
-The :class:`TC` object is used in gravitational modelling to create
-a terrain correction grid from a topography grid. This is
-accomplished with a call first to :func:`Grregter_TC`, which determines
-the terrain correction from an input topography grid, then
-to :func:`Grterain_TC`, which calculates the actual corrections at
-the input positions.
-""")
+                 The :class:`TC` object is used in gravitational modelling to create
+                 a terrain correction grid from a topography grid. This is
+                 accomplished with a call first to :func:`Grregter_TC`, which determines
+                 the terrain correction from an input topography grid, then
+                 to :func:`Grterain_TC`, which calculates the actual corrections at
+                 the input positions.
+                 """)
 
 
 gx_defines = [

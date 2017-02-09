@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('TRND',
                  doc="""
-The :class:`TRND` methods are used to determine trend directions in database data by locating
-maxima and minima along lines and joining them in a specified direction.
-The resulting trend lines are appended to the database and used by gridding methods
-such as Bigrid and Rangrid to enforce features in the specified direction.
-""")
+                 The :class:`TRND` methods are used to determine trend directions in database data by locating
+                 maxima and minima along lines and joining them in a specified direction.
+                 The resulting trend lines are appended to the database and used by gridding methods
+                 such as Bigrid and Rangrid to enforce features in the specified direction.
+                 """)
 
 
 gx_defines = [
@@ -24,6 +24,7 @@ gx_methods = {
         Method('GetMaxMin_TRND', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find the max/min nodes in a line.",
+               notes="Trend lines positions consist of X and Y VVs",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",

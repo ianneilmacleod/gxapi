@@ -50,6 +50,7 @@ gx_methods = {
         Method('Create_WA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates an ASCII file to write to.",
+               notes="ANSI Encoding is assumed, See :func:`CreateEx_WA` to override this.",
                return_type="WA",
                return_doc=":class:`WA` Handle",
                parameters = [
@@ -62,6 +63,12 @@ gx_methods = {
         Method('CreateEx_WA', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Creates an ASCII file to write to.",
+               notes="""
+               Before version 6.2. text in on the GX API level were handled as characters in the current ANSI code page
+               defining how characters above ASCII 127 would be displayed. 6.2. introduced Unicode in the core
+               montaj engine that greatly increased the number of symbols that can be used. The :def:`WA_ENCODE` constants
+               were introduce that controls how text are written to files on disk with the :class:`WA` class.
+               """,
                return_type="WA",
                return_doc=":class:`WA` Handle",
                parameters = [
@@ -76,6 +83,7 @@ gx_methods = {
         Method('CreateSBF_WA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates an ASCII file to write to in an :class:`SBF`.",
+               notes="See sbf.gxh. ANSI Encoding is assumed, See :func:`CreateSBFEx_WA` to override this.",
                return_type="WA",
                return_doc=":class:`WA` Handle",
                parameters = [
@@ -90,6 +98,13 @@ gx_methods = {
         Method('CreateSBFEx_WA', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Creates an ASCII file to write to in an :class:`SBF`.",
+               notes="""
+               Also see sbf.gxh
+               Before version 6.2. text in on the GX API level were handled as characters in the current ANSI code page
+               defining how characters above ASCII 127 would be displayed. 6.2. introduced Unicode in the core
+               montaj engine that greatly increased the number of symbols that can be used. The :def:`WA_ENCODE` constants
+               were introduce that controls how text are written to files on disk with the :class:`WA` class.
+               """,
                return_type="WA",
                return_doc=":class:`WA` Handle",
                parameters = [

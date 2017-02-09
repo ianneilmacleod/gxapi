@@ -2,14 +2,14 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('SBF',
                  doc="""
-The :class:`SBF` class provides a means of storing data in a
-file-type directory structure within a workspace, database
-or map. Each of these three objects contains its own :class:`SBF` object,
-which may be accessed using the :func:`hGetSYS_SBF`, :func:`hGetDB_SBF` and
-:func:`hGetMAP_SBF` functions. To access data in a file, or create a
-new file in the :class:`SBF` object, call the CreatSBF_BF function (see :class:`BF`),
-which will return a :class:`BF` object to use.
-""")
+                 The :class:`SBF` class provides a means of storing data in a
+                 file-type directory structure within a workspace, database
+                 or map. Each of these three objects contains its own :class:`SBF` object,
+                 which may be accessed using the :func:`hGetSYS_SBF`, :func:`hGetDB_SBF` and
+                 :func:`hGetMAP_SBF` functions. To access data in a file, or create a
+                 new file in the :class:`SBF` object, call the CreatSBF_BF function (see :class:`BF`),
+                 which will return a :class:`BF` object to use.
+                 """)
 
 
 gx_defines = [
@@ -56,6 +56,12 @@ gx_methods = {
         Method('CreateObjList_SBF', module='geoengine.core', version='5.0.7',
                availability=Availability.PUBLIC, 
                doc="Fills an :class:`LST` with embedded storage names of an :class:`SBF`.",
+               notes="""
+               Function will populate an :class:`LST` object with embedded files (:def_val:`SBF_TYPE_FILES`),
+               directories (:def_val:`SBF_TYPE_DIRS`), or both (pass :def_val:`SBF_TYPE_BOTH`) in an :class:`SBF`.
+               Along with the Name of the file or directory, a constant "dir" or "file" string is written
+               to the :class:`LST` also.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SBF",

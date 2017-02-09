@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('EDOC',
                  doc="""
-The :class:`EDOC` class provides access to a generic documents views as loaded within
-Oasis montaj.
-""")
+                 The :class:`EDOC` class provides access to a generic documents views as loaded within
+                 Oasis montaj.
+                 """)
 
 
 gx_defines = [
@@ -81,6 +81,12 @@ gx_methods = {
         Method('CreateNewGMS3D_EDOC', module='None', version='5.0.0',
                availability=Availability.EXTENSION, is_app=True, 
                doc="Creates a new :class:`GMSYS` 3D Model into the workspace, flags as new.",
+               notes="""
+               See :func:`Load_EDOC`. This is used for brand new documents, it also sets
+               an internal flag such that if on closing the user chooses
+               not to save changes, the document is deleted thus keeping the
+               project folders clean.
+               """,
                return_type="EDOC",
                return_doc="Handle to the newly created edited model.",
                parameters = [
@@ -109,6 +115,10 @@ gx_methods = {
         Method('CurrentNoActivate_EDOC', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method returns the Current Edited Document.",
+               notes="""
+               This function acts just like :func:`Current_EDOC` except that the document is not activated (brought to foreground) and no
+               				guarantee is given about which document is currently active.
+               """,
                return_type="EDOC",
                return_doc=":class:`EDOC` Object",
                parameters = [
@@ -132,6 +142,7 @@ gx_methods = {
         Method('Destroy_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Destroy :class:`EDOC` handle.",
+               notes="This does not unload the document; it simply deletes the gx resource handle",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDOC",
@@ -250,6 +261,13 @@ gx_methods = {
         Method('Load_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads a list of documents into the workspace",
+               notes="""
+               The last listed document will become the current document.
+               
+               Only the first file in the list may have a directory path.
+               All other files in the list are assumed to be in the same
+               directory as the first file.
+               """,
                return_type="EDOC",
                return_doc="""
                Handle to current edited document, which will be the last
@@ -265,6 +283,10 @@ gx_methods = {
         Method('LoadNoActivate_EDOC', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads a list of documents into the workspace",
+               notes="""
+               This function acts just like :func:`Load_EDOC` except that the document(s) is not activated (brought to foreground) and no
+               					guarantee is given about which document is currently active.
+               """,
                return_type="EDOC",
                return_doc="""
                Handle to current edited document, which will be the last
@@ -318,6 +340,10 @@ gx_methods = {
         Method('UnLoad_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited document.",
+               notes="""
+               If the document is not loaded, nothing happens.
+               Same as :func:`UnLoadVerify_EDOC` with FALSE to prompt save.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -338,6 +364,7 @@ gx_methods = {
         Method('UnLoadDiscard_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads a document in the workspace, discards changes.",
+               notes="If the document is not loaded, nothing happens.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -349,6 +376,11 @@ gx_methods = {
         Method('UnLoadVerify_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited document, optional prompt to save.",
+               notes="""
+               If the document is not loaded, nothing happens.
+               The user can be prompted to save before unloading.
+               If :def_val:`EDOC_UNLOAD_NO_PROMPT`, data is always saved.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -364,6 +396,17 @@ gx_methods = {
         Method('GetWindowArea_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Get the location of the document window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               If the window is minimized, the max values will be
+               equal to the min values. If the window is maximized
+               X Min and Y min will be :def_val:`iMIN` and X max and Y max
+               will be :def_val:`iMAX`.
+               
+               NOTE: Now Obsolete. Use :func:`GetWindowPosition_EDOC`, which includes multi-monitor support.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDOC"),
@@ -380,6 +423,16 @@ gx_methods = {
         Method('SetWindowArea_EDOC', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Set the location of the document window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               if the max values are equal or less than the min values
+               the window will be mimimized. If any Min values are :def_val:`iMIN`
+               or any Max values are :def_val:`iMAX`, the window is maximized.
+               
+               NOTE: Now Obsolete. Use :func:`GetWindowPosition_EDOC`, which includes multi-monitor support.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDOC"),

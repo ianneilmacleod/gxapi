@@ -2,67 +2,67 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('EMAP',
                  doc="""
-The :class:`EMAP` class provides access to a map as displayed within
-Oasis montaj, but (usually) does not change data within the map itself.
-It performs functions such as setting the currently displayed area,
-or drawing "tracking" lines or boxes on the map (which are not
-part of the map itself).
-""",
+                 The :class:`EMAP` class provides access to a map as displayed within
+                 Oasis montaj, but (usually) does not change data within the map itself.
+                 It performs functions such as setting the currently displayed area,
+                 or drawing "tracking" lines or boxes on the map (which are not
+                 part of the map itself).
+                 """,
                  notes="""
-To obtain access to the map itself, it is recommended practice
-to begin with an :class:`EMAP` object, and use the :func:`Lock_EMAP` function to
-lock the underlying map to prevent external changes. The returned
-:class:`MAP` object (see :class:`MAP`) may then be safely used to make changes to the map itself.
-
-:class:`MAP` Redraw Rules:
-
-1. Redraws only occur at the end of the proccess (GX or SCRIPT) not during.
-You can safely call other GX's and the map will not redraw. If you need the
-map to redraw immediately use :func:`Redraw_EMAP` instead.
-
-2. If the final GX calls :func:`Cancel_SYS`, the map redraw is not done. If you
-need to force a redraw when the user hits cancel use the :func:`Redraw_EMAP` function.
-
-3. You can set the redraw flag to :def_val:`EMAP_REDRAW_YES` or :def_val:`EMAP_REDRAW_NO` at any
-time using :func:`SetRedrawFlag_EMAP`. This flag will only be looked at, when
-the last call to :func:`UnLock_EMAP` occurs and is ignored on a :func:`Cancel_SYS`.
-
-4. :func:`Redraw_EMAP` only works if the current map is not locked. It will do nothing
-if the map is locked.  Issue an :func:`UnLock_EMAP` before using this function.
-
-
-VIRTUAL :class:`EMAP` SUPPORT
-
-These methods are only available when running in an external application.
-They allow the GX to open a :class:`MAP` and then create a Virtual :class:`EMAP` from that
-map. The GX can then call :func:`MakeCurrent_EMAP` and set the current :class:`EMAP` so
-that code that follows sees this map as the current :class:`MAP`.
-
-Supported methods on Virtual EMAPS are:
-
-:func:`Current_EMAP`
-:func:`CurrentNoActivate_EMAP`
-:func:`MakeCurrent_EMAP`
-:func:`iHaveCurrent_EMAP`
-:func:`CurrentIfExists_EMAP`
-:func:`Current_MAP`
-
-:func:`Lock_EMAP`
-:func:`UnLock_EMAP`
-:func:`iIsLocked_EMAP`
-
-:func:`IGetName_EMAP`
-:func:`SetRedrawFlag_EMAP`
-:func:`Redraw_EMAP`
-
-:func:`iLoaded_EMAP`
-:func:`Load_EMAP`
-:func:`LoadNoActivate_EMAP`
-:func:`UnLoadVerify_EMAP`
-:func:`UnLoad_EMAP`
-
-:func:`CreateVirtual_EMAP`
-""")
+                 To obtain access to the map itself, it is recommended practice
+                 to begin with an :class:`EMAP` object, and use the :func:`Lock_EMAP` function to
+                 lock the underlying map to prevent external changes. The returned
+                 :class:`MAP` object (see :class:`MAP`) may then be safely used to make changes to the map itself.
+                 
+                 :class:`MAP` Redraw Rules:
+                 
+                 1. Redraws only occur at the end of the proccess (GX or SCRIPT) not during.
+                 You can safely call other GX's and the map will not redraw. If you need the
+                 map to redraw immediately use :func:`Redraw_EMAP` instead.
+                 
+                 2. If the final GX calls :func:`Cancel_SYS`, the map redraw is not done. If you
+                 need to force a redraw when the user hits cancel use the :func:`Redraw_EMAP` function.
+                 
+                 3. You can set the redraw flag to :def_val:`EMAP_REDRAW_YES` or :def_val:`EMAP_REDRAW_NO` at any
+                 time using :func:`SetRedrawFlag_EMAP`. This flag will only be looked at, when
+                 the last call to :func:`UnLock_EMAP` occurs and is ignored on a :func:`Cancel_SYS`.
+                 
+                 4. :func:`Redraw_EMAP` only works if the current map is not locked. It will do nothing
+                 if the map is locked.  Issue an :func:`UnLock_EMAP` before using this function.
+                 
+                 
+                 VIRTUAL :class:`EMAP` SUPPORT
+                 
+                 These methods are only available when running in an external application.
+                 They allow the GX to open a :class:`MAP` and then create a Virtual :class:`EMAP` from that
+                 map. The GX can then call :func:`MakeCurrent_EMAP` and set the current :class:`EMAP` so
+                 that code that follows sees this map as the current :class:`MAP`.
+                 
+                 Supported methods on Virtual EMAPS are:
+                 
+                 :func:`Current_EMAP`
+                 :func:`CurrentNoActivate_EMAP`
+                 :func:`MakeCurrent_EMAP`
+                 :func:`iHaveCurrent_EMAP`
+                 :func:`CurrentIfExists_EMAP`
+                 :func:`Current_MAP`
+                 
+                 :func:`Lock_EMAP`
+                 :func:`UnLock_EMAP`
+                 :func:`iIsLocked_EMAP`
+                 
+                 :func:`IGetName_EMAP`
+                 :func:`SetRedrawFlag_EMAP`
+                 :func:`Redraw_EMAP`
+                 
+                 :func:`iLoaded_EMAP`
+                 :func:`Load_EMAP`
+                 :func:`LoadNoActivate_EMAP`
+                 :func:`UnLoadVerify_EMAP`
+                 :func:`UnLoad_EMAP`
+                 
+                 :func:`CreateVirtual_EMAP`
+                 """)
 
 
 gx_defines = [
@@ -190,6 +190,16 @@ gx_methods = {
         Method('CopyToClip_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Copy entire map to clipboard.",
+               notes="""
+               Four objects are placed on the clipboard:
+               
+               1. Georefernce Text
+               2. Bitmap of current window screen resolution
+               3. EMF of current window screen resolution
+               4. Entire map as a Geosoft View (go to view mode
+               and hit paste). The coordinates are placed
+               in the current view coordinates.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -199,6 +209,13 @@ gx_methods = {
         Method('DrawLine_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Draws a line on the current map.",
+               notes="""
+               Locations are in the current view user units.
+               
+               The line is temporary and will disappear on the next
+               screen refresh.  This function is for you to provide
+               interactive screen feedback to your user.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -216,6 +233,13 @@ gx_methods = {
         Method('DrawRect_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Draws a rect on the current map.",
+               notes="""
+               Locations are in the current view user units.
+               
+               The line is temporary and will disappear on the next
+               screen refresh.  This function is for you to provide
+               interactive screen feedback to your user.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -233,6 +257,13 @@ gx_methods = {
         Method('DrawRect3D_EMAP', module='None', version='9.1.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Plot a square symbol on a section view.",
+               notes="""
+               Plot a square symbol on a section view, but input 3D user coordinates
+               
+               The line is temporary and will disappear on the next
+               screen refresh.  This function is for you to provide
+               interactive screen feedback to your user.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -250,6 +281,10 @@ gx_methods = {
         Method('GetDisplayArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the area you are currently looking at.",
+               notes="""
+               Coordinates are based on the current view units.
+               For 3D views this will return the full map extents.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -267,6 +302,10 @@ gx_methods = {
         Method('GetDisplayAreaRaw_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the area you are currently looking at in raw map units",
+               notes="""
+               Coordinates are in millimeters.
+               For 3D views this will return the full map extents.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -284,6 +323,10 @@ gx_methods = {
         Method('GetMapLayoutProps_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the base layout view properties.",
+               notes="""
+               This affects the display units and other related properties for the base
+               view of a map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -329,6 +372,10 @@ gx_methods = {
         Method('SetDisplayArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the area you wish to see.",
+               notes="""
+               Coordinates are based on the current view user units.
+               The map is immediatly redrawn.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -346,6 +393,10 @@ gx_methods = {
         Method('SetMapLayoutProps_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the base layout view properties.",
+               notes="""
+               This affects the display units and other related properties for the base
+               view of a map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -394,6 +445,13 @@ gx_methods = {
         Method('ActivateGroup_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Activates a group and associated tools.",
+               notes="""
+               Activating a group basically enters the edit mode associated
+               with the type of group. E.g. a vector group will enable the
+               edit toolbar for that gorup and an :class:`AGG` will bring up the
+               image colour tool. Be sure to pass a combined name containing
+               both the view name and the group separated by a "/" or "\\".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -422,6 +480,10 @@ gx_methods = {
         Method('CurrentNoActivate_EMAP', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method returns the Current Edited map.",
+               notes="""
+               This function acts just like :func:`Current_EMAP` except that the document is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EMAP",
                return_doc=":class:`EMAP` Object"),
 
@@ -437,6 +499,7 @@ gx_methods = {
         Method('Destroy_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Destroy :class:`EMAP` handle.",
+               notes="This does not unload the map, it simply deletes the gx resource handle",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -446,6 +509,13 @@ gx_methods = {
         Method('DestroyView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Removes the view from the workspace.",
+               notes="""
+               Can only be run in interactive mode. After this call the
+               :class:`EMAP` object will become invalid. If this is the last view on
+               the document and the document has been modified the map will be
+               unloaded and optionally saved depending on the :def:`EMAP_REMOVE`
+               parameter.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -457,6 +527,11 @@ gx_methods = {
         Method('FontLST_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="List all Windows and geosoft fonts.",
+               notes="""
+               To get TT and GFN fonts, call twice with the same list
+               and :def_val:`EMAP_FONT_TT`, then :def_val:`EMAP_FONT_GFN`, or vice-versa to
+               change order of listing.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -470,6 +545,11 @@ gx_methods = {
         Method('iChangeCurrentView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Change the current working view.",
+               notes="""
+               This function operates on the current map.
+               Unlike :func:`iSetCurrentView_EMAP` this function's action
+               survive the GX finishing.
+               """,
                return_type=Type.INT32_T,
                return_doc="0 if view set, 1 if view does not exist.",
                parameters = [
@@ -513,6 +593,7 @@ gx_methods = {
         Method('IGetCurrentGroup_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the current group name.",
+               notes="This function operates on the current map.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -526,6 +607,7 @@ gx_methods = {
         Method('IGetCurrentView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the current view name.",
+               notes="This function operates on the current map.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -604,6 +686,7 @@ gx_methods = {
         Method('ReloadGrid_EMAP', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Reloads a grid document.",
+               notes="Use this method to reload (if loaded) a grid document if the file on disk changed.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -696,6 +779,10 @@ gx_methods = {
                the Name field only. The function will compare with
                a more current :class:`LST` and zoom the map to the new entry.
                """,
+               notes="""
+               Typically this function is used in conjunction with
+               CreateSnapshot_EMAP.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if zoom proceeded ok
@@ -711,6 +798,12 @@ gx_methods = {
         Method('iSetCurrentView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the current working view.",
+               notes="""
+               This function operates on the current map.
+               It changes the view only during the execution of the
+               GX. As soon as the GX terminates the view will revert
+               to the original one.
+               """,
                return_type=Type.INT32_T,
                return_doc="0 if view set, 1 if view does not exist.",
                parameters = [
@@ -723,6 +816,11 @@ gx_methods = {
         Method('GetViewIPJ_EMAP', module='None', version='9.1.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get a view's :class:`IPJ`.",
+               notes="""
+               This function can be used to obtain a views coordinate system 
+               without having to call :func:`Lock_EMAP`. This could be an expensive operation
+               that cause undesirable UX.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -736,6 +834,15 @@ gx_methods = {
         Method('Load_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads maps into the editor.",
+               notes="""
+               The last map in the list will be the current map.
+               
+               Maps may already be loaded.
+               
+               Only the first file in the list may have a directory path.
+               All other files in the list are assumed to be in the same
+               directory as the first file.
+               """,
                return_type="EMAP",
                return_doc=":class:`EMAP` Object to edited map.",
                parameters = [
@@ -746,6 +853,10 @@ gx_methods = {
         Method('LoadNoActivate_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads documents into the workspace",
+               notes="""
+               This function acts just like :func:`Load_EMAP` except that the document(s) is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EMAP",
                return_doc="""
                Handle to current edited document, which will be the last
@@ -759,6 +870,11 @@ gx_methods = {
         Method('LoadWithView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Load an :class:`EMAP` with the view from a current :class:`EMAP`.",
+               notes="""
+               Can only be run in interactive mode. Is used by
+               dbsubset to create a new database with the same
+               view as previously.
+               """,
                return_type="EMAP",
                return_doc="New :class:`EMAP` handle.",
                parameters = [
@@ -771,6 +887,7 @@ gx_methods = {
         Method('Lock_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method locks the Edited map.",
+               notes="The Redraw flag is set to :def_val:`EMAP_REDRAW_YES` when this functions is called.",
                return_type="MAP",
                return_doc=":class:`EMAP` Object to map associated with edited map.",
                parameters = [
@@ -825,6 +942,7 @@ gx_methods = {
         Method('Redraw_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Redraw the map immediately.",
+               notes="Redraws the map immediately. Map must not be locked.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -845,6 +963,21 @@ gx_methods = {
         Method('SetRedrawFlag_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the redraw flag.",
+               notes="""
+               This function is generally used to prevent redrawing of
+               the map, which normally occurs after the last :func:`UnLock_EMAP`
+               call, in cases where it is known that no changes are being
+               made to the map.
+               
+               Typical usage:
+               
+               ap = :func:`Lock_EMAP`(EMap);
+               etRedrawFlag_EMAP(EMap,:def_val:`EMAP_REDRAW_NO`);
+               
+               Stuff....
+               
+               :func:`UnLock_EMAP`(Map);
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -856,6 +989,10 @@ gx_methods = {
         Method('UnLoad_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads a :class:`MAP`.",
+               notes="""
+               If the :class:`MAP` is not loaded, nothing happens.
+               Same as :func:`UnLoadVerify_EMAP` with FALSE to prompt save.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -870,6 +1007,10 @@ gx_methods = {
         Method('UnLoadVerify_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited map, optional prompt to save.",
+               notes="""
+               If the map is not loaded, nothing happens.
+               If "FALSE", map is saved without a prompt.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -944,6 +1085,18 @@ gx_methods = {
         Method('iDigitize_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Digitise points from the current map and place in a :class:`WA`.",
+               notes="""
+               The command line will start to recieve digitized points
+               from the mouse.  Whenever the left mouse button is
+               pressed, the current view X,Y are placed on the workspace
+               command line.  If a valid :class:`IMG` is passed, the Z value is
+               also placed on the command line.  If auto-newline is
+               specified, the line is immediately placed into :class:`WA`,
+               otherwise the user has the oportunity to enter data
+               before pressing Enter.
+               
+               Locations are in the current view user units
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if user digitized some points.
@@ -971,6 +1124,18 @@ gx_methods = {
         Method('iDigitize2_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Digitise points from the current map and place in VVs.",
+               notes="""
+               The command line will start to recieve digitized points
+               from the mouse.  Whenever the left mouse button is
+               pressed, the current view X,Y are placed on the workspace
+               command line.  If a valid :class:`IMG` is passed, the Z value is
+               also placed on the command line.  If auto-newline is
+               specified, the line is immediately placed into the VVs,
+               otherwise the user has the oportunity to enter data
+               before pressing Enter.
+               
+               Locations are in the current view user units
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if user digitized some points.
@@ -996,6 +1161,14 @@ gx_methods = {
         Method('iDigitizePeaks_EMAP', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Digitise points from the current map and place in VVs.",
+               notes="""
+               Same as :func:`iDigitize2_EMAP`, but the closest peaks to the selected locations are
+               returned instead of the selected location. The method chooses the highest value
+               of the 8 surrounding points, the repeats this process until no higher value can
+               be found in any of the 8 surrounding points. If there are two or more points with
+               a higher value, it will just take the first one and continue, and this method will
+               stall on flat areas as well (since no surrounding point is larger).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if user digitized some points.
@@ -1021,6 +1194,13 @@ gx_methods = {
         Method('iDigitizePolygon_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Same as iDigitze2_EMAP, but automatically close polygons.",
+               notes="""
+               This is the same as :func:`iDigitize2_EMAP`, except that it automatically
+               detects, (except for the 2nd and 3rd points) when a selected location
+               is within the entered number of pixels from the starting point. If yes,
+               the polygon is assumed to be closed, and the operation is the same as
+               the RMB "done" command, and the process returns 0.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if user digitized some points.
@@ -1071,6 +1251,13 @@ gx_methods = {
         Method('iGetBox2_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected box in a warped view.",
+               notes="""
+               If the data view has a rotational (or other) warp, then the
+               :func:`iGetBox_EMAP` function returns only opposite diagonal points in the
+               box, not enough info to determine the other two corners. This
+               function returns the exact coordinates of all four corners, calculated
+               from the pixel locations.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -1102,6 +1289,18 @@ gx_methods = {
         Method('iGetGrid_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Position and size a grid on a map.",
+               notes="""
+               If the input angle is :def_val:`rDUMMY`, an extra step is inserted
+               for the user to define the angle by drawing a line
+               with the mouse.
+               The output primary axis angle will always be in the
+               range -90 < angle <= 90. The grid origin is shifted to
+               whichever corner necessary to make this possible, while keeping
+               the secondary axis at 90 degrees greater than the primary (
+               going counter-clockwise).
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1131,6 +1330,10 @@ gx_methods = {
         Method('iGetLine_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the end points of a line.",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1154,6 +1357,10 @@ gx_methods = {
         Method('iGetLineEx_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the end points of a line.",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1178,6 +1385,12 @@ gx_methods = {
         Method('iGetLineXYZ_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the end points of a line in X,Y and Z",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               This is useful for digitizing a line in an oriented view and getting
+               the true coordinates in (X, Y, Z) at the selected point on the view plane.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1206,6 +1419,8 @@ gx_methods = {
         Method('iGetPoint_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected point.",
+               notes="This will wait for user to select a point.",
+               see_also="iTrackPoint, GetCurPoint, GetCursor",
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -1225,6 +1440,8 @@ gx_methods = {
         Method('iGetPointEx_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected point.",
+               notes="This will wait for user to select a point.",
+               see_also="iTrackPoint, GetCurPoint, GetCursor",
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -1246,6 +1463,8 @@ gx_methods = {
         Method('iGetPoint3D_EMAP', module='None', version='9.1.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected point.",
+               notes="This will wait for user to select a point.",
+               see_also="iTrackPoint, GetCurPoint, GetCursor",
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -1269,6 +1488,10 @@ gx_methods = {
         Method('iGetPolyLine_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns a polyline.",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1288,6 +1511,12 @@ gx_methods = {
         Method('iGetPolyLineXYZ_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns a polyline.",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.) In this version
+               of the method X, Y and Z (depth) are returned. Initially created
+               to deal with crooked sections.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -1309,6 +1538,24 @@ gx_methods = {
         Method('iGetRect_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected box starting at a corner.",
+               notes="""
+               The coordinates are returned in the current User projection
+               (See :func:`GetUserIPJ_MVIEW` and :func:`SetUserIPJ_MVIEW`.)
+               If the user :class:`IPJ` distorts the coordinates from being rectilinear
+               (e.g. for a TriPlot graph), then care should be taken since the
+               (Xmin, Ymin) and (Xmax, Ymax) values returned do not necessarily
+               correspond to the lower-left and upper-right corners. In fact, the
+               returned values are calculated by taking the starting (fixed) corner
+               and the tracked (opposite) corner, and finding the min and max for
+               X and Y among these two points. With a warped User projection, those
+               two corner locations could easily be (Xmin, Ymax) and (Xmax, Ymin).
+               This becomes quite important if you want to use the rectangle for a
+               masking operation, because the "other" two corner's coordinates may
+               need to be constructed based on a knowledge of the User projection,
+               and may not be directly obtained from the returned X and Y min and
+               max values. What appears to be a rectangle as seen on the map is not
+               necessarily a rectangle in the User coordinates.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -1353,6 +1600,7 @@ gx_methods = {
         Method('GetAOIArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the area of interest.",
+               notes="Coordinates are based on the current view units.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1370,6 +1618,10 @@ gx_methods = {
         Method('SetAOIArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the area of interest.",
+               notes="""
+               Coordinates are based on the current view user units.
+               The map is immediatly redrawn.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1387,6 +1639,11 @@ gx_methods = {
         Method('SetViewportMode_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the viewport mode.",
+               notes="""
+               This is handy for using a map to define an area of interest. Use in conjunction
+               with Get/Set AOIArea. If this is used inside montaj it is important to set or provide
+               for a method to set the map mode back to normal as this is not exposed in the interface.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1400,6 +1657,7 @@ gx_methods = {
         Method('GetSelectedVertices_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the verticies of selected object",
+               notes="Works only in Vertex Edit Mode",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1453,6 +1711,7 @@ gx_methods = {
         Method('ExportAllInView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Export the entire Map in view units to an external format.",
+               notes="Uses 24 bit colour",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1518,6 +1777,7 @@ gx_methods = {
         Method('ExportAreaInView_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Export an area of a Map in view units to an external format.",
+               notes="Uses 24 bit colour",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1607,6 +1867,15 @@ gx_methods = {
         Method('GetWindowArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Get the location of the map window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               If the window is minimized, the max values will be
+               equal to the min values. If the window is maximized
+               X Min and Y min will be :def_val:`iMIN` and X max and Y max
+               will be :def_val:`iMAX`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",
@@ -1624,6 +1893,14 @@ gx_methods = {
         Method('SetWindowArea_EMAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Set the location of the map window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               if the max values are equal or less than the min values
+               the window will be mimimized. If any Min values are :def_val:`iMIN`
+               or any Max values are :def_val:`iMAX`, the window is maximized.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAP",

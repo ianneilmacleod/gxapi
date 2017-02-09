@@ -2,17 +2,17 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DAT',
                  doc="""
-The :class:`DAT` object is used to access data from an variety of data sources
-using the same access functions. The :class:`DAT` interface supports data access
-on a point-by-point, of line-by-line basis.  For example,
-the :func:`Run_BIGRID` function uses 2 :class:`DAT` objects - one :class:`DAT` associated with the
-input data source, which is read line-by-line, and a second associated with
-the output grid file output grid file.
-
-Use a specific :class:`DAT` creation method for an associated
-information source in order to make a :class:`DAT` as required
-by a specific processing function.  The gridding methods all use DATs.
-""")
+                 The :class:`DAT` object is used to access data from an variety of data sources
+                 using the same access functions. The :class:`DAT` interface supports data access
+                 on a point-by-point, of line-by-line basis.  For example,
+                 the :func:`Run_BIGRID` function uses 2 :class:`DAT` objects - one :class:`DAT` associated with the
+                 input data source, which is read line-by-line, and a second associated with
+                 the output grid file output grid file.
+                 
+                 Use a specific :class:`DAT` creation method for an associated
+                 information source in order to make a :class:`DAT` as required
+                 by a specific processing function.  The gridding methods all use DATs.
+                 """)
 
 
 gx_defines = [
@@ -82,6 +82,11 @@ gx_methods = {
         Method('GetLST_DAT', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Put available :class:`DAT` filters and qualifiers in a :class:`LST`",
+               notes="""
+               The filters displayed in the Grid/Image file browse dialog are put
+               in the "Name" of the :class:`LST`, while the file qualifiers are stored in
+               the "Value".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -97,6 +102,7 @@ gx_methods = {
         Method('RangeXYZ_DAT', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Determine the range in X, Y and Z in the :class:`DAT` source",
+               notes="Terminates if unable to open an RPT :class:`DAT` interface.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DAT",

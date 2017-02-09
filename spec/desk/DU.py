@@ -2,17 +2,17 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DU',
                  doc="""
-:class:`DU` functions provide a variety of common utilities that can be applied
-efficiently to the contents of a database. Most :class:`DU` library functions take
-as their first argument a :class:`DB` object, and apply standard processes to data
-stored in an OASIS database, including import and export functions.
-""",
+                 :class:`DU` functions provide a variety of common utilities that can be applied
+                 efficiently to the contents of a database. Most :class:`DU` library functions take
+                 as their first argument a :class:`DB` object, and apply standard processes to data
+                 stored in an OASIS database, including import and export functions.
+                 """,
                  notes="""
-The following defines are used by GX functions but are not required
-for any methods:
-
-:def:`DU_LINES`
-""")
+                 The following defines are used by GX functions but are not required
+                 for any methods:
+                 
+                 :def:`DU_LINES`
+                 """)
 
 
 gx_defines = [
@@ -321,6 +321,14 @@ gx_methods = {
         Method('_TableLook1_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a new channel using a single reference table",
+               notes="""
+               Fails if table does not contain requested fields.
+               The nominal data sample spacing for the CLOSE options is
+               calculated by finding the fiducial increment the
+               - primary index channel for Lookup1C_DU;
+               - secondary index channel for Lookup2C_DU, LookupIValC_DU
+               and LookupRValC_DU
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -346,6 +354,14 @@ gx_methods = {
         Method('_TableLook2_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a new channel using a double reference  table.",
+               notes="""
+               Fails if table does not contain requested fields.
+               The nominal data sample spacing for the CLOSE options is
+               calculated by finding the fiducial increment the
+               - primary index channel for Lookup1C_DU;
+               - secondary index channel for Lookup2C_DU, LookupIValC_DU
+               and LookupRValC_DU
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -377,6 +393,14 @@ gx_methods = {
                doc="""
                Create a new channel using constant integer primary
                reference and a secondary reference table.
+               """,
+               notes="""
+               Fails if table does not contain requested fields.
+               The nominal data sample spacing for the CLOSE options is
+               calculated by finding the fiducial increment the
+               - primary index channel for Lookup1C_DU;
+               - secondary index channel for Lookup2C_DU, LookupIValC_DU
+               and LookupRValC_DU
                """,
                return_type=Type.VOID,
                parameters = [
@@ -410,6 +434,14 @@ gx_methods = {
                Create a new channel using a constant real primary
                reference and a secondary reference table.
                """,
+               notes="""
+               Fails if table does not contain requested fields.
+               The nominal data sample spacing for the CLOSE options is
+               calculated by finding the fiducial increment the
+               - primary index channel for Lookup1C_DU;
+               - secondary index channel for Lookup2C_DU, LookupIValC_DU
+               and LookupRValC_DU
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -439,6 +471,11 @@ gx_methods = {
         Method('ADOTableNames_DU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Scans a ADO-compliant database and returns the table names in a :class:`VV`",
+               notes="""
+               The :class:`VV` must be created to hold strings of length
+               :def_val:`STR_DB_SYMBOL`; i.e. use
+               Creat_VV(-:def_val:`STR_DB_SYMBOL`, 0), or it will assert.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -465,6 +502,14 @@ gx_methods = {
         Method('Append_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Append a source database onto a destination database.",
+               notes="""
+               If the source database and destination database have channels
+               with the same name, then data is appended onto the end
+               of the channel in lines which have the same number.
+               
+               If a channel in the destination database is not also in the source
+               database, it is ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -478,6 +523,18 @@ gx_methods = {
         Method('AvgAzimuth_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Returns average azimuth of selected lines.",
+               notes="""
+               Direction in degrees azimuth (clockwise relative
+               the +Y direction). The result is in the range
+               -90 < azimuth <= 90. The method handles lines going
+               in opposite directions (they do not average to 0!)
+               The method takes a precision, which is used to generate
+               a series of "test" angles.
+               The dot product of the line directions is taken
+               with each of the test angles, and the absolute values summed.
+               The maximum value occurs at the angle which most closely
+               approximates the trend direction of the lines.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -561,6 +618,10 @@ gx_methods = {
                This method applies a band-pass filter to the specified
                line/channel and places the output in the output channel.
                """,
+               notes="""
+               If the short and long wavelengths are <= 0, the input channel
+               is simply copied to the output channel without filtering.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -595,6 +656,7 @@ gx_methods = {
         Method('BreakLine2_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Break up a line based on line numbers in a channel.",
+               notes="The same as BreakLine, but with an option to reset each line's starting fiducial to zero.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -610,6 +672,20 @@ gx_methods = {
         Method('BreakLineToGroups_DU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Break up a line into group-lines based on a channel.",
+               notes="""
+               The original line will be deleted.
+               This is similar to :func:`BreakLine_DU`, but the output lines
+               are "group" lines, without the line type letters at the
+               start. (See db.gxh for information of Group Lines).
+               All channels are associated with each group line, and the
+               input class name is assigned to each group.
+               Class names for
+               groups ensure that (for instance) if you add a new channel to
+               one group of a given class, it will get added to all other
+               groups in the same class. If the class name is left empty, then
+               this will NOT be true. (Groups without class names are treated
+               as isolated entities for the purposes of channel loading).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -625,6 +701,7 @@ gx_methods = {
         Method('BreakLineToGroups2_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Break up a line into group-lines based on a channel.",
+               notes="The same as BreakLineToGroups, but with an option to reset each line's starting fiducial to zero.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -642,6 +719,7 @@ gx_methods = {
         Method('BSpline_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="B-spline Interpolate a Channel.",
+               see_also=":func:`Trend_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -663,6 +741,14 @@ gx_methods = {
         Method('ClosestPoint_DU', module='geogxx', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Return closest data point to input location.",
+               notes="""
+               Selected lines are scanned for the (X, Y) location
+               which is closest to the input location.
+               The line and fiducial of the point are returned.
+               
+               Will register an error if no valid (X, Y) locations
+               are found.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB"),
@@ -683,6 +769,10 @@ gx_methods = {
         Method('CopyLine_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a line.",
+               notes="""
+               Existing channels in the output line will be replaced
+               by copied channels.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -696,6 +786,11 @@ gx_methods = {
         Method('CopyLineAcross_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a line from one database to another.",
+               notes="""
+               Existing channels in the output line will be replaced
+               by copied channels.
+               """,
+               see_also=":func:`CopyLineChanAcross_DU` function",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -711,6 +806,11 @@ gx_methods = {
         Method('CopyLineChanAcross_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a list of channels in a line from one database to another.",
+               notes="""
+               Existing channels in the output line will be replaced
+               by copied channels.
+               """,
+               see_also=":func:`CopyLineAcross_DU` function",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -728,6 +828,14 @@ gx_methods = {
         Method('CopyLineMasked_DU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Copy a line, prune items based on a mask channel",
+               notes="""
+               The input line's channel data is ReFidded to the mask
+               channel, and then pruned from the output line data,
+               based on the value of the VVU_PRUNE_XXX variable.
+               For :def_val:`VVU_PRUNE_DUMMY`, only those items where the mask channel
+               value is not a dummy are retained, while the complement
+               is retained for VV_PRUNE_VALID.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -745,6 +853,11 @@ gx_methods = {
         Method('DAOTableNames_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Scans a DAO-compliant database and returns the table names in a :class:`VV`",
+               notes="""
+               The :class:`VV` must be created to hold strings of length
+               :def_val:`STR_DB_SYMBOL`; i.e. use
+               Creat_VV(-:def_val:`STR_DB_SYMBOL`, 0), or it will assert.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -775,6 +888,12 @@ gx_methods = {
         Method('Diff_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate differences within a channel.",
+               notes="""
+               Differences with dummies result in dummies.
+               An even number of differences locates data accurately.
+               An odd number of differences locates result 1/2 element lower
+               in the :class:`VV`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -869,6 +988,10 @@ gx_methods = {
         Method('EditDuplicates_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Edit duplicate readings at individual location",
+               notes="""
+               All the channels must be of the same fid incr/start and length.
+               Protected channels are modified automatically.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -890,6 +1013,19 @@ gx_methods = {
         Method('Export_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to a specific format.",
+               notes="""
+               For databases with both groups and lines:
+               If both lines and groups are selected, save only the lines.
+               If no lines are selected, (only groups), save the current line
+               if it is (1) a group and (2) selected, else save the first selected
+               group. ---
+               Option to filter out data where one of the channels has a dummy in it.
+               Option to allow a header with the channel names.
+               
+               The :def_val:`DU_CHANNELS_DISPLAYED` option can be used to export any selection of
+               channels, listed by the symbols (DB_SYMB) values, cast to int values and
+               stored in a :class:`VV`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -913,6 +1049,10 @@ gx_methods = {
         Method('Export2_DU', module='geogxx', version='5.1.6',
                availability=Availability.LICENSED, 
                doc="Like :func:`Export_DU`, but include line names as data.",
+               notes="""
+               See :func:`Export_DU`.
+               The line names are printed as the first column of data exported.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -938,6 +1078,10 @@ gx_methods = {
         Method('ExportAMIRA_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to database an AMIRA data file.",
+               notes="""
+               Other defined FIELDS stored in the database (see :func:`ImportAMIRA_DU` function)
+               will be automatically included in the export
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -967,6 +1111,17 @@ gx_methods = {
         Method('ExportAseg_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to ASEG-GDF format file(s).",
+               notes="""
+               At least one of the header file
+               or data file names must be set. (Unset names will get the
+               same file name, but with the extensions .dfn (header) or
+               .dat (data).
+               For databases with both groups and lines:
+               If both lines and groups are selected, save only the lines.
+               If no lines are selected, (only groups), save the current line
+               if it is (1) a group and (2) selected, else save the first selected
+               group. ---
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -986,6 +1141,19 @@ gx_methods = {
         Method('ExportAsegProj_DU', module='geogxx', version='5.0.1',
                availability=Availability.LICENSED, 
                doc="Export to ASEG-GDF format file(s) (supports projections).",
+               notes="""
+               At least one of the header file
+               or data file names must be set. (Unset names will get the
+               same file name, but with the extensions .dfn (header) or
+               .dat (data).
+               For databases with both groups and lines:
+               If both lines and groups are selected, save only the lines.
+               If no lines are selected, (only groups), save the current line
+               if it is (1) a group and (2) selected, else save the first selected
+               group. ---
+               
+               This version supports projections
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1009,6 +1177,12 @@ gx_methods = {
         Method('ExportChanCRC_DU', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Export a channel as XML and compute a CRC value.",
+               notes="""
+               The output file is an XML describing the channel. The
+               CRC is of the channel data ONLY. To compute a CRC of the
+               full channel (include metadata) do a CRC of the generated
+               file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1024,6 +1198,15 @@ gx_methods = {
         Method('ExportCSV_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to a CSV file.",
+               notes="""
+               For databases with both groups and lines:
+               If both lines and groups are selected, save only the lines.
+               If no lines are selected, (only groups), save the current line
+               if it is (1) a group and (2) selected, else save the first selected
+               group. ---
+               Option to filter out data where one of the channels has a dummy in it.
+               Option to allow a header with the channel names.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1045,6 +1228,12 @@ gx_methods = {
         Method('ExportDatabaseCRC_DU', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Export a channel as XML and compute a CRC value.",
+               notes="""
+               The output file is an XML describing the channel. The
+               CRC is of the channel data ONLY. To compute a CRC of the
+               full channel (include metadata) do a CRC of the generated
+               file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1058,6 +1247,10 @@ gx_methods = {
         Method('ExportGBN_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to a GBN data file.",
+               notes="""
+               The iDispChanList_DBE or :func:`iSymbList_DB` methods can be
+               used to obtain a list of channels.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1071,6 +1264,12 @@ gx_methods = {
         Method('ExportMDB_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export to a Microsoft Access Database (MDB) file.",
+               notes="""
+               Similar to :func:`ExportGBN_DU`, with the addition that
+               Groups go to individual tables, and lines go to
+               a single table, or individual tables, based on the
+               value of :def:`DU_LINEOUT`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1090,6 +1289,12 @@ gx_methods = {
         Method('ExportGeodatabase_DU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Export to a ESRI Geodatabase file.",
+               notes="""
+               Similar to :func:`ExportGBN_DU`, with the addition that
+               Groups go to individual tables, and lines go to
+               a single table, or individual tables, based on the
+               value of :def:`DU_LINEOUT`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1113,6 +1318,7 @@ gx_methods = {
         Method('GetExistingFeatureClassesInGeodatabase_DU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Searches the geodatabases for an existing Feature class.",
+               notes="Searches the geodatabases for an existing Feature class",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Feature class does not exist
@@ -1132,6 +1338,11 @@ gx_methods = {
         Method('ExportSHP_DU', module='geogxx', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Export to a shape file or files.",
+               notes="""
+               Similar to :func:`ExportMDB_DU`, with the addition that groups go to indiviual files
+               with group name suffixes, and lines go to a single file, or multiple files
+               with line name suffixes, based on the value of :def:`DU_LINEOUT`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1153,6 +1364,25 @@ gx_methods = {
         Method('ExportXYZ_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export XYZdata from a database to an XYZ file.",
+               notes="""
+               1. The export template can be in the local directory or the :class:`GEOSOFT`
+               directory.  The import data file must include the path if it is not
+               in the local directory.
+               
+               2. Both the import template and data file must exist.
+               
+               3. Sample Template file
+               
+               [EXPORT XYZ]
+               EXPORT     CHAN {,FORMAT} {,WIDTH} {,DECIMAL}
+               WRITEDUMMY YES
+               CLIPMAP    YES
+               MAXPOINTS  1000
+               INCREMENT  .5
+               
+               4. This can be used to export a group, but the group must be the
+               currently displayed line, and only that group will be exported.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1166,6 +1396,7 @@ gx_methods = {
         Method('ExportXYZ2_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Export XYZdata from a database to an XYZ file, using file handles.",
+               see_also=":func:`ExportXYZ_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1230,6 +1461,13 @@ gx_methods = {
         Method('GenLevDB_DU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Generate a Level table from an Intersection Database",
+               notes="""
+               Requires channels with the following names:
+               
+               ine, TFid, TZ, TDZ
+               Line, LFid, LZ, LDZ
+               Mask
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1267,6 +1505,18 @@ gx_methods = {
         Method('GetChanDataLST_DU', module='geogxx', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Populate a :class:`LST` with unique items in a channel.",
+               notes="""
+               Items from all selected lines are collected,
+               sorted, and duplicates removed. The output
+               :class:`LST` name and value are set to the item values.
+               Non-string channels are converted internally to
+               string values using Copy_VV,
+               so results may differ from what
+               you may expect given the current channel's display
+               width and number of decimals.
+               If a mask channel is selected, then only those items
+               where the mask channel is not a dummy are collected.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1282,6 +1532,17 @@ gx_methods = {
         Method('GetChanDataVV_DU', module='geogxx', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Populate a :class:`VV` with unique items in a channel.",
+               notes="""
+               Items from all selected lines are collected,
+               sorted, and duplicates removed.
+               The data is collected in the channel's data type,
+               so normal :func:`Sort_VV` rules apply.
+               If the output :class:`VV` and channel type are not the
+               same, then the data is converted using the
+               Copy_VV function, so see that for conversion rules.
+               If a mask channel is selected, then only those items
+               where the mask channel is not a dummy are collected.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1420,6 +1681,12 @@ gx_methods = {
         Method('Head_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Applies a heading correction.",
+               notes="""
+               Updates channel with Direction in degrees azimuth (counter-clockwise
+               relative the +Y direction).
+               :def_val:`GS_R8DM` if the line has no data, or if there is a
+               problem.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1439,6 +1706,13 @@ gx_methods = {
         Method('IImportBIN3_DU', module='geogxx', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="Same as :func:`ImportBIN2_DU`, but returns the name of the imported line.",
+               notes="""
+               See :func:`ImportBIN2_DU`. Because the name of the created line is
+               not necessarily the value passed in (and the value passed in
+               can be blank), this version returns the name of the line
+               to which the data is actually imported.
+               """,
+               see_also=":func:`ImportBIN2_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1461,6 +1735,7 @@ gx_methods = {
         Method('ImpCBPly_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Import concession boundary polygon file into a database",
+               notes="The polygon file is provided by Ana Christina in Brasil.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1478,6 +1753,16 @@ gx_methods = {
         Method('ImportADO_DU', module='geogxx', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Import an external database table into a group using ADO.",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+               directory.
+               
+               2. Only the import template must be specified. The database connection string,
+               the database table and Oasis line name are normally taken from the template
+               file itself, but if these values are provided, they will override those found in the template.
+               
+               3. If the line already exists, the data will overwrite the existing data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1495,6 +1780,19 @@ gx_methods = {
         Method('ImportAllADO_DU', module='geogxx', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Import an entire external database using ADO.",
+               notes="""
+               1. For group storage, the table names are imported "as is". For line storage,
+               if the table names are valid Geosoft line names, they are used as is.
+               Otherwise, line names will be created with type LINE_NORMAL, starting at
+               L0 and incrementing by 10 (L10, L20 etc.)
+               
+               2. If the line exists, the data will overwrite the existing data.
+               
+               3. All tables and fields will be imported.
+               
+               4. If connection string is of type "FILENAME=..." the connection will attempt to resolve
+               it as a file database. (see also ODBCFileConnect_GUI)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1508,6 +1806,35 @@ gx_methods = {
         Method('ImportAllDAO_DU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Import an entire external database using DAO.",
+               notes="""
+               1. The file is assumed to be a DAO compliant database.
+               
+               2. The import data file must include the path if it is not
+               in the local directory.
+               
+               3. For group storage, the table names are imported "as is". For line storage,
+               if the table names are valid Geosoft line names, they are used as is.
+               Otherwise, line names will be created with type LINE_NORMAL, starting at
+               L0 and incrementing by 10 (L10, L20 etc.)
+               
+               4. If the line exists, the data will overwrite the existing data.
+               
+               5. All tables and fields will be imported.
+               
+               6. The following are valid type strings for DAO:
+               
+               MSJET       : Microsoft Access
+               ODBC        : ODBC source
+               dBASE III
+               dBASE IV
+               dBASE 5
+               FoxPro 2.0
+               FoxPro 2.5
+               FoxPro 2.6
+               Paradox 3.x
+               Paradox 4.x
+               Paradox 5.x
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1523,6 +1850,14 @@ gx_methods = {
         Method('ImportAMIRA_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Import an AMIRA data file.",
+               notes="""
+               All the constant declarations are stored within the database
+               under \\TEM\\CONSTANTS. The format is as follows:
+               
+               1. Lines stored in the file beginning with "/" are comments
+               2. Each constant occupies a line in the file. It uses the format:
+               CONSTANT=VALUE
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1555,6 +1890,7 @@ gx_methods = {
         Method('ImportAsegProj_DU', module='geogxx', version='5.0.1',
                availability=Availability.LICENSED, 
                doc="Import an ASEG-GDF data file (supports projections).",
+               notes="This version supports projections",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1580,6 +1916,20 @@ gx_methods = {
         Method('ImportBIN_DU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Import blocked binary or archive ASCII data",
+               notes="""
+               1. Binary import templates have extension .I2 by convention.  See
+               BINARY.I2 for a description of the template format.
+               Archive import templates have extension .I3 by convention. See
+               ARCHIVE.I3 for a description of the template format.
+               
+               2. Both the import template and data file must exist.
+               
+               3. If a line already exists in the database, a new version is created
+               unless a line name is passed in.  In this case, the specified name
+               is used and the imported channels on the previous line will be
+               destroyed.
+               """,
+               see_also=":func:`LabTemplate_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1599,6 +1949,20 @@ gx_methods = {
         Method('ImportBIN2_DU', module='geogxx', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Import blocked binary or archive ASCII data with data error display",
+               notes="""
+               1. Binary import templates have extension .I2 by convention.  See
+               BINARY.I2 for a description of the template format.
+               Archive import templates have extension .I3 by convention. See
+               ARCHIVE.I3 for a description of the template format.
+               
+               2. Both the import template and data file must exist.
+               
+               3. If a line already exists in the database, a new version is created
+               unless a line name is passed in.  In this case, the specified name
+               is used and the imported channels on the previous line will be
+               destroyed.
+               """,
+               see_also=":func:`LabTemplate_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1619,6 +1983,8 @@ gx_methods = {
         Method('ImportBIN4_DU', module='geogxx', version='9.1.0',
                availability=Availability.PUBLIC, 
                doc="Same as :func:`ImportBIN2_DU` but with an import mode",
+               notes="Same as :func:`ImportBIN2_DU` but with an import mode",
+               see_also=":func:`ImportBIN2_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1641,6 +2007,11 @@ gx_methods = {
         Method('ImportDAARC500Serial_DU', module='geogxx', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Import Serial data from the RMS Instruments DAARC500.",
+               notes="""
+               Imports data stored in a serial channel recorded
+               by the RMS Instruments DAARC500 instrument, and outputs the data to
+               a line in the database. The channels created depend on the input data type
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1658,6 +2029,15 @@ gx_methods = {
         Method('ImportDAARC500SerialGPS_DU', module='geogxx', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Import Serial GPS data from the RMS Instruments DAARC500.",
+               notes="""
+               Imports GPS data stored in a serial channel recorded
+               by the RMS Instruments DAARC500 instrument, and outputs the data to
+               a line in the database. Makes the following channels:
+               
+               Fid, UTC_Time, Latitude, Longitude, Altitude, GPS_Quality,
+               NumSat (Number of satellites), GPS_HDOP (Horizontal Dilution of Position),
+               Undulation, GPS_DiffAge (Age of differential channel).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1673,6 +2053,18 @@ gx_methods = {
         Method('ImportDAO_DU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Import an external database table into a group using DAO.",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+               directory.  The import data file must include the path if it is not
+               in the local directory.
+               
+               2. Only the import template must be specified. The database file name,
+               file type, the database table and Oasis line name are normally
+               taken from the template file itself, but if these values are provided,
+               they will override those found in the template.
+               
+               3. If the line already exists, the data will overwrite the existing data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1692,6 +2084,16 @@ gx_methods = {
         Method('ImportESRI_DU', module='geogxx', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Import an ArcGIS Geodatabase table or feature class into a GDB group",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+               directory.
+               
+               2. Only the import template must be specified. The Geodatabase connection string
+               and Oasis line name are normally taken from the template file itself,
+               but if these values are provided, they will override those found in the template.
+               
+               3. If the line already exists, the data will overwrite the existing data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1744,6 +2146,10 @@ gx_methods = {
         Method('ImportUBCModMsh_DU', module='geogxx', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Import UBC Mod and Msh files.",
+               notes="""
+               Each slice in X,Y or Z is imported to its own line in the database
+               beginning with L0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1772,6 +2178,13 @@ gx_methods = {
         Method('ImportXYZ_DU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Import XYZ data into the database.",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+               directory.  The import data file must include the path if it is not
+               in the local directory.
+               
+               2. Both the import template and data file must exist.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1787,6 +2200,13 @@ gx_methods = {
         Method('ImportXYZ2_DU', module='geogxx', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Import XYZ data into the database.",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+               directory.  The import data file must include the path if it is not
+               in the local directory.
+               
+               2. Both the import template and data file must exist.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1803,6 +2223,10 @@ gx_methods = {
         Method('ImportIoGAS_DU', module='geogxx', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Import data columns from an ioGAS data file.",
+               notes="""
+               1. All columns in the speficied ioGAS data file will be imported.
+               2. If a line already exists, the data will overwrite the existing data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1911,6 +2335,7 @@ gx_methods = {
         Method('IntersectGDBtoTBL_DU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Create a new intersection table from an intersection database.",
+               notes="If the TBL exists, it is overwritten.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1922,6 +2347,15 @@ gx_methods = {
         Method('IntersectOld_DU', module='geogxx', version='5.1.4',
                availability=Availability.LICENSED, 
                doc="Use existing intersection table and re-calculate miss-ties.",
+               notes="""
+               Reads intersection information from an existing intersect
+               table and looks up the values at the intersections for the
+               input Z channel. This makes it unnecessary to re-calculate
+               the intersections every time if you want to determine
+               miss-ties using different Z channels, or the same Z channel
+               after processing levelling corrections. Existing intersections
+               whose locations do not exist in the database are ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1941,6 +2375,12 @@ gx_methods = {
         Method('IntersectTBLtoGDB_DU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Create a new intersection database from an intersection table.",
+               notes="""
+               If the GDB exists, it is deleted, so it should not
+               be loaded.
+               The database is split by Tie lines (or whatever lines are found in column 3
+               of the TBL file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1952,6 +2392,25 @@ gx_methods = {
         Method('LabTemplate_DU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Makes a default template from a lab assay file.",
+               notes="""
+               The template can be used to import the file using
+               sImportBIN_DU.
+               
+               The first column is assumed to be the sample number.
+               
+               If the unit label line is the same as the column label
+               line, column labels are assummed to be followed by
+               unit labels using the format "Au-ppm", "Au ppm" or
+               "Au(ppm)".
+               
+               The number of channels is determined from the number of
+               columns in the data channel.  If there are more column
+               labels or unit labels, the last labels are assumed to
+               be correct.  If there are fewer line labels, default
+               labels "Col_n", where n is the column number, will be
+               created and no unit labels will be defined.
+               """,
+               see_also=":func:`ImportBIN_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1977,6 +2436,32 @@ gx_methods = {
         Method('LoadGravity_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Load a gravity survey file",
+               notes="""
+               See GRAVITY.:class:`DAT` for a description of the file format.
+               
+               Existing data in the line will be replaced.
+               
+               The following :class:`REG` parameters will be set if they appear
+               in the data file:
+               default
+               OPERATOR             ""
+               DATE                 none
+               INSTRUMENT           ""
+               INSTRUMENT_SCALE     "1.0"
+               BASE_GRAVITY         "0.0"
+               FORMULA              "1967"
+               GMT_DIFF             "0.0"
+               DISTANCE_UNITS       "m"
+               DENSITY_EARTH        "2.67"
+               DENSITY_WATER        "1.0"
+               DENSITY_ICE          "0.95"
+               MAP_PROJECTION       ""
+               
+               If the corresponding constant is not specified and the
+               :class:`REG` already has the constant defined, it is not changed.
+               If the constant is not defined and it is not already in
+               the :class:`REG`, the indicated default will be set.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1992,6 +2477,19 @@ gx_methods = {
         Method('LoadLTB_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Load :class:`LTB` into a database line.",
+               notes="""
+               A new channel will be created for all :class:`LTB` fields
+               that do not already exist.
+               The :class:`LTB` field type will be double if all entries can be
+               converted to double, otherwise it will be a string type
+               set to the larger of 16 characters or the longest string
+               in the field.
+               
+               For _APPEND, the :class:`LTB` data is simply added the end of each
+               channel.  :func:`ReFidAllCh_DU` can be used to re-fid data to
+               match a specifc channel and there-by case all channels to be
+               the same length before appending data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2037,6 +2535,20 @@ gx_methods = {
         Method('Math_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Apply an expression to the database",
+               notes="""
+               The MATH_DU method will READWRITE lock channels on the left
+               side of expressions and READONLY lock channels on the right
+               side of expressions.  Channels are unlocked before returning.
+               Therefore, channels on the left side of an expression cannot
+               be locked READONLY because the :func:`Math_DU` attempt to lock the
+               channel READWRITE will fail.  Similarly, channels on the right
+               side of an expression cannot be locked READWRITE because
+               :func:`Math_DU`'s attempt to lock the channels READONLY will fail.
+               
+               If this is confusing, just make sure no channels used in the
+               expression are locked before calling :func:`Math_DU`.
+               """,
+               see_also=":class:`EXP`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2070,6 +2582,12 @@ gx_methods = {
         Method('ModFidRange_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Insert/Append/Delete a range of fids.",
+               notes="""
+               Channels that do not have the same fid start or fid
+               increment are not processed.
+               
+               Protected channels are modified automatically.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2091,6 +2609,10 @@ gx_methods = {
         Method('Move_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Move/correct a channel to a control channel.",
+               notes="""
+               The input channel is moved to the absolute location
+               of the control channel.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2132,6 +2654,7 @@ gx_methods = {
         Method('Normal_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set fid of all channels to match a specified channel.",
+               see_also=":func:`ReFidAllCh_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2187,6 +2710,7 @@ gx_methods = {
         Method('ProjectData_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Project X,Y channels",
+               notes="Output channels can be the same as input channels",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2208,6 +2732,7 @@ gx_methods = {
         Method('ProjectXYZ_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Project X,Y,Z channels from one system to another.",
+               notes="Output channels can be the same as input channels",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2233,6 +2758,7 @@ gx_methods = {
         Method('ProjPoints_DU', module='geogxx', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Project X,Y(Z) channels with different projections",
+               notes="Output channels can be the same as input channels",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2280,6 +2806,14 @@ gx_methods = {
         Method('QCInitSeparation_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Creates the nearest line channels for line separation QC.",
+               notes="""
+               This must be called before QCSeparation_DU. It uses a pager to
+               establish the relative positions of the selected lines, then,
+               for every point determines the closest point in another line to
+               the left and to the right (as determined by looking in the
+               direction of the line.) These distances are stored to two new
+               channels in the database, "Closest_Left" and "Closest_Right"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2293,6 +2827,13 @@ gx_methods = {
         Method('QCSurveyPlan_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a database containing proposed survey plan in a :class:`PLY`",
+               notes="""
+               The LINE on which has the reference (X,Y) will have the starting Line number
+               The lines on the right hand side of the reference line (while looking
+               into azimuth of ref. line) have increasing line numbers. The lines
+               on the left hand side have the decreasing line numbers from the starting
+               number. Returns an error code or 0 (if successful)
+               """,
                return_type=Type.INT32_T,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2336,6 +2877,10 @@ gx_methods = {
         Method('rDirection_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Returns the direction of a line.",
+               notes="""
+               The direction is calculated from the first and last
+               non-dummy locations in the X and Y reference channels.
+               """,
                return_type=Type.DOUBLE,
                return_doc="""
                direction in degrees azimuth (clockwise relative
@@ -2357,6 +2902,19 @@ gx_methods = {
         Method('ReFid_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Re-fid a channel based on a reference channel",
+               notes="""
+               The original channel can be an array channel, in which case
+               the columns (up to the number of columns available in the output)
+               are individually interpolated. If the number of
+               columns in the output channel is more than the input channel,
+               the remaining columns are dummied.
+               
+               This function is fundamentally different in behaviour from :func:`ReFidCh_DU`.
+               The values in the Reference channel in :func:`ReFid_DU` are the "X" locations
+               corresponding to the "Y" locations in the "Original Channel". Output
+               Channel values are calculated at the new "X" locations specified by
+               the Start Fid and the Fid Increment.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2382,6 +2940,11 @@ gx_methods = {
         Method('ReFidAllCh_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Simple re-fid of all channels based on a reference channel",
+               notes="""
+               Channels can be array channels, in which case
+               the columns are individually re-fidded.
+               """,
+               see_also=":func:`Normal_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2395,6 +2958,13 @@ gx_methods = {
         Method('ReFidCh_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Simple re-fid of a channel based on a reference channel",
+               notes="""
+               The original channel can be an array channel, in which case
+               the columns are individually re-fidded.
+               
+               :func:`ReFidCh_DU` resamples the "Channel to refid" to the "Reference Channel" Fid
+               range and increment.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2435,6 +3005,7 @@ gx_methods = {
         Method('SampleGD_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Sample a :class:`GD` at a specified X and Y.",
+               notes="Values in result channel",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2454,6 +3025,7 @@ gx_methods = {
         Method('SampleIMG_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Sample a :class:`IMG` at a specified X and Y.",
+               notes="Values in result channel",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2473,6 +3045,7 @@ gx_methods = {
         Method('SampleIMGLineLST_DU', module='geogxx', version='8.3.0',
                availability=Availability.LICENSED, 
                doc="Sample an :class:`IMG` at a specified X and Y, for a :class:`LST` of lines.",
+               notes="Values in result channel",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2492,6 +3065,7 @@ gx_methods = {
         Method('ScanADO_DU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Scans an external ADO database and generates a default template.",
+               notes="All the channels are listed",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2523,6 +3097,7 @@ gx_methods = {
         Method('ScanDAO_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Scans an external DAO database and generates a default template.",
+               notes="All the channels are listed",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2626,6 +3201,7 @@ gx_methods = {
                Splits a line a the fiducial and copies any data past
                that fiducial into the new line.
                """,
+               notes="The same as SplitLine, but with an option to reset each line's starting fiducial to zero.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2646,6 +3222,7 @@ gx_methods = {
                Break up a line based on tolerance of lateral and horizontal distance, with
                options for the output line names.
                """,
+               notes="The original line will be deleted.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2676,6 +3253,7 @@ gx_methods = {
                Break up a line based on tolerance of lateral and horizontal distance, with
                options for the output line names.
                """,
+               notes="The same as SplitLineXY, but with an option to reset each line's starting fiducial to zero.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2708,6 +3286,7 @@ gx_methods = {
                Break up a line based on tolerance of lateral and horizontal distance, with
                options for the output line names.
                """,
+               notes="The same as SplitLineXY2, but with the option to maintain line types when outputting sequentially numbered lines.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2742,6 +3321,7 @@ gx_methods = {
                The line is split when the heading (calculated from the current X and Y channels) changes by more than a specified amount over
                a specified distance. Additional options to discard too-short lines
                """,
+               notes="Split a line based on changes in heading.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2775,6 +3355,7 @@ gx_methods = {
         Method('SplitLineByDirection2_DU', module='geogxx', version='9.0.0',
                availability=Availability.LICENSED, 
                doc="The same as SplitLineByDirection, but with the option to maintain line types when outputting sequentially numbered lines.",
+               notes="Split a line based on changes in heading.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2810,6 +3391,11 @@ gx_methods = {
         Method('Stat_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Add a data channel to a statistics object.",
+               notes="""
+               If the input channel is a :class:`VA` (array) channel, then the columns set using
+               :func:`SetVAWindows_DB`() are used in the statistics; all columns are used by default.
+               """,
+               see_also=":class:`ST`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2859,6 +3445,11 @@ gx_methods = {
         Method('TimeConstant_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate TEM time constant (Tau)",
+               notes="""
+               When DU_TIME_LOG option is used, Time channel will be converted
+               with logarithmic before calculating time constant.
+               Logarthmic conversion is always applied to the response channel.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2882,6 +3473,7 @@ gx_methods = {
         Method('Trend_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculates an n'th order trend of a data channel.",
+               see_also=":func:`BSpline_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2899,6 +3491,10 @@ gx_methods = {
         Method('UpdateIntersectDB_DU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Update the Z and DZ values in an intersection database, using the current database.",
+               notes="""
+               Updates the TZ, TDZ, LZ and LDZ channels at the intersections,
+               using the current flight database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2914,6 +3510,20 @@ gx_methods = {
         Method('VoxelSection_DU', module='geogxx', version='6.4.0',
                availability=Availability.LICENSED, 
                doc="Slice a voxel to a grid under a database line.",
+               notes="""
+               Takes the first and XY locations in a line (using the
+               current X and Y channels) and defines a section grid
+               as a slice through a voxel file.
+               The grid cell sizes can be left as :def_val:`GS_R8DM`, in which
+               case an attempt will be made to match the voxel cell
+               size, based on the line azimuth, voxel rotation, etc.
+               
+               If the slice does NOT intersect the voxel, or if
+               there are fewer than 2 valid locations in the line,
+               then no grid file is created, but there is no error.
+               (This is to simplify creating multiple grids from
+               at once, where not all may intersect).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2939,6 +3549,15 @@ gx_methods = {
         Method('WriteWA_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Write data to an ASCII file.",
+               notes="""
+               Channels to be written should be placed in a :class:`LST` object.
+               
+               Channels are written in the order of the list.  Only the
+               channel names in the list are used.
+               
+               Data is formated as in the channel definition and
+               channels are separated by a single space character.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2954,6 +3573,7 @@ gx_methods = {
         Method('XyzLine_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Break up a line based on tolerance of lateral distance.",
+               notes="The original line will be deleted.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2973,6 +3593,7 @@ gx_methods = {
         Method('XyzLine2_DU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Break up a line based on tolerance of lateral and horizontal distance.",
+               notes="The original line will be deleted.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2994,6 +3615,7 @@ gx_methods = {
         Method('XyzLine3_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Break up a line based on tolerance of lateral and horizontal distance.",
+               notes="The same as XyzLine2, but with an option to reset each line's starting fiducial to zero.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3036,6 +3658,10 @@ gx_methods = {
         Method('RangeXY_DU', module='geogxx', version='8.5.0',
                availability=Availability.LICENSED, 
                doc="Find the range of X, and Y in the selected lines.",
+               notes="""
+               Returns the range in X and Y of the current X and Y channels.
+               Returned values are dummy if no valid items are found.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3053,6 +3679,11 @@ gx_methods = {
         Method('RangeXYZ_DU', module='geogxx', version='8.5.0',
                availability=Availability.LICENSED, 
                doc="Find the range of X, Y and Z in selected lines.",
+               notes="""
+               The X, Y and Z channels should be normal (not array) channels.
+               Only locations where all values are non-dummy are included in the calculation.
+               If no non-dummy values are found, Dummy values are returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3082,6 +3713,15 @@ gx_methods = {
         Method('RangeXYZData_DU', module='geogxx', version='8.1.0',
                availability=Availability.LICENSED, 
                doc="Find the range of X, Y, Z and Data values in selected lines.",
+               notes="""
+               The Z and Data channels may be array channels, but both must have
+               the same number of columns.
+               Only values where all channels are non-dummy (or, for :class:`VA` channels,
+               where the Z or Data value are defined) are included in the calculation.
+               If no non-dummy values are found, Dummy values are returned.
+               This function is optimized for cases where Z and Data are array channels
+               with many columns (e.g. 32 or more columns).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3117,6 +3757,18 @@ gx_methods = {
         Method('CreateDrillholeParameterWeightConstraintDatabase_DU', module='geogxx', version='8.2.0',
                availability=Availability.LICENSED, 
                doc="Used for weighting inversion models.",
+               notes="""
+               Control parameters are passed in the :class:`REG` (to allow for future expansion without
+               the need to modify the wrappers).
+               The input drillhole database must contain current X, Y and Z channels.
+               Drillhole data should be equally spaced (or nearly so) down the hole.
+               Weights are calculated on a circle perpendicular to the hole at each point.
+               
+               RADIUS - Maximum radius from drillhole to create weighting points (Default = 100).
+               INCRMENENT - Grid cell size in weighting circle (Default = 10).
+               MINIMUM - the minimum weighting value to apply, at the radius (Default = 0.0001).
+               POWER - Exponential power to use in the weighting function (negative of this is used) (Default = 2).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3132,6 +3784,10 @@ gx_methods = {
         Method('CalculateDrapedSurveyAltitude_DU', module='geogxx', version='8.3.0',
                availability=Availability.LICENSED, 
                doc="Calculate a draped flight path, enforcing maximum descent and ascent rates.",
+               notes="""
+               Calculate a draped flight path, enforcing maximum descent and ascent rates. Additional Inputs are the sample distance along the line
+               and a topography grid.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3163,6 +3819,12 @@ gx_methods = {
         Method('CalculateDrapedSurveyAltitude2_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Calculate a draped flight path, enforcing maximum descent and ascent rates.",
+               notes="""
+               Calculate a draped flight path, enforcing maximum descent and ascent rates.
+               Set both a nominal and minimum drape height.
+               Additional Inputs are the sample distance along the line
+               and a topography grid.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3198,6 +3860,7 @@ gx_methods = {
         Method('DirectGridDataToVoxel_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Create a voxel using direct gridding.",
+               notes="The Z and Data channels may be array channels. If they are, the array sizes must match.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -3237,6 +3900,7 @@ gx_methods = {
         Method('DirectGridItemCountsToVoxel_DU', module='geogxx', version='8.4.0',
                availability=Availability.LICENSED, 
                doc="Create a voxel using direct gridding containing the number of data points in each cell.",
+               notes="The Z and Data channels may be array channels. If they are, the array sizes must match.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",

@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VVU',
                  doc="""
-These methods are not a class. Utility methods perform
-various operations on :class:`VV` objects, including pruning,
-splining, clipping and filtering.
-""")
+                 These methods are not a class. Utility methods perform
+                 various operations on :class:`VV` objects, including pruning,
+                 splining, clipping and filtering.
+                 """)
 
 
 gx_defines = [
@@ -168,6 +168,14 @@ gx_methods = {
         Method('AverageRepeat_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Average repeat values.",
+               notes="""
+               Repeated values in the reference :class:`VV` will be averaged
+               in the data :class:`VV`.  The first value in the data :class:`VV` will be set to the
+               average and subsequent data :class:`VV` values will be dummied out.
+               Data is processed only to the minimum length of the
+               input :class:`VV` lengths.
+               """,
+               see_also=":func:`RemoveDummy_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -179,6 +187,15 @@ gx_methods = {
         Method('AverageRepeatEx_VVU', module='geogxx', version='8.0.1',
                availability=Availability.LICENSED, 
                doc="Average repeat values.",
+               notes="""
+               Repeated values in the reference :class:`VV` will be set to the mean, median, minimum or maximum value
+               in the data :class:`VV`.  For minimum and maximum, the index in the data :class:`VV` containing the minimum or maximum value
+               is retained, and the other repeated values are dummied out. For mean and median, the first value in the 
+               data :class:`VV` will be reset and subsequent data :class:`VV` values will be dummied out.
+               Data is processed only to the minimum length of the
+               input :class:`VV` lengths.
+               """,
+               see_also=":func:`RemoveDummy_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -192,6 +209,17 @@ gx_methods = {
         Method('AverageRepeat2_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Average repeat values based on 2 reference channels.",
+               notes="""
+               Repeated values in the reference :class:`VV` will be averaged
+               in the data :class:`VV`.  The first value in the data :class:`VV` will be set to the
+               average and subsequent data :class:`VV` values will be dummied out.
+               Data is processed only to the minimum length of the
+               input :class:`VV` lengths.
+               Both the reference :class:`VV` values must repeat for the averageing
+               to occur. This version is useful for averaging on repeated
+               (X,Y) locations.
+               """,
+               see_also="RemoveDummy_VV",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -205,6 +233,16 @@ gx_methods = {
         Method('AverageRepeat2Ex_VVU', module='geogxx', version='8.0.1',
                availability=Availability.LICENSED, 
                doc="Average repeat values based on 2 reference channels.",
+               notes="""
+               Repeated values in the reference :class:`VV` will be set to the mean, median, minimum or maximum value
+               in the data :class:`VV`.  The first value in the data :class:`VV` will be reset and subsequent data :class:`VV` values will be dummied out.
+               Data is processed only to the minimum length of the
+               input :class:`VV` lengths.
+               Both the reference :class:`VV` values must repeat for the averageing
+               to occur. This version is useful for averaging on repeated
+               (X,Y) locations.
+               """,
+               see_also="RemoveDummy_VV",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -220,6 +258,10 @@ gx_methods = {
         Method('BinarySearch_VVU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Search  numeric value in a :class:`VV`.",
+               notes="""
+               The :class:`VV` should be sorted.Search comparison is made on double
+               comparison of the data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -245,6 +287,12 @@ gx_methods = {
         Method('BPFilt_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Band-pass filter to the specified.",
+               notes="""
+               If the short and long wavelengths are <= 0, the input channel
+               is simply copied to the output channel without filtering.
+               
+               The wavelengths are in fiducials.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -277,6 +325,18 @@ gx_methods = {
         Method('ClipToDetectLimit_VVU', module='geogxx', version='5.1.6',
                availability=Availability.LICENSED, 
                doc="Apply detection limit clipping of data.",
+               notes="""
+               Flow:
+               
+               1. If auto-converting negatives, then all negative values
+                   are replaced by -0.5*value, and detection limit is ignored.
+               
+               2. If not auto-converting negatives, and the detection limit is not
+                  :def_val:`rDUMMY`, then values less than the detection limit are converted to
+                  one-half the detection limit.
+               
+               This function is identical to :func:`ClipToDetectLimit_CHIMERA`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -323,6 +383,10 @@ gx_methods = {
         Method('Decimate_VVU', module='geogxx', version='6.1.0',
                availability=Availability.LICENSED, 
                doc="Decimate a :class:`VV`.",
+               notes="""
+               For a decimation factor N, will remove all values except
+               those with indices equal to MN, where M is an integer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -381,6 +445,7 @@ gx_methods = {
                distance element is the distance of the corresponding
                (X,Y) element and the previous element.
                """,
+               notes="The fist distace element is :def_val:`rDUMMY`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -402,6 +467,14 @@ gx_methods = {
         Method('Distance3D_VVU', module='geogxx', version='8.0.1',
                availability=Availability.LICENSED, 
                doc="Create a cumulative distance :class:`VV` from X, Y and Z VVs",
+               notes="""
+               The output :class:`VV` is the length of the shortest X,Y or Z input :class:`VV`.
+               Any values with dummies are ignored - the distance at that
+               point is equal to the distance at the previous valid point.
+               The returned :class:`VV` is the cumulative straight-line distance
+               between the points. No re-sampling is performed.
+               VVs of any type are supported.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -419,6 +492,12 @@ gx_methods = {
         Method('FindGaps3D_VVU', module='geogxx', version='8.1.0',
                availability=Availability.LICENSED, 
                doc="Return indices of locations separated from previous locations by more than the input gap distance.",
+               notes="""
+               Locate the starting points of line segements determined by an input gap distance.
+               The returned indices indicate where to break the line, given an input gap.
+               The number of returned indices is one less than the number of line segments.
+               (So if there are no gaps the returned :class:`VV` has zero length).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -436,6 +515,14 @@ gx_methods = {
         Method('DummyRange_VVU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Dummy values inside or outside a range in a :class:`VV`",
+               notes="""
+               If the Inside flag is TRUE, values within the specified
+               range are set to dummy. If the inside flag is FALSE,
+               values outside the range are set to dummy.  If the Inclusive
+               flag is TRUE, then dMin and dMax are considered part of the
+               range. If it is FALSE, then < or > are used, and dMin and
+               dMax lie outside the range.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -453,6 +540,14 @@ gx_methods = {
         Method('DummyRangeEx_VVU', module='geogxx', version='5.0.7',
                availability=Availability.PUBLIC, 
                doc="Like DummyRangeVVU, with inclusion options for both ends.",
+               notes="""
+               If the Inside flag is TRUE, values within the specified
+               range are set to dummy. If the inside flag is FALSE,
+               values outside the range are set to dummy.  If the Inclusive
+               flag is TRUE, then dMin and dMax are considered part of the
+               range. If it is FALSE, then < or > are used, and dMin and
+               dMax lie outside the range.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -472,6 +567,10 @@ gx_methods = {
         Method('DummyRepeat_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="dummy repeat values in a :class:`VV`.",
+               notes="""
+               Either the first, middle or last point will be left.
+                                 Use :func:`Interp_VVU` to interpolate after if desired.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -482,6 +581,16 @@ gx_methods = {
         Method('DupStats_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Calculate means and differences for duplicate sample pairs",
+               notes="""
+               Created for duplicate sample handling in :class:`CHIMERA`. On input,
+               a numeric :class:`VV` containing data values, and a sample type :class:`VV`.
+               Sample pairs have types "1" and "2". This routine searches for
+               types in order "1 2 1 2", and writes the mean values of pairs
+               to the mean value :class:`VV`, and the differences with the mean (equal
+               values, negative and positive) to the difference :class:`VV`. Results
+               for samples out of order, for unmatched values, or when the
+               sample type does not equal "1" or "2" are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -497,6 +606,11 @@ gx_methods = {
         Method('ExpDist_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Fill with exponentially distributed values.",
+               notes="""
+               :class:`VV` is set to input length (except for -1)
+               See RAND for a short discription of the
+               random number generator used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -525,6 +639,20 @@ gx_methods = {
         Method('FindStringItems_VVU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Searches a :class:`VV` for items in a second :class:`VV`, returns indices of those found.",
+               notes="""
+               This is a much more efficient way of determining if items in
+               one :class:`VV` are found in a second, than by searching
+               repeatedly in a loop.
+               The returned :def_val:`GS_LONG` :class:`VV` contains the same number of items as
+               the "search items" :class:`VV`, and contains -1 for items where the
+               value is not found, and the index of items that are found.
+               Comparisons are case-tolerant.
+               Non-string VVs are converted to string type VVs (element size 24) internally.
+               
+               The method requires that the :class:`VV` items be sorted, and
+               will do so internally. Since the input VVs may already be sorted,
+               the method will run faster if this stage can be skipped.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -559,6 +687,11 @@ gx_methods = {
         Method('iCloseXY_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Find the closest point to an input point (XY).",
+               notes="""
+               Input X and Y location VVs, and a location.
+               Returns the index of the point in the :class:`VV` closest to the
+               input point.
+               """,
                return_type=Type.INT32_T,
                return_doc="Index of closest point, -1 if no valid locations, or data is masked.",
                parameters = [
@@ -575,6 +708,14 @@ gx_methods = {
         Method('iCloseXYM_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Find the closest point to an input point, with mask (XY).",
+               notes="""
+               Input X and Y location VVs, and a location.
+               Returns the index of the point in the :class:`VV` closest to the
+               input point.
+               This skips points where the mask value is dummy.
+               If no valid points are in the VVs, or all the mask :class:`VV` values
+               are dummy, the returned index is -1.
+               """,
                return_type=Type.INT32_T,
                return_doc="Index of closest point, -1 if no valid locations, or data is masked.",
                parameters = [
@@ -593,6 +734,11 @@ gx_methods = {
         Method('iCloseXYZ_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Find the closest point to an input point (XYZ).",
+               notes="""
+               Input X, Y and Z location VVs, and a location.
+               Returns the index of the point in the :class:`VV` closest to the
+               input point.
+               """,
                return_type=Type.INT32_T,
                return_doc="Index of closest point, -1 if no valid locations, or data is masked.",
                parameters = [
@@ -613,6 +759,14 @@ gx_methods = {
         Method('iCloseXYZM_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Find the closest point to an input point, with mask (XYZ).",
+               notes="""
+               Input X, Y and Z location VVs, and a location.
+               Returns the index of the point in the :class:`VV` closest to the
+               input point.
+               This skips points where the mask value is dummy.
+               If no valid points are in the VVs, or all the mask :class:`VV` values
+               are dummy, the returned index is -1.
+               """,
                return_type=Type.INT32_T,
                return_doc="Index of closest point, -1 if no valid locations, or data is masked.",
                parameters = [
@@ -635,6 +789,10 @@ gx_methods = {
         Method('iDummyBackTracks_VVU', module='geogxx', version='7.0.0',
                availability=Availability.LICENSED, 
                doc="Dummy all points that keep a :class:`VV` from being monotonically increasing.",
+               notes="""
+               The :class:`VV` length remains the same. Any point that is less than or equal to
+               the previous (valid) point in the :class:`VV` is dummied.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of items dummied in order to render the :class:`VV` montonically increasing.",
                parameters = [
@@ -645,6 +803,11 @@ gx_methods = {
         Method('iFindDummy_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find the first dummy|non-dummy value in :class:`VV`",
+               notes="""
+               Start and end of range are always defined lowest
+               to largest even if decreasing search order.  To search
+               entire :class:`VV` range, specify 0,-1.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                The index of the first dummy|non-dummy value in :class:`VV`
@@ -666,6 +829,26 @@ gx_methods = {
         Method('Interp_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Replace all dummies by interpolating from valid data.",
+               notes="""
+               Edge behaviour: Dummies at the ends are treated as follows
+               for various combinations of the inside and outside interpolation
+                choices:
+               
+                 if ((iOutside==VV_INTERP_EDGE_NEAREST) ||
+                     (iOutside==VV_INTERP_EDGE_SAME && iInside==VV_INTERP_NEAREST))
+               
+                    // -- Set dummies to the same value as the last defined element
+               
+                 else if ((iOutside==VV_INTERP_EDGE_LINEAR) ||
+                          (iOutside==VV_INTERP_EDGE_SAME &&  iInside==VV_INTERP_LINEAR))
+               
+                    // --- Set dummies using the slope of the last two defined elements
+               
+                 endif
+               
+               In all other cases and combinations of the two interpolation
+               choices, the dummies are left "as is".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -679,6 +862,7 @@ gx_methods = {
         Method('iQCFillGaps_VVU', module='geogxx', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Calculate fill in line segments",
+               notes="The X & Y VVs are returned as the calculated fill in line segments.",
                return_type=Type.INT32_T,
                return_doc="1 if error, 0 if successful",
                parameters = [
@@ -697,6 +881,17 @@ gx_methods = {
         Method('iSearchText_VVU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Search for a text value in a :class:`VV`",
+               notes="""
+               Search comparison is made on string comparison
+               of the data. Returns index of first item matching
+               the input string.
+               If start index is -1 or dummy, then full :class:`VV` is searched.
+               Use :def_val:`VVU_MATCH_INPUT_LENGTH` to match the first part of a string.
+               This is also recommended for matching numerical values, since
+               the displayed value in the database may not be the same as the
+               stored value.
+               """,
+               see_also="sSearchReplace_VV",
                return_type=Type.INT32_T,
                return_doc="Index of first matching text, -1 if not found.",
                parameters = [
@@ -717,6 +912,11 @@ gx_methods = {
         Method('Mask_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Mask dummies in one :class:`VV` onto another.",
+               notes="""
+               :class:`VV` to mask will be resampled to reference :class:`VV` if required.
+               The returned length of the :class:`VV` to mask will be the shorter
+               of the reference :class:`VV` or the mask :class:`VV`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -728,6 +928,7 @@ gx_methods = {
         Method('MaskAND_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Create mask from logical AND of two VVs.",
+               notes="If both values are non-dummies, then result is 1, else dummy.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -741,6 +942,7 @@ gx_methods = {
         Method('MaskOR_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Create mask from logical OR of two VVs.",
+               notes="If either values is non-dummy, then result is 1, else dummy.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -769,6 +971,14 @@ gx_methods = {
         Method('NoiseCheck_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Check on deviation of data from variable background in a :class:`VV`",
+               notes="""
+               This function checks vertical deviation of data in input :class:`VV`
+               against a moving straight line. The straight line at any time is
+               defined by two extreme points of a data segment.  Output :class:`VV` will
+               be 0 if data point in input :class:`VV` falls within the deviation,
+               otherwise, it will be 1.
+               Output :class:`VV` will be 0 if the straight line is vertical.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -784,6 +994,20 @@ gx_methods = {
         Method('NoiseCheck2_VVU', module='geogxx', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Like :func:`NoiseCheck_VVU`, but returns maximum deviation at all points.",
+               notes="""
+               This function checks vertical deviation of data in an input :class:`VV`
+               against a moving straight line, where the X-axis value is
+               taken to be the data index, and the Y-axis value is the
+               input data :class:`VV` value. The straight line is drawn between data points
+               at the ends of the line segment, whose length is an input.
+               
+               The output flag :class:`VV` is set to 0 if data point in input :class:`VV` falls within the
+               deviation for all the moving line segments of which it is a part, otherwise, it
+               will be set to 1.
+               
+               The output maximum deviation :class:`VV` contains the maximum deviation at each point
+               for all the moving line segments that it is a part of.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -801,6 +1025,11 @@ gx_methods = {
         Method('NormalDist_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Fill with normally (Gaussian) distributed values.",
+               notes="""
+               :class:`VV` is set to input length (except for -1)
+               See RAND for a short discription of the
+               random number generator used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -818,6 +1047,22 @@ gx_methods = {
         Method('OffsetCircles_VVU', module='geogxx', version='5.0.7',
                availability=Availability.LICENSED, 
                doc="Get non-overlapping offset location for circular symbols.",
+               notes="""
+               Often on maps plotted symbols and text overlap each other.
+               This routine accepts of :class:`VV` of locations and returns a new
+               set of locations offset from the originals, and guaranteed
+               not to overlap, given the size of the original symbols.
+               The returned offset X, Y
+               locations are offset from the original locations by
+               the minimum of a) the input offset, b) the input symbol
+               radius. This is to ensure that the original location is
+               never covered by the offset symbol.
+               
+               Care should be taken when choosing the symbol size, because
+               if the point density is too high, all the points will get
+               pushed to the outside edge and your plot will look like a
+               hedgehog (it also takes a lot longer!).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -837,6 +1082,33 @@ gx_methods = {
         Method('OffsetCorrect_VVU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Correct locations based on heading and fixed offset.",
+               notes="""
+               In many applications, measurements are taken with an instrument which
+               is towed behind, or pushed ahead of where the locations are recorded.
+               Use this function to estimate the actual location of the instrument.
+               The method determines the heading along the line, using a "thinned"
+               version of the line. The degree of thinning is based on the size of the
+               offset; the larger the offset, the greater the distance between sample
+               locations used to construct the thinned lined used for determining headings.
+               The thinned line is splined at a frequency greater than the sample
+               frequency, and the heading at any given point is determined from the
+               vector formed by the closest two points on the splined line. The
+               correction (behind, in front, left or right) is determined with respect
+               to the heading, and added to the original location.
+               
+               IF this method fails, no dummies, no duplicated locations, no reversals
+               are produced.
+               
+               The algorithm:
+               
+               1. Determine average distance between each point = D
+               2. Smoothing interval = MAX(2*D, Offset distance) = I
+               3. Thin input points to be at least the smoothing interval I apart from each other.
+               4. Smoothly re-interpolate the thinned points at five times the
+                  original average distance D.
+               5. For each input point, calculate the bearing using the nearest points
+                  on the smoothed curve
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -875,6 +1147,7 @@ gx_methods = {
         Method('OffsetCorrect3_VVU', module='geogxx', version='5.1.4',
                availability=Availability.LICENSED, 
                doc="Same as :func:`OffsetCorrect2_VVU`, but specify smoothing interval.",
+               notes="See the algorithm note #2 above for the default smoothing interval.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -896,6 +1169,33 @@ gx_methods = {
         Method('OffsetCorrectXYZ_VVU', module='geogxx', version='9.0',
                availability=Availability.LICENSED, 
                doc="Correct locations based on heading and fixed offset.",
+               notes="""
+               In many applications, measurements are taken with an instrument which
+               is towed behind, or pushed ahead of where the locations are recorded.
+               Use this function to estimate the actual location of the instrument.
+               The method determines the heading along the line, using a "thinned"
+               version of the line. The default degree of thinning is based on the size of the
+               offset; the larger the offset, the greater the distance between sample
+               locations used to construct the thinned lined used for determining headings.
+               The thinned line is splined at a frequency greater than the sample
+               frequency, and the heading at any given point is determined from the
+               vector formed by the closest two points on the splined line. The
+               correction (behind, in front, left or right) is determined with respect
+               to the heading, and added to the original location.
+               
+               IF this method fails, no dummies, no duplicated locations, no reversals
+               are produced.
+               
+               The algorithm:
+               
+               1. Determine average distance between each point = D
+               2. Default smoothing interval = MAX(2*D, Offset distance) = I
+               3. Thin input points to be at least the smoothing interval I apart from each other.
+               4. Smoothly re-interpolate the thinned points at five times the
+               original average distance D.
+               5. For each input point, calculate the bearing using the nearest points
+               on the smoothed curve
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -923,6 +1223,24 @@ gx_methods = {
         Method('OffsetRectangles_VVU', module='geogxx', version='5.0.7',
                availability=Availability.LICENSED, 
                doc="Get non-overlapping offset location for rectangular symbols.",
+               notes="""
+               Often on maps plotted symbols and text overlap each other.
+               This routine accepts of :class:`VV` of locations and returns a new
+               set of locations offset from the originals, and guaranteed
+               not to overlap, given the size of the original symbols.
+               The returned offset X, Y
+               locations are offset from the original locations by
+               the minimum of a) the input offset, b) the input symbol
+               X or Y size. This is to ensure that the original location is
+               never covered by the offset symbol. In addition, the offset
+               symbol is never place directly below the original location,
+               to make it easier to draw a connecting line.
+               
+               Care should be taken when choosing the symbol size, because
+               if the point density is too high, all the points will get
+               pushed to the outside edge and your plot will look like a
+               hedgehog (it also takes a lot longer!).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -944,6 +1262,18 @@ gx_methods = {
         Method('PickPeak_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find peaks in a :class:`VV` - method one.",
+               notes="""
+               Peaks are the maximum point within a sequence of
+               positive values in the input :class:`VV`.  The width is the
+               number of points in the positive sequence.
+               
+               A :class:`VV` may have to be pre-filtered before finding
+               the peak values:
+               
+               Use :func:`BPFilt_VVU` to smooth the data as required.
+               Use :func:`Filter_VVU` to apply a Laplace filter
+               "-0.5,1.0,-0.5" to make curvature data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -959,6 +1289,15 @@ gx_methods = {
         Method('PickPeak2_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find peaks in a :class:`VV` - method two.",
+               notes="""
+               Peaks are the maximum point within a sequence of
+               values in the input :class:`VV`. Maximum points must be above
+               the base level and have a local amplitude greater
+               than the minimum amplitude specified.
+               
+               A :class:`VV` may have to be pre-filtered before finding
+               the peak values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -974,6 +1313,17 @@ gx_methods = {
         Method('PickPeak3_VVU', module='geogxx', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Find peaks in a :class:`VV` - method two, returning width and half-amplitude widths.",
+               notes="""
+               Uses Method 2 above, but also returns the anomaly width (defined
+               as the distance between the surrounding troughs), and the
+               width at the half-amplitude. The half-amplitude width is
+               calculated in two parts, individually for each side based on
+               the distance from the maximum to the location where the
+               amplitude is mid-way between the maximum and trough.
+               
+               The returned VVs are packed; no dummies. Instead the
+               indicies of the peak locations are returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -999,6 +1349,12 @@ gx_methods = {
         Method('PolyFill_VVU', module='geogxx', version='5.0.6',
                availability=Availability.LICENSED, 
                doc="Fill a :class:`VV` with values from an n'th order polynomial, integral x.",
+               notes="""
+               The output :class:`VV` length must be set as desired before calling.
+               
+               The X scale is unitless (1 per element), i.e. 0,1,2,3,...
+               """,
+               see_also=":func:`Trend_VVU`, :func:`Trend2_VVU`, :func:`PolyFill2_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1012,6 +1368,11 @@ gx_methods = {
         Method('PolyFill2_VVU', module='geogxx', version='5.0.6',
                availability=Availability.LICENSED, 
                doc="Fill a :class:`VV` with values from an n'th order polynomial, specified X",
+               notes="""
+               The output :class:`VV` length must be set as desired before calling.
+               The X scale is defined by a X :class:`VV` (see Trend_VV for unitless X).
+               """,
+               see_also=":func:`Trend_VVU`, :func:`Trend2_VVU`, :func:`PolyFill_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1027,6 +1388,7 @@ gx_methods = {
         Method('PolygonMask_VVU', module='geogxx', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Mask a :class:`VV` using XY data and a polygon.",
+               notes="The VVs have to be the same length",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1044,6 +1406,11 @@ gx_methods = {
         Method('Prune_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Prune values from a :class:`VV` based on reference :class:`VV`",
+               notes="""
+               Pruning will shorten the :class:`VV` by removing values
+               that are either dummy or non-dummy in the reference
+               :class:`VV`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1057,6 +1424,25 @@ gx_methods = {
         Method('QC_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Qualit control on deviation of data from norm in a :class:`VV`",
+               notes="""
+               This function tests data in input :class:`VV` against
+               two separate criteria. Each element of the output :class:`VV`
+               will have one of the following indicators:
+               
+               Indicator  Meaning
+               ---------  --------
+                 0        Input data passed both tests
+                 1        The input data and is greater than the nominal value
+                          plus maximum tolerance/deviation (Criterion #1)
+                 2        The input data over a specified distance is greater than the
+                                  nominal value plus allowed tolerance (Criterion #2)
+                 3        The input data failed on above two tests
+                -1        The input data and is less than the nominal value
+                          minus maximum tolerance (Criterion #1)
+                -2        The input data over a specified distance is less than the
+                                  nominal value minus allowed tolerance (Criterion #2)
+                -3        The input data failed on above two tests
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1080,6 +1466,10 @@ gx_methods = {
         Method('RangeVectorMag_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find the range of hypotenuse values of two VVs.",
+               notes="""
+               For each value in the VVs, finds sqrt(dV1*dV1 + dV2*dV2)
+               and returns the min and max values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1110,6 +1500,18 @@ gx_methods = {
         Method('RelVarDup_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Estimate relative variance of duplicate sample pairs from a database.",
+               notes="""
+               Created for duplicate sample handling in :class:`CHIMERA`. On input,
+               a numeric or text :class:`VV` containing data values, and a sample type :class:`VV`.
+               Sample pairs have types "1" and "2". This routine searches for
+               types in order "1 2 1 2", and calulates the unnormalized relative variance,
+               defined as the sum of the squared differences between duplicates
+               divided by the sum of the squared mean values of the duplicates.
+               (To get the true rel.var., divide by N-1, where N is the number of
+               duplicate pairs used.)
+               Samples out of order, unmatched pairs, or when the
+               sample type does not equal "1" or "2" are ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1133,6 +1535,10 @@ gx_methods = {
         Method('RemoveDummy2_VVU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Remove dummy values from 2 VVs.",
+               notes="""
+               Removes all indices where either :class:`VV` has a dummy, or is
+               not defined (due to length differences).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1144,6 +1550,10 @@ gx_methods = {
         Method('RemoveDummy3_VVU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Remove dummy values from 3 VVs.",
+               notes="""
+               Removes all indices where any :class:`VV` has a dummy, or is
+               not defined (due to length differences).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1157,6 +1567,10 @@ gx_methods = {
         Method('RemoveDummy4_VVU', module='geogxx', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Remove dummy values from 4 VVs.",
+               notes="""
+               Removes all indices where any :class:`VV` has a dummy, or is
+               not defined (due to length differences).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1172,6 +1586,15 @@ gx_methods = {
         Method('RemoveDup_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Remove/average duplicate sample pairs from a database.",
+               notes="""
+               Created for duplicate sample handling in :class:`CHIMERA`. On input,
+               a numeric or text :class:`VV` containing data values, and a sample type :class:`VV`.
+               Sample pairs have types "1" and "2". This routine searches for
+               types in order "1 2 1 2", and replaces the pair of values in the
+               data :class:`VV` according to the :def:`VV_DUP` value.
+               Results for samples out of order, for unmatched pairs, or when the
+               sample type does not equal "1" or "2" remain unchanged.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1185,6 +1608,14 @@ gx_methods = {
         Method('RemoveXYDup_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Remove/average duplicate samples with the same (X, Y).",
+               notes="""
+               Searches for duplicated (X, Y) locations and removes the
+               duplicates (can be more than just a pair). The "Z" values,
+               if defined, are treated according to the value of :def:`VV_XYDUP`.
+               The returned VVs are shortened to the new length, without
+               duplicates.
+               The Z :class:`VV` can be set to NULL on input, in which case it is ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1200,6 +1631,12 @@ gx_methods = {
         Method('RemoveXYDupIndex_VVU', module='geogxx', version='7.2.0',
                availability=Availability.LICENSED, 
                doc="Remove duplicate samples with the same (X, Y) and update index.",
+               notes="""
+               Searches for duplicated (X, Y) locations and removes the
+               duplicates (can be more than just a pair). The Index :class:`VV` is
+               updated accordingly .i.e if  (X,Y) location of Index[0] == Index[1]
+               Index[1] is removed.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1213,6 +1650,44 @@ gx_methods = {
         Method('RollingStats_VVU', module='geogxx', version='5.1.0',
                availability=Availability.LICENSED, 
                doc="Calculate a statistic in a rolling window.",
+               notes="""
+               If the input VVs are not REAL, copies are made to
+               temporary REALs for processing.
+               
+               If the window size is even, it is increased by 1 so that the
+               output value is put at the exact center index of the window.
+               
+               Statistics are calculated on the values in a window
+               surrounding the individual data points.
+               
+               By shrinking the window at the ends, one-sided effects can be
+               eliminated. For instance, if the data is linear to begin with,
+               a rolling mean will not alter the original data.
+               However, if the window size is kept constant, then values
+               near the ends tend to be pulled up or down.
+               
+               With shrinking, the window is shrunk so that it always has the
+               same width on both sides of the data point under analysis;
+               at the end points the window width is 1, at the next point in
+               it is 3, and so on, until the full width is reached.
+               
+               The median value is calculated by sorting the valid data in
+               the window, then selecting the middle value. If the number
+               of valid data points is even, then the average of the two
+               central values is returned.
+               
+               The mode value is defined as the value which occurs most
+               frequently in the data. This value may not even exist, or
+               may not be unique. In this implementation, the following
+               algorithm is used: The valid data in the window is sorted
+               in ascending order. The number of occurrences of each data
+               value is tracked, and if it occurs more times than any
+               value, it becomes the modal value. If all
+               values are different, this procedure returns the smallest
+               value. If two or more values each have the same (maximum)
+               number of occurrences, then the smallest of these values is
+               returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1230,6 +1705,11 @@ gx_methods = {
         Method('SearchReplace_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Search and replace numeric values in a :class:`VV`.",
+               notes="""
+               Search comparison is made on double comparison
+               of the data.
+               """,
+               see_also="SearchReplaceText_VV",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -1242,6 +1722,11 @@ gx_methods = {
         Method('SearchReplaceText_VVU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Search and replace text values in a :class:`VV`",
+               notes="""
+               Search comparison is made on string comparison
+               of the data.
+               """,
+               see_also="SearchReplace_VV",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -1260,6 +1745,11 @@ gx_methods = {
         Method('SearchReplaceTextEx_VVU', module='geogxx', version='6.0.1',
                availability=Availability.LICENSED, 
                doc="Search and replace text values in a :class:`VV`, count items changed.",
+               notes="""
+               Search comparison is made on a string comparison
+               of the data.
+               """,
+               see_also="SearchReplaceText_VV",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -1322,6 +1812,7 @@ gx_methods = {
         Method('iTokenizeToValues_VVU', module='geogxx', version='9.0.0',
                availability=Availability.PUBLIC, 
                doc="Tokenize a string based on any characters.",
+               notes="Parses a series of space, tab or comma-delimited values to a :class:`VV`.",
                return_type=Type.INT32_T,
                return_doc="number of tokens (length of :class:`VV`)",
                parameters = [
@@ -1334,6 +1825,7 @@ gx_methods = {
         Method('Translate_VVU', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Translate values in a :class:`VV`",
+               notes="(new :class:`VV`) = ((old :class:`VV`) + base) * scale",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV"),
@@ -1346,6 +1838,17 @@ gx_methods = {
         Method('Trend_VVU', module='geogxx', version='5.0.6',
                availability=Availability.LICENSED, 
                doc="Calculate an n'th order best-fit polynomial, integral x.",
+               notes="""
+               Returns coefficients c[0] .. c[n]
+               
+                  Y(x) = c[0] + c[1]x + c[2](x**2) + ... + c[n](x**n)
+               
+               The X scale is unitless (1 per element), i.e. 0,1,2,3,...
+               
+               The polynomial :class:`VV` length is set to the number of coefficients
+               (order + 1)
+               """,
+               see_also=":func:`PolyFill_VVU`, :func:`Trend2_VVU`, :func:`PolyFill2_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1359,6 +1862,17 @@ gx_methods = {
         Method('Trend2_VVU', module='geogxx', version='5.0.6',
                availability=Availability.LICENSED, 
                doc="Calculate an n'th order best-fit polynomial, specified X",
+               notes="""
+               Returns coefficients c[0] .. c[n]
+               
+                  Y(x) = c[0] + c[1]x + c[2](x**2) + ... + c[n](x**n)
+               
+               The X scale is defined by a X :class:`VV` (see Trend_VV for unitless X).
+               
+               The polynomial :class:`VV` length is set to the number of coefficients
+               (order + 1)
+               """,
+               see_also=":func:`PolyFill_VVU`, :func:`Trend2_VVU`, :func:`PolyFill2_VVU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1374,6 +1888,11 @@ gx_methods = {
         Method('UniformDist_VVU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Fill with uniformly distributed values.",
+               notes="""
+               :class:`VV` is set to input length (except for -1)
+               See rand.gxh for a short discription of the
+               random number generator used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1393,6 +1912,7 @@ gx_methods = {
         Method('OffsetCorrect4_VVU', module='geogxx', version='7.0.0',
                availability=Availability.LICENSED, is_obsolete=True, 
                doc="Same as :func:`OffsetCorrect3_VVU`, but specify roll, pitch, yaw and Z.",
+               notes="Add roll, pitch, yaw correction.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",

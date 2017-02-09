@@ -2,32 +2,32 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('GER',
                  doc="""
-Allows access to a Geosoft format error message file. This class
-does not in itself produce an error message, but retrieves a
-selected message from the file, and allows the
-setting of replacement parameters within the message. It
-is up to the user to display or use the message.
-""",
+                 Allows access to a Geosoft format error message file. This class
+                 does not in itself produce an error message, but retrieves a
+                 selected message from the file, and allows the
+                 setting of replacement parameters within the message. It
+                 is up to the user to display or use the message.
+                 """,
                  notes="""
-:class:`GER` message files contain numbered messages that can be used within GXs.
-Following is an example from the file :class:`GEOSOFT`.:class:`GER`:
-
-
-      #20008
-      ! Invalid password. The product installation has failed.
-
-      #20009
-      ! Unable to find INI file: %1
-      ! See the documentation for details
-
-
-A '#' character in column 1 indicates a message number.  The message
-follows on lines that begin with a '!' character.  Strings in the message
-may be replaced at run time with values using the :func:`SetString_GER`,
-:func:`SetInt_GER` and :func:`SetReal_GER` methods. The iGet_GER will return the message
-with strings replaced by their settings.  By convention, we recommend
-that you use "%1", "%2", etc. as replacement strings.
-""")
+                 :class:`GER` message files contain numbered messages that can be used within GXs.
+                 Following is an example from the file :class:`GEOSOFT`.:class:`GER`:
+                 
+                 
+                       #20008
+                       ! Invalid password. The product installation has failed.
+                 
+                       #20009
+                       ! Unable to find INI file: %1
+                       ! See the documentation for details
+                 
+                 
+                 A '#' character in column 1 indicates a message number.  The message
+                 follows on lines that begin with a '!' character.  Strings in the message
+                 may be replaced at run time with values using the :func:`SetString_GER`,
+                 :func:`SetInt_GER` and :func:`SetReal_GER` methods. The iGet_GER will return the message
+                 with strings replaced by their settings.  By convention, we recommend
+                 that you use "%1", "%2", etc. as replacement strings.
+                 """)
 
 
 
@@ -39,6 +39,10 @@ gx_methods = {
         Method('Create_GER', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Opens an ASCII error file to read from.",
+               notes="""
+               The :class:`GER` file may be in the local directory or the :class:`GEOSOFT`
+               directory.
+               """,
                return_type="GER",
                return_doc=":class:`GER` Object",
                parameters = [

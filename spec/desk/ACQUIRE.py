@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ACQUIRE',
                  doc="""
-This class is used to import Acquire data. It uses the
-public Acquire API.
-""")
+                 This class is used to import Acquire data. It uses the
+                 public Acquire API.
+                 """)
 
 
 gx_defines = [
@@ -48,6 +48,10 @@ gx_methods = {
         Method('iImportHole_ACQUIRE', module='geoacquire', version='6.0.1',
                availability=Availability.LICENSED, 
                doc="Import Drillhole data acQuire database into a GDB",
+               notes="""
+               Point data and polygon data are saved into D### lines in GDB,
+               ### representing incremental number starting from 0
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -73,6 +77,11 @@ gx_methods = {
         Method('iImportPoint_ACQUIRE', module='geoacquire', version='6.0.1',
                availability=Availability.LICENSED, 
                doc="Import Point Sample data acQuire database into a GDB",
+               notes="""
+               Data existing in the receiving GDB file will be over-written.
+               Point data and polygon data are saved into D### lines in GDB,
+               ### representing incremental number starting from 0
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -92,6 +101,11 @@ gx_methods = {
         Method('iSelectionTool_ACQUIRE', module='geoacquire', version='6.0.1',
                availability=Availability.LICENSED, 
                doc="Run the Acquire Selection Tool.",
+               notes="""
+               The selection file will be loaded (if present) and then
+               the user can make selections then the selections are saved
+               back in the selection file.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok

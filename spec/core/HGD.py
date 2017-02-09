@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('HGD',
                  doc="""
-High Performance Grid. Designed to place grid data
-on a DAP server. It produces a multi-resolution
-compressed object that supports multi-threading and
-allows for high-speed extraction of data at any
-resolution.
-""")
+                 High Performance Grid. Designed to place grid data
+                 on a DAP server. It produces a multi-resolution
+                 compressed object that supports multi-threading and
+                 allows for high-speed extraction of data at any
+                 resolution.
+                 """)
 
 
 

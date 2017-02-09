@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MISC',
                  doc="""
-Not a class. A catch-all for miscellaneous geophysical
-methods, primarily file conversions.
-""")
+                 Not a class. A catch-all for miscellaneous geophysical
+                 methods, primarily file conversions.
+                 """)
 
 
 
@@ -42,6 +42,17 @@ gx_methods = {
         Method('Ukoa2Tbl_MISC', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Convert a UKOA file to a location TBL file.",
+               notes="""
+               The TBL file will contain the following fields:
+               
+               = Line:string16
+               = Station:long
+               = Latitude:double
+               = Longitude:double
+               = X:double
+               = Y:double
+               = Elevation:double
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -57,6 +68,10 @@ gx_methods = {
         Method('CG3toRAW_MISC', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, 
                doc="Convert a CG3 dump to RAW format.",
+               notes="""
+               REPLACED BY: :func:`ConvertCG3toRAW_MISC`.
+               or supporting tide correction info in the CG3 file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -68,6 +83,10 @@ gx_methods = {
         Method('CG5toRAW_MISC', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, is_obsolete=True, 
                doc="Convert a CG5 dump to RAW format.",
+               notes="""
+               REPLACED BY: :func:`ConvertCG5toRAW_MISC`.
+               for supporting tide correction info in the CG5 file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

@@ -2,16 +2,16 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('PAT',
                  doc="""
-A :class:`PAT` object is created from a Geosoft-format pattern file.
-It contains all the individual patterns listed in the file.
-
-Notes		You may create your own fill patterns should be added to the "user.pat"
-le in the <geosoft>\\user\\etc directory.
-
-you wish to add your own fill patterns, create a file named user.pat in
-e <geosoft>/User/ directory and add your own fill patterns in the number
-nge 20000 to 29999.
-""")
+                 A :class:`PAT` object is created from a Geosoft-format pattern file.
+                 It contains all the individual patterns listed in the file.
+                 
+                 Notes		You may create your own fill patterns should be added to the "user.pat"
+                 le in the <geosoft>\\user\\etc directory.
+                 
+                 you wish to add your own fill patterns, create a file named user.pat in
+                 e <geosoft>/User/ directory and add your own fill patterns in the number
+                 nge 20000 to 29999.
+                 """)
 
 
 
@@ -38,6 +38,11 @@ gx_methods = {
         Method('GetLST_PAT', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Copies all pattern names into a :class:`LST` object.",
+               notes="""
+               Returns a list of the available patterns.
+               There will always be at least two items,
+               "None" and "Solid Fill"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PAT",
@@ -53,6 +58,7 @@ gx_methods = {
         Method('Copy_PAT', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Copy one :class:`PAT` object to another.",
+               notes="Was not correctly implemented or used",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PAT",
@@ -64,6 +70,7 @@ gx_methods = {
         Method('Load_PAT', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Load patterns from a file",
+               notes="Was not correctly implemented or used",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PAT",

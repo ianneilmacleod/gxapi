@@ -28,6 +28,11 @@ gx_methods = {
         Method('BarPlot_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plot a Bar plot of up to 8 channels.",
+               notes="""
+               The number of channels is taken from the Data handles :class:`VV`.
+               Plots a bar plot with the center of the "X" axis at the symbol location.
+               See the note on offset symbols in :func:`RosePlot_CHIMERA`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -57,6 +62,17 @@ gx_methods = {
         Method('CategorizeByValue_CHIMERA', module='geochimera', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Transform values to the index of input data ranges.",
+               notes="""
+               A list of minima (e.g.  M1, M2, M3, M4, M5) is input.
+               A list of values V is input and transformed to outputs N in the following manner:
+               
+               if(V) >= M5) N = 5
+               else if(V) >= M4) N = 4
+               ...
+               ...
+               else if(V) >= M1) N = 1
+               else N = 0
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -70,6 +86,11 @@ gx_methods = {
         Method('CategorizeByValueDetLimit_CHIMERA', module='geochimera', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Transform values to the index of input data ranges, with detection limit.",
+               notes="""
+               Same as :func:`CategorizeByValue_CHIMERA`, but if the
+               input value is less than the detection limit,
+               the output value is set to zero.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -85,6 +106,16 @@ gx_methods = {
         Method('ClipToDetectLimit_CHIMERA', module='geochimera', version='5.0.8',
                availability=Availability.EXTENSION, 
                doc="Apply detection limit clipping of data.",
+               notes="""
+               Flow:
+               
+               1. If auto-converting negatives, then all negative values
+                   are replaced by -0.5*value, and detection limit is ignored.
+               
+               2. If not auto-converting negatives, and the detection limit is not
+                  :def_val:`rDUMMY`, then values less than the detection limit are converted to
+                  one-half the detection limit.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -98,6 +129,7 @@ gx_methods = {
         Method('DrawCircleOffsetMarkers_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plots location marker and joining line for circle offset symbols",
+               notes="Draws black filled circle (symbols.gfn #7) and a joining line.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -117,6 +149,7 @@ gx_methods = {
         Method('DrawRectangleOffsetMarkers_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plots location marker and joining line for rectangle offset symbols",
+               notes="Draws black filled circle (symbols.gfn #7) and a joining line.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -211,6 +244,11 @@ gx_methods = {
         Method('GetExpressionDataVV_CHIMERA', module='geochimera', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Get data from a line using a channel expression.",
+               notes="""
+               Input a channel expression. Units for individual channels
+               are stored in the input INI. Returns a :class:`VV` for the given line
+               with the calculated expression values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -230,6 +268,23 @@ gx_methods = {
         Method('GetLithogeochemData_CHIMERA', module='geochimera', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Get all rows of non-dummy data in a database.",
+               notes="""
+               This function is a quick way to get all rows
+               of data, guaranteeing no dummy items.
+               Book-keeping VVs returned let you easily
+               write back results to new channels in the
+               correct locations.
+               Set the "Dummy Row" :class:`VV` to 1 if you wish to
+               remove any row where a value for the corresponding
+               channel is a dummy.
+               
+               Transforms to apply:
+               
+               -1 - Channel default (will be either raw or log)
+               0 - Raw Transform
+               1 - Log transform: base e with log min = CHIMERA_LOG_MIN
+               2 - Lambda transform
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -265,6 +320,17 @@ gx_methods = {
         Method('GetTransform_CHIMERA', module='geochimera', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Get channel transform options and lambda values.",
+               notes="""
+               If the lambda transform is requested, the channel
+               must have the lambda value defined.
+               
+               Input Transform options
+               
+               -1 - Channel default (will be either raw or log)
+               0 - Raw Transform
+               1 - Log transform: base e with log min = CHIMERA_LOG_MIN
+               2 - Lambda transform
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -282,6 +348,12 @@ gx_methods = {
         Method('iIsAcquireChan_CHIMERA', module='geochimera', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc='Is this channel in acQuire format (e.g. "Ag_ppm_4AWR")',
+               notes="""
+               Expressions can take acQuire-type named channels
+               if the exact element/oxide is not found. This function
+               extracts the channel name, and units from an acQuire-formatted
+               channel name.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL`",
                parameters = [
@@ -304,6 +376,10 @@ gx_methods = {
         Method('iIsElement_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Tests a string to see if it is an element symbol",
+               notes="""
+               Suggested use - testing to see if a channel name is an
+               element so that the "ASSAY" class can be set.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL`",
                parameters = [
@@ -316,6 +392,11 @@ gx_methods = {
         Method('LaunchHistogram_CHIMERA', module='geochimera', version='5.0.6',
                availability=Availability.EXTENSION, 
                doc="Launch histogram tool on a database.",
+               notes="""
+               The database should be a currently open database.
+               This function supercedes :func:`LaunchHistogram_EDB`, (which now
+               just gets the name of the :class:`EDB` and calls this function).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -327,6 +408,7 @@ gx_methods = {
         Method('LaunchProbability_CHIMERA', module='geochimera', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Launch probability tool on a database.",
+               notes="The database should be a currently open database.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -338,6 +420,19 @@ gx_methods = {
         Method('LaunchScatter_CHIMERA', module='geochimera', version='5.0.6',
                availability=Availability.EXTENSION, 
                doc="Launch scatter tool on a database.",
+               notes="""
+               The scatter tool uses the following INI parameters
+               
+               SCATTER.STM       name of the scatter template,"none" for none
+               SCATTER.STM_NAME  name of last template section, "" for none.
+               SCATTER.X         name of channel to display in X
+               SCATTER.Y         name of channel to display in Y
+               SCATTER.MASK      name of channel to use for mask
+               
+               The database should be a currently open database.
+               This function supercedes :func:`LaunchScatter_EDB`, (which now
+               just gets the name of the :class:`EDB` and calls this function).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -347,6 +442,18 @@ gx_methods = {
         Method('LaunchTriplot_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Launch Triplot tool on a database.",
+               notes="""
+               The Triplot tool uses the following INI parameters
+               
+                        TRIPLOT.TTM       name of the triplot template,"none" for none
+                        TRIPLOT.TTM_NAME  name of last template section, "" for none.
+                        TRIPLOT.X         name of channel to display in X
+                        TRIPLOT.Y         name of channel to display in Y
+                        TRIPLOT.Z         name of channel to display in Z
+                        TRIPLOT.MASK      name of channel to use for mask
+               
+               The database should be a currently open database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -356,6 +463,15 @@ gx_methods = {
         Method('MaskChanLST_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Load a :class:`LST` with mask channels.",
+               notes="""
+               Loads a :class:`LST` with all channels with CLASS "MASK", as well
+               as all channels containing the string "MASK", as long
+               as the CLASS for these channels is not set to something
+               other than "" or "MASK".
+               
+               This function has been duplicated by :func:`MaskChanLST_DB`, which
+               is safe to use in applications which do not have :class:`CHIMERA` loaded.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -367,6 +483,17 @@ gx_methods = {
         Method('OrderedChannelLST_CHIMERA', module='geochimera', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Fill a list with the channels in the preferred order.",
+               notes="""
+               Loads a :class:`LST` with all channels in the preferred order:
+               
+               First:  Sample, E, N, assay channels,
+               Middle: Data from survey (other channels),
+               Last:   Duplicate, Standard, Chemmask (and other masks), weight, lab, batch
+               
+               If the input :class:`LST` object has values, it is used as the channel :class:`LST`,
+               otherwise, get all the database channels. (This allows you to pass in
+               the currently displayed channels and only reload those).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -378,6 +505,12 @@ gx_methods = {
         Method('PiePlot_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plot a Pie plot of up to 8 channels.",
+               notes="""
+               The number of channels is taken from the Data handles :class:`VV`.
+               The values in each data :class:`VV` are summed and the pie arc is
+               is given by the percent contribution of each consituent.
+               See the note on offset symbols in :func:`RosePlot_CHIMERA`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -407,6 +540,11 @@ gx_methods = {
         Method('PiePlot2_CHIMERA', module='geochimera', version='5.1.5',
                availability=Availability.EXTENSION, 
                doc="Same as :func:`PiePlot_CHIMERA`, with a starting angle.",
+               notes="""
+               The starting angle is the location of the edge of the first pie
+               slice, counted in degrees counter-clockwise from horizontal
+               (3 o'clock). Zero degrees gives the same plot as :func:`PiePlot_CHIMERA`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -438,6 +576,7 @@ gx_methods = {
         Method('PlotStringClassifiedSymbolsLegendFromClassFile_CHIMERA', module='geochimera', version='8.0.1',
                availability=Availability.EXTENSION, 
                doc="Plot legend for the string classified symbols",
+               notes="Plot in a legend the classes in the class file found in the input class indices.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -459,6 +598,10 @@ gx_methods = {
         Method('rAtomicWeight_CHIMERA', module='geochimera', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Return the atomic weight of a particular element.",
+               notes="""
+               If the input string is not an element symbol (elements in the range
+               1-92, "H" to "U"), then returns a dummy (:def_val:`GS_R8DM`).
+               """,
                return_type=Type.DOUBLE,
                return_doc="The atomic weight of the given element.",
                parameters = [
@@ -469,6 +612,21 @@ gx_methods = {
         Method('RosePlot_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plot a Rose plot of up to 8 channels.",
+               notes="""
+               The number of channels is taken from the Data handles :class:`VV`.
+               The values in each data :class:`VV` give the radius, in view units,
+               of the sector arc to plots. Values <=0 or dummies are not
+               plotted.
+               
+               Offset symbols: When selected, the symbols plot without
+               overlap, away from the original locations. The original
+               location is marked with a small symbol and a line joins the
+               original position and the relocated symbol.
+               Care should be taken when choosing the symbol size, because
+               if the point density is too high, all the points will get
+               pushed to the outside edge and your plot will look like a
+               hedgehog (it also takes a lot longer!).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -496,6 +654,11 @@ gx_methods = {
         Method('RosePlot2_CHIMERA', module='geochimera', version='5.1.5',
                availability=Availability.EXTENSION, 
                doc="Same as :func:`RosePlot_CHIMERA`, with a starting angle.",
+               notes="""
+               The starting angle is the location of the edge of the first pie
+               slice, counted in degrees counter-clockwise from horizontal
+               (3 o'clock). Zero degrees gives the same plot as :func:`RosePlot_CHIMERA`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -525,6 +688,10 @@ gx_methods = {
         Method('Scatter2_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plot the scatter plot on a map using symbol number, size and color VVs.",
+               notes="""
+               The view scaling is not altered with any projection. The base view
+               is best as the input.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -598,6 +765,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a scatter plot using a single fixed symbol.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -671,6 +839,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a scatter plot using colours based on a zone file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -750,6 +919,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a scatter plot using symbols based on a symbol class file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -813,6 +983,21 @@ gx_methods = {
         Method('SetLithogeochemData_CHIMERA', module='geochimera', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Set data back into a database.",
+               notes="""
+               This function would normally be called after
+               AAGetLithogeochemData_CHIMERA to write processed values
+               back into a database, in the correct lines,
+               and in the correct fiducial locations wrt the
+               other data. The book-keeping VVs would all be
+               set up in AAGetLithogeochemData_CHIMERA.
+               
+               Values NOT in the data (missing indices) will
+               be initialized to dummy if the channel is new,
+               or if the value in the last :class:`VV` below is set to 1.
+               
+               New channel types will be set using the data :class:`VV` type.
+               Any meta data (CLASS, display formats) should be set separately.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -840,6 +1025,11 @@ gx_methods = {
         Method('StackedBarPlot_CHIMERA', module='geochimera', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Plot a Bar plot of up to 8 channels, bars stacked on each other",
+               notes="""
+               The number of channels is taken from the Data handles :class:`VV`.
+               Plots a bar plot with the center of the "X" axis at the symbol location.
+               See the note on offset symbols in :func:`RosePlot_CHIMERA`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -869,6 +1059,10 @@ gx_methods = {
         Method('Standard_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, 
                doc="Plot ASSAY Standard result in a graph window.",
+               notes="""
+               If the tolerance is :def_val:`rDUMMY`, then the minimum and maximum
+               values are used, and must be specified.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -900,6 +1094,7 @@ gx_methods = {
         Method('StandardView_CHIMERA', module='geochimera', version='8.3.0',
                availability=Availability.EXTENSION, 
                doc="Plot ASSAY Standard result in a graph window.",
+               notes="Same as :func:`Standard_CHIMERA` but plot in a new view.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -942,6 +1137,13 @@ gx_methods = {
         Method('TriPlot2_CHIMERA', module='geochimera', version='5.1.6',
                availability=Availability.EXTENSION, 
                doc="Plot the TriPlot on a map using symbol number, size and color VVs.",
+               notes="""
+               The mask channel :class:`VV` is used for plotting precedence; those points with
+               mask = dummy are plotted first, then overwritten with the non-masked
+               values, so you don't get "good" points being covered up by masked values.
+               The view scaling is not altered with any projection. The base view
+               is best as the input.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1017,6 +1219,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a tri plot using a single fixed symbol.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1080,6 +1283,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a tri plot using colours based on a zone file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1149,6 +1353,7 @@ gx_methods = {
                Optional data masking with masking colour.
                Optioinal database linking.
                """,
+               notes="Plot a tri-plot using symbols based on a symbol class file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1204,6 +1409,7 @@ gx_methods = {
         Method('GetStringClassifiedSymbolsIndex_CHIMERA', module='geochimera', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Get symbol indices based on a classification :class:`VV`.",
+               notes="Obsolete - Use GetStringClassifiedSymbolsIndexFromClassFile_CHIMERA. Scatter and Triplots now use class files.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1215,6 +1421,13 @@ gx_methods = {
         Method('GetStringClassifiedSymbols_CHIMERA', module='geochimera', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Get symbol numbers and colours based on a classification :class:`VV`.",
+               notes="""
+               Obsolete - Use GetStringClassifiedSymbolsFromClassFile_CHIMERA. Scatter and Triplots now use class files.
+               Up to 42 different symbols are defined.
+               Index 0 is returned for unclassified strings ""
+               Index 1 is returned for unassigned strings (only the
+               first 40 different classes get their own unique symbol/colour.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -1232,6 +1445,14 @@ gx_methods = {
         Method('PlotStringClassifiedSymbolsLegend_CHIMERA', module='geochimera', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Plot legend for the string classified symbols",
+               notes="""
+               Obsolete - Use :func:`PlotStringClassifiedSymbolsLegendFromClassFile_CHIMERA`. Scatter and Triplots now use class files.
+               Up to 42 different symbols are defined.
+               Duplicate symbol indices are removed.
+               Index 0 is returned for unclassified strings ""
+               Index 1 is returned for unassigned strings (only the
+               first 40 different classes get their own unique symbol/colour.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1257,6 +1478,11 @@ gx_methods = {
         Method('Scatter_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Plot the scatter plot on a map.",
+               notes="""
+               OBSOLETE.
+               The view scaling is not altered with any projection. The base view
+               is best as the input.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1322,6 +1548,19 @@ gx_methods = {
         Method('Scatter3_CHIMERA', module='geochimera', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Like :func:`Scatter2_CHIMERA`, but passes Line-Fid info, more options.",
+               notes="""
+               OBSOLETE - Replaced by Scatter4_CHIMERA.
+               - As of v6.3, the plotted data is put in its own view. The Line-Fid
+               values are passed in to enable Line-Fid linking.
+               - Optional Mask symbol colours
+               - Optional overlay. (See :class:`SEMPLOT` class).
+               - If the classified symbols are used, unique symbols (up to 266) are
+               given to the different classes. An "Unassigned" symbol is plotted
+               for blank or classes above 266.
+               - The view is given a user-projection and so should not be re-used
+               for other purposes (like the base view for the :func:`Scatter_CHIMERA` and
+               :func:`Scatter2_CHIMERA` functions can be).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1387,6 +1626,7 @@ gx_methods = {
         Method('TriPlot_CHIMERA', module='geochimera', version='5.0.7',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Plot the TriPlot on a map.",
+               notes="OBSOLETE",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",
@@ -1454,6 +1694,7 @@ gx_methods = {
         Method('TriPlot3_CHIMERA', module='geochimera', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="TriPlot to its own view, with Line-Fid info.",
+               notes="OBSOLETE",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVIEW",

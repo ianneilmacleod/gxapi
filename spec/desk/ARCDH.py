@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ARCDH',
                  doc="""
-This library is not a class. It contains various utilities
-used in the Target extension for ArcGIS.
-""")
+                 This library is not a class. It contains various utilities
+                 used in the Target extension for ArcGIS.
+                 """)
 
 
 

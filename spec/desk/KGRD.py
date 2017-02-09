@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('KGRD',
                  doc="""
-The :class:`KGRD` object is used as a storage place for the control
-parameters that the Krigrid program needs to execute. The
-Run_KGRD function executes the Krigrid program using the
-:class:`KGRD` object.
-""")
+                 The :class:`KGRD` object is used as a storage place for the control
+                 parameters that the Krigrid program needs to execute. The
+                 Run_KGRD function executes the Krigrid program using the
+                 :class:`KGRD` object.
+                 """)
 
 
 
@@ -27,6 +27,12 @@ gx_methods = {
         Method('Create_KGRD', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Create a handle to a Krigrid object",
+               notes="""
+               The Krigrid object is initially empty. It will store the
+               control file parameters which the Krigrid program needs
+               to execute. Use the LoadParms_KGRD method to get the
+               control file parameters into the :class:`KGRD` object.
+               """,
                return_type="KGRD",
                return_doc=":class:`KGRD` Object"),
 
@@ -42,6 +48,13 @@ gx_methods = {
         Method('iLoadParms_KGRD', module='geogxx', version='6.0.1',
                availability=Availability.EXTENSION, 
                doc="Retrieves a Krigrid object's control parameters from a file.",
+               notes="""
+               If the control file name passed into this function is a file
+               which does not exist, then the defaults for a Krigrid control
+               file will be generated and put into the :class:`KGRD` object.
+               Otherwise, the control file's settings are retrieved from
+               the file and loaded into the :class:`KGRD` object.
+               """,
                return_type=Type.INT32_T,
                return_doc="0 OK, 1 Error.",
                parameters = [
@@ -145,6 +158,10 @@ gx_methods = {
                doc="""
                Puts the Krigrid object's control parameters back into
                its control file.
+               """,
+               notes="""
+               If the control file did not previously exist, it will be
+               created. Otherwise, the old file will be overwritten.
                """,
                return_type=Type.INT32_T,
                return_doc="0 OK, 1 Error.",

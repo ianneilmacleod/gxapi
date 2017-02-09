@@ -2,30 +2,30 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ITR',
                  doc="""
-The :class:`ITR` class provides access to :class:`ITR` files. An :class:`ITR` file maps
-ranges of values to specific colours. The :class:`ITR` object is typically
-used in conjunction with :class:`MVIEW` objects (see :class:`MVIEW` and :class:`MVU`).
-""",
+                 The :class:`ITR` class provides access to :class:`ITR` files. An :class:`ITR` file maps
+                 ranges of values to specific colours. The :class:`ITR` object is typically
+                 used in conjunction with :class:`MVIEW` objects (see :class:`MVIEW` and :class:`MVU`).
+                 """,
                  notes="""
-Histogram ranges and colour zone ranges
-
-Histogram bins are defined with inclusive minima and exclusive maxima;
-for instance if Min = 0 and Inc = 1, then the second bin would include
-all values z such that  0 <= z < 1 (the first bin has all values < 0).
-
-Colour zones used in displaying grids (:class:`ITR`, ZON etc...) are the
-opposite, with exclusive minima and inclusive maxima.
-For instance, if a zone is defined from 0 to 1, then it would
-contain all values of z such that 0 < z <= 1.
-
-These definitions mean that it is impossible to perfectly assign
-:class:`ITR` colours to individual bars of a histogram. The best work-around
-when the data values are integers is to define the colour zones using
-0.5 values between the integers. A general work-around is to make the
-number of histogram bins much larger than the number of colour zones.
-
-The :def_val:`ITR_NULL` is used to hold a NULL handle to an :class:`ITR` class.
-""")
+                 Histogram ranges and colour zone ranges
+                 
+                 Histogram bins are defined with inclusive minima and exclusive maxima;
+                 for instance if Min = 0 and Inc = 1, then the second bin would include
+                 all values z such that  0 <= z < 1 (the first bin has all values < 0).
+                 
+                 Colour zones used in displaying grids (:class:`ITR`, ZON etc...) are the
+                 opposite, with exclusive minima and inclusive maxima.
+                 For instance, if a zone is defined from 0 to 1, then it would
+                 contain all values of z such that 0 < z <= 1.
+                 
+                 These definitions mean that it is impossible to perfectly assign
+                 :class:`ITR` colours to individual bars of a histogram. The best work-around
+                 when the data values are integers is to define the colour zones using
+                 0.5 values between the integers. A general work-around is to make the
+                 number of histogram bins much larger than the number of colour zones.
+                 
+                 The :def_val:`ITR_NULL` is used to hold a NULL handle to an :class:`ITR` class.
+                 """)
 
 
 gx_defines = [
@@ -85,6 +85,11 @@ gx_methods = {
         Method('ChangeBrightness_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Change the brightness.",
+               notes="""
+               0.0 brightness does nothing.
+               -1.0 to 0.0 makes colours darker, -1.0 is black
+               0.0 to 1.0 makes colours lighter, 1.0 is white
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",
@@ -96,6 +101,10 @@ gx_methods = {
         Method('ColorVV_ITR', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Get color transform of a :class:`VV`.",
+               notes="""
+               If the input value is a dummy, then the output colour
+               is 0 (no colour).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR"),
@@ -135,6 +144,15 @@ gx_methods = {
         Method('CreateIMG_ITR', module='geoengine.core', version='5.1.0',
                availability=Availability.PUBLIC, 
                doc="Create an :class:`ITR` for an image.",
+               notes="""
+               The :def_val:`ITR_ZONE_DEFAULT` model will ask the :class:`IMG` to provide
+               a model if it can.
+               
+               If a shaded relief model is selected, a shaded image
+               will be created and a shaded image file will be created with
+               the same name as the original grid but with the suffux "_s"
+               added to the name part of the grid.
+               """,
                return_type="ITR",
                return_doc=":class:`ITR` Object",
                parameters = [
@@ -194,6 +212,14 @@ gx_methods = {
         Method('GetDataLimits_ITR', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Get :class:`ITR` max/min data limits.",
+               notes="""
+               In some ITRs, especially those defined and
+               embedded inside grid (:class:`IMG`) objects, the
+               actual data minimum and maximum values are
+               stored. This function retrieves those values.
+               This is NOT true of all :class:`ITR` objects, and in
+               those cases dummy values will be returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR"),
@@ -216,6 +242,7 @@ gx_methods = {
         Method('GetZoneColor_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the colour in a zone of the :class:`ITR`",
+               notes="Valid indices are 0 to N-1, where N is the size of the :class:`ITR`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",
@@ -250,6 +277,10 @@ gx_methods = {
         Method('iGetZoneModelType_ITR', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Get the :class:`ITR` zone model (e.g. Linear, LogLin, Equal Area).",
+               notes="""
+               This function may be used to determine if a colour
+               transform is included in an :class:`ITR`.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`ITR_ZONE_MODEL`",
                parameters = [
@@ -285,6 +316,7 @@ gx_methods = {
         Method('LogLinear_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Calculate a log transform.",
+               notes="The function name is a misnomer. This is a pure log transform.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",
@@ -328,6 +360,12 @@ gx_methods = {
         Method('rGetBrightness_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the brightness setting of the :class:`ITR`",
+               notes="""
+               Brightness can range from -1.0 (black) to 1.0 (white).
+               This brightness control is relative to the normal colour
+               when the :class:`ITR` is created.
+               """,
+               see_also=":func:`ChangeBrightness_ITR`, :func:`rGetBrightness_AGG`, :func:`ChangeBrightness_AGG`",
                return_type=Type.DOUBLE,
                return_doc="The brightness setting of the :class:`ITR`",
                parameters = [
@@ -338,6 +376,7 @@ gx_methods = {
         Method('rGetZoneValue_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the value in a zone of the :class:`ITR`",
+               notes="Valid indices are 0 to N-2, where N is the size of the :class:`ITR`.",
                return_type=Type.DOUBLE,
                return_doc="The value of the specified zone.",
                parameters = [
@@ -381,6 +420,7 @@ gx_methods = {
         Method('SetAggMap_ITR', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set :class:`ITR` to an Agg in map",
+               notes="See the :func:`CreateMap_ITR` function",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -394,6 +434,16 @@ gx_methods = {
         Method('SetBrightContrast_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the brightness of the :class:`ITR` colours",
+               notes="""
+               Brightness settings:
+               0.0   - black
+               0.5   - normal (no change)
+               1.0   - white
+               
+               Contrast
+               0.0   - flat
+               1.0   - full contrast (normal)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",
@@ -441,6 +491,7 @@ gx_methods = {
         Method('SetZoneColor_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the colour in a zone of the :class:`ITR`",
+               notes="Valid indices are 0 to N-1, where N is the size of the :class:`ITR`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",
@@ -454,6 +505,7 @@ gx_methods = {
         Method('SetZoneValue_ITR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the value in a zone of the :class:`ITR`",
+               notes="Valid indices are 0 to N-2, where N is the size of the :class:`ITR`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ITR",

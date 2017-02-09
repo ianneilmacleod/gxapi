@@ -2,15 +2,15 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DH',
                  doc="""
-This class is used for importing and interacting with Drill Hole
-data files. For detailed information on Drill Hole data,
-see the documentation for Wholeplot.
-""",
+                 This class is used for importing and interacting with Drill Hole
+                 data files. For detailed information on Drill Hole data,
+                 see the documentation for Wholeplot.
+                 """,
                  notes="""
-The :class:`DH` class has some defines not used by any functions.
-    :def_val:`DH_DEFINE_PLAN`
-    :def:`DH_DEFINE_SECT`
-""")
+                 The :class:`DH` class has some defines not used by any functions.
+                     :def_val:`DH_DEFINE_PLAN`
+                     :def:`DH_DEFINE_SECT`
+                 """)
 
 
 gx_defines = [
@@ -178,6 +178,12 @@ gx_methods = {
         Method('CreatChanLST_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available string and numeric channel code values.",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -189,6 +195,12 @@ gx_methods = {
         Method('DepthDataLST_DH', module='geodh', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available channel code values from Depth databases.",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -200,6 +212,12 @@ gx_methods = {
         Method('FromToDataLST_DH', module='geodh', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available string and numeric channel code values from From-To databases.",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -213,6 +231,11 @@ gx_methods = {
         Method('GetGeologyContacts_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Return XYZ locations of top or bottom geological surfaces",
+               notes="""
+               For the input :class:`LST` of holes, returns XYZ location of top or bottom
+               contact with the input geology. Those selected holes which do NOT
+               have contacts, return :def_val:`rDUMMY` for the corresponding locations.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -238,6 +261,14 @@ gx_methods = {
         Method('GetOrientedCoreDipDir_DH', module='geodh', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Converted alpha/beta values in oriented cores to dip/dip direction.",
+               notes="""
+               The input data are the oriented core alpha and beta values, using either
+               top or bottom reference. The values for each hole in the :class:`LST` are converted
+               to "absolute" dip and dip-direction values, using the resurveyed hole
+               orientations at each depth.
+               The alpha and beta data must be from the same database, and the output
+               dip and dip/dir channels are written to the same database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -259,6 +290,7 @@ gx_methods = {
         Method('GetUniqueChannelItems_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Return a :class:`VV` with unique items in a channel.",
+               notes="Finds and sorts all the unique non-dummy items for the selected channel.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -274,6 +306,7 @@ gx_methods = {
         Method('GetUniqueChannelItemsFromCollar_DH', module='geodh', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Return a :class:`VV` with unique items in a channel.",
+               notes="Finds and sorts all the unique non-dummy items for the selected channel.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -289,6 +322,7 @@ gx_methods = {
         Method('iChanType_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Return the data type for a channel code.",
+               notes="Finds and sorts all the unique non-dummy items for the selected channel.",
                return_type=Type.INT32_T,
                return_doc="Channel data type",
                parameters = [
@@ -301,6 +335,12 @@ gx_methods = {
         Method('iFindHoleIntersection_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Return XYZ locations of the intersection of a hole with a DEM grid.",
+               notes="""
+               Input the hole index and an :class:`IMG` object. Returns XYZ location
+               of the hole intersection with the DEM. Interpolation inside the DEM
+               uses the native :class:`IMG` interp method. If no intersection is found the
+               returned XYZ locations are :def_val:`rDUMMY`.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                1 if intersection found
@@ -324,6 +364,7 @@ gx_methods = {
         Method('IGetChanCodeInfo_DH', module='geodh', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Return the assay database index and channel name from a channel code string.",
+               notes='The input channel code is in the form "[Assay] channel"',
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -341,6 +382,10 @@ gx_methods = {
         Method('iGridIntersection_DH', module='geodh', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Algorithm to determine the intersection of a straight hole with a surface (DEM) grid.",
+               notes="""
+               Given a point on the hole and the straight hole dip and azimuth,
+               ocate (an) intersection point with the input DEM grid.
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if an intersection is found, 0 if not.",
                parameters = [
@@ -369,6 +414,16 @@ gx_methods = {
         Method('LithoGrid3D_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Create a lithology voxel grid with lith codes mapped to single values.",
+               notes="""
+               Values in the input channel are assigned the index of the corresponding
+               item found in the input :class:`TPAT`.
+               The compositing gap refers to the size of gaps in the data (either
+               a blank lithology or missing from-to interval) which will be ignored
+               when compositing lithologies into contiguous from-to intervals.
+               The non-contact radius is used to dummy out the level grids around holes
+               where the gridded lithology is not found. If not specified (dummy) then
+               half the distance to the nearest contacting hole is used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -396,6 +451,12 @@ gx_methods = {
         Method('NumericChanLST_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available numeric channel code values.",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -407,6 +468,12 @@ gx_methods = {
         Method('NumericFromToDataLST_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available numeric channel code values from From-To databases..",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -420,6 +487,14 @@ gx_methods = {
         Method('PunchGridHoles_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Dummy out locations in a grid around non-contact holes.",
+               notes="""
+               Grid is dummied out to the blanking distance around holes where
+               the input Z value is dummy. If a contacting hole is closer then
+               twice the blanking distance, the blanking distance is reduced
+               accordingly. Distances are measured horizontally (e.g. Z is ignored).
+               If the blanking distance is zero or dummy, the distance is
+               automatically set to half the distance to the closest hole intersection.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -439,6 +514,12 @@ gx_methods = {
         Method('StringChanLST_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available string channel code values.",
+               notes="""
+               Channel codes are in the format "[Assay] Au", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Au" channel in the "Tutorial_Assay.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -450,6 +531,12 @@ gx_methods = {
         Method('StringFromToDataLST_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Fills a :class:`LST` with available string-type channel code values from From-To databases.",
+               notes="""
+               Channel codes are in the format "[Geology] Lithology", where the name in
+               the square brackets is descriptive part of the project database
+               containing the given channel name. The above code might refer to
+               the "Lithology" channel in the "Tutorial_Geology.gdb" database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -465,6 +552,7 @@ gx_methods = {
         Method('_hAssayDB_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Database for an assay data set.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB",
                return_doc="""
                x - :class:`DB`
@@ -480,6 +568,7 @@ gx_methods = {
         Method('_hAssaySymb_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Line/Group symbol for a specific assay data set hole.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB_SYMB",
                return_doc="""
                x - DB_SYMB
@@ -497,6 +586,7 @@ gx_methods = {
         Method('_hCollarDB_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Database for the collar table.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB",
                return_doc="""
                x - :class:`DB`
@@ -510,6 +600,7 @@ gx_methods = {
         Method('_hCollarSymb_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Line/Group symbol for the collar table.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB_SYMB",
                return_doc="""
                x - DB_SYMB
@@ -523,6 +614,7 @@ gx_methods = {
         Method('_hDipAzSurveyDB_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Database for the Dip-Azimuth survey data",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB",
                return_doc="""
                x - :class:`DB`
@@ -536,6 +628,7 @@ gx_methods = {
         Method('_hDipAzSurveySymb_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Line/Group symbol for a specific hole Dip-Azimuth survey.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB_SYMB",
                return_doc="""
                x - DB_SYMB
@@ -551,6 +644,7 @@ gx_methods = {
         Method('_hENSurveyDB_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Database for the East-North survey data",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB",
                return_doc="""
                x - :class:`DB`
@@ -564,6 +658,7 @@ gx_methods = {
         Method('_hENSurveySymb_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Line/Group symbol for a specific hole East-North survey.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type="DB_SYMB",
                return_doc="""
                x - DB_SYMB
@@ -579,6 +674,10 @@ gx_methods = {
         Method('AddSurveyTable_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Add a survey table for a new hole.",
+               notes="""
+               The information is created from the collar table info.
+               If the survey info already exists, does nothing.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -603,6 +702,11 @@ gx_methods = {
         Method('AssayLST_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Return the :class:`LST` of from-to and point assay datasets",
+               notes="""
+               Assay dataset name is given as :def_val:`LST_ITEM_NAME`
+               Assay dataset number is given as :def_val:`LST_ITEM_VALUE`
+               Returns an empty :class:`LST` if no datasets.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -623,6 +727,12 @@ gx_methods = {
         Method('Clean_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Delete extraneous holes from project databases.",
+               notes="""
+               Removes from Project databases any lines not connected to
+               a line found in the collar table list.
+               If all the database lines would be removed, the database is
+               simply deleted.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -708,6 +818,18 @@ gx_methods = {
         Method('ConvertOldLineNames_DH', module='geodh', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc='Convert old "DD001.Assay" type lines to "DD001"',
+               notes="""
+               The input :class:`LST` must be filled using a function like :func:`SymbLST_DB`, which
+               puts the name and symbol into the :class:`LST` items.
+               Any names with a period are truncated at the period, and
+               the line name in the database is changed to the new name
+               (just the hole name).
+               The :class:`LST` is modified to have the new names.
+               A value is put into the :class:`DB` :class:`REG` "DH_CONVERTED_NAMES" parameter so
+               this process is done only once on a database.
+               
+               DO NOT use on old-style single-database Wholeplot projects.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -742,6 +864,12 @@ gx_methods = {
         Method('CreateExternal_DH', module='geodh', version='5.1.6',
                availability=Availability.EXTENSION, 
                doc="Create a :class:`DH` from an external process (no montaj running).",
+               notes="""
+               The regular :func:`Create_DH` assumes a workspace is open and creates
+               the project from the databases which are currently loaded.
+               This function instead creates the project from all projects
+               in the input databases's directory.
+               """,
                return_type="DH",
                return_doc=":class:`DH` Object",
                parameters = [
@@ -752,12 +880,23 @@ gx_methods = {
         Method('Current_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Creates a drill project from current environment.",
+               notes="""
+               If no :class:`DH` database is open the Open :class:`DH` Project :class:`GUI` will be displayed which may be
+               cancelled by the user in which case the GX will terminate with cancel.
+               """,
                return_type="DH",
                return_doc=":class:`DH` Object"),
 
         Method('DatamineToCSV_DH', module='geodh', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Convert a Datamine drillhole file to CSV files ready for import.",
+               notes="""
+               Creates three CSV files and the accompanying template files
+               ready for batch ASCII import into a drill project.
+                  Project_Collar.csv, .i3
+                  Project_Survey.csv, .i3
+                  Project_Assay.csv,  .i3
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -769,6 +908,11 @@ gx_methods = {
         Method('DeleteHoles_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Delete a list of holes from the project.",
+               notes="""
+               Removes all lines in the input :class:`LST` from :class:`DH` project databases.
+               If all the database lines would be removed, the database is
+               simply deleted.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -802,6 +946,10 @@ gx_methods = {
         Method('ExportGeodatabaseLST_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Exports whole or part of a Drill Hole database to an ArcGIS Geodatabase as feature class(es).",
+               notes="""
+               A table with metadata about the created feature classes will be written to the Geodatabase. This table will have the same
+               name with the postfix "_Metadata" attached
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -840,6 +988,7 @@ gx_methods = {
         Method('ExportLST_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Exports a :class:`LST` of holes in a Drill Hole database to an external file.",
+               notes="Use functions like :func:`SelectedLineLST_DB` to construct the :class:`LST`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -886,6 +1035,7 @@ gx_methods = {
         Method('GetDataType_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Get the type of data in a Wholeplot database.",
+               notes="Returns :def_val:`DH_DATA_UNKNOWN` if it can't determine the type.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -951,6 +1101,10 @@ gx_methods = {
         Method('GetIPJ_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Get the project :class:`IPJ`.",
+               notes="""
+               The projection for the project is the projection stored
+               in the DH_EAST channel in the collar table.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -962,6 +1116,12 @@ gx_methods = {
         Method('GetMapNamesVV_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Get plotted map names.",
+               notes="""
+               This will return the currently plotted map name(s)
+               in a :class:`VV`. This should only be called after a call
+               to :func:`Wholeplot_DH`. The :class:`VV` size is set to the number
+               of maps created.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1016,6 +1176,10 @@ gx_methods = {
         Method('GetTableDefaultChanLST_DH', module='geodh', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Return list of default channels by collar/assay/survey table type.",
+               notes="""
+               Fills a :class:`LST` with the default channel names created according to
+               type (Collar, Survey, Assay). Value is in the :def_val:`LST_ITEM_NAME` part.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -1074,6 +1238,7 @@ gx_methods = {
         Method('iCompositingToolGUI_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Annotate a strip log map using the compositing tool.",
+               notes="If any of the input X or Y values are dummies the tool uses default values.",
                return_type=Type.INT32_T,
                return_doc=":def:`DH_COMP_CHOICE`",
                parameters = [
@@ -1092,6 +1257,11 @@ gx_methods = {
         Method('ICreateCollarTable_DH', module='geodh', version='5.1.6',
                availability=Availability.EXTENSION, 
                doc="Create a collar table :class:`DB` with channels set up.",
+               notes="""
+               The database name will be of the form
+               
+               "d:\\directory\\Project_Collar.gdb"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1107,6 +1277,11 @@ gx_methods = {
         Method('ICreateCollarTableDir_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Create a collar table in the specified directory.",
+               notes="""
+               The database name will be of the form
+               
+               "d:\\directory\\Project_Collar.gdb"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1167,6 +1342,11 @@ gx_methods = {
         Method('IGetInfo_DH', module='geodh', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Get Collar Information.",
+               notes="""
+               If the DH_ELEV channel is requested it will also
+               search for the DH_RL channel, which is the new
+               name for the collar elevation.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1214,6 +1394,15 @@ gx_methods = {
         Method('iGetTemplateBlob_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Retrieve the import template from the database.",
+               notes="""
+               The template can be retrieved in order to refresh the
+               database with a call to the DHIMPORT.GX.
+               
+               The import types correspond to the DHIMPORT.IMPTYPE variable:
+               0: ASCII, 1: Database/XLS, 2: ODBC
+               
+               If no template blob exists, templ
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0: No template stored in the database
@@ -1231,6 +1420,26 @@ gx_methods = {
         Method('IGetTemplateInfo_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Retrieve the file, :class:`DH` Table name and type from an import template.",
+               notes="""
+               As of version 6.0, the import templates (*.i3, *.i4) produced
+               by the Wholeplot import wizards contain the following lines:
+               
+                FILE assay.txt  (except for ODBC)
+                DRILLTYPE 3
+                DRILLTABLE Assay
+               
+               The FILE is normally the input file name, except for ODBC, where it
+               is not defined.
+               The DRILLTYPE is one of DH_DATA_XXX, and the DRILLTABLE
+               is the name of the Wholeplot database table; e.g. Project_Assay.gdb
+               in the above case. The DRILLTABLE is only included in the template
+               for :def_val:`DH_DATA_FROMTO` and :def_val:`DH_DATA_POINT`, but this function will
+               return the appropriate table names (e.g. Collar, Survey, ENSurvey)
+               for the other types.
+               If the DRILLTYPE is NOT found in the template, a value of
+               :def_val:`DH_DATA_UNKNOWN` is returned for the data type; likely an indication that this
+               is not a new-style template produced by Wholeplot.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1250,6 +1459,28 @@ gx_methods = {
         Method('IGetTemplateInfoEx_DH', module='geodh', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Retrieve the file, :class:`DH` Table name, type and channel list from an import template.",
+               notes="""
+               As of version 6.0, the import templates (*.i3, *.i4) produced
+               by the Wholeplot import wizards contain the following lines:
+               
+                FILE assay.txt  (except for ODBC)
+                DRILLTYPE 3
+                DRILLTABLE Assay
+               
+               The FILE is normally the input file name, except for ODBC, where it
+               is not defined.
+               The DRILLTYPE is one of DH_DATA_XXX, and the DRILLTABLE
+               is the name of the Wholeplot database table; e.g. Project_Assay.gdb
+               in the above case. The DRILLTABLE is only included in the template
+               for :def_val:`DH_DATA_FROMTO` and :def_val:`DH_DATA_POINT`, but this function will
+               return the appropriate table names (e.g. Collar, Survey, ENSurvey)
+               for the other types.
+               If the DRILLTYPE is NOT found in the template, a value of
+               :def_val:`DH_DATA_UNKNOWN` is returned for the data type; likely an indication that this
+               is not a new-style template produced by Wholeplot.
+               This version also returns a list of the channels in the template checks can be made to
+               see if the import will exceed the database channel limit.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1359,6 +1590,7 @@ gx_methods = {
         Method('iModifyCrookedSectionHolesGUI_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Modify parameters to replot holes and hole data to an existing crooked section map.",
+               notes="Will plot to an empty crooked section.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1376,6 +1608,7 @@ gx_methods = {
         Method('iModifyFenceGUI_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Modify parameters for a section plot.",
+               notes="The fence section function.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1428,6 +1661,7 @@ gx_methods = {
         Method('iModifyHoleTracesGUI2_DH', module='geodh', version='8.3.0',
                availability=Availability.EXTENSION, 
                doc="Modify parameters for a hole traces plot to a current plan or section view.",
+               notes="Currently supports :def_val:`DH_PLOT_PLAN` and :def_val:`DH_PLOT_SECTION`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1464,6 +1698,7 @@ gx_methods = {
         Method('iModifyPlanHolesGUI_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Modify parameters to replot holes and hole data to an existing plan map.",
+               notes="Modifies only hole trace, hole data, topo, voxel slice data.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1494,6 +1729,12 @@ gx_methods = {
         Method('iModifyRockCodesGUI2_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Modify/create a rock codes file, channel population option.",
+               notes="""
+               Same as above, but passes the current database so that
+               the "Populate from channel" button can be used to
+               automatically populate the rock code list. The database
+               should be a Wholeplot database.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1509,6 +1750,13 @@ gx_methods = {
         Method('iModifySectionGUI_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Modify parameters for a section plot.",
+               notes="""
+               The stacked section function uses the same control file
+               format, but the plotting of profiles and plan views is
+               disabled, and if multiple sections are requested, they
+               are plotted in a stack on the left side of the same map,
+               not to individual maps.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1529,6 +1777,10 @@ gx_methods = {
         Method('iModifySectionHolesGUI_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Modify parameters to replot holes and hole data to an existing section map.",
+               notes="""
+               Works for both regular and stacked sections.
+               Modifies only hole trace, hole data, topo, voxel slice data.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1546,6 +1798,13 @@ gx_methods = {
         Method('iModifyStackedSectionGUI_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Modify parameters for a section plot.",
+               notes="""
+               The stacked section function uses the same control file
+               format, but the plotting of profiles and plan views is
+               disabled, and if multiple sections are requested, they
+               are plotted in a stack on the left side of the same map,
+               not to individual maps.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1596,6 +1855,12 @@ gx_methods = {
         Method('iModifyStructureCodesGUI2_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Modify/create a structure codes file, channel population option.",
+               notes="""
+               Same as above, but passes the current database so that
+               the "Populate from channel" button can be used to
+               automatically populate the structure code list. The database
+               should be a Wholeplot database.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1632,6 +1897,11 @@ gx_methods = {
         Method('ImportLAS_DH', module='geodh', version='6.0.1',
                availability=Availability.EXTENSION, 
                doc="Imports LAS Data into a :class:`DH` database",
+               notes="""
+               The argument for the assay database is the file name
+               without the project name and underscore, e.g. for
+               "Project_Assay.gdb" use "Assay"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1651,6 +1921,7 @@ gx_methods = {
         Method('iNumAssays_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Number of assay datasets.",
+               notes="Works for both single and multiple :class:`DB` Wholeplots.",
                return_type=Type.INT32_T,
                return_doc="The number of assay datasets.",
                parameters = [
@@ -1671,6 +1942,7 @@ gx_methods = {
         Method('iQADipAzCurvatureLST_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data for holes in a :class:`LST`.",
+               notes="Checks all holes with Dip-Azimuth survey data",
                return_type=Type.INT32_T,
                return_doc="The number of holes found and checked.",
                parameters = [
@@ -1687,6 +1959,10 @@ gx_methods = {
         Method('iQADipAzSurveyLST_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC on Dip/Az Survey data for holes in a :class:`LST`.",
+               notes="""
+               Error if no Dip-Azimuth survey database, or if
+               a requested hole does not exist in the drill project.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of holes found and checked.",
                parameters = [
@@ -1701,6 +1977,7 @@ gx_methods = {
         Method('iQAEastNorthCurvatureLST_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data for holes in a :class:`LST`.",
+               notes="Checks all holes with East-North survey data",
                return_type=Type.INT32_T,
                return_doc="The number of holes found and checked.",
                parameters = [
@@ -1717,6 +1994,10 @@ gx_methods = {
         Method('iQAEastNorthSurveyLST_DH', module='geodh', version='7.0.0',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC on East/North Survey data for holes in a :class:`LST`.",
+               notes="""
+               Error if no East-North survey database, or if
+               a requested hole does not exist in the drill project.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of holes found and checked.",
                parameters = [
@@ -1768,6 +2049,11 @@ gx_methods = {
         Method('iUpdateSurveyFromCollar_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Update the Survey table from the collar info.",
+               notes="""
+               Call when the collar values are edited to update the survey table
+               values. If the survey contains more than one row, then no changes
+               are applied, and no warning or error is registered.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - No change; there is no survey table, the table was empty, or values were same as collar
@@ -1784,6 +2070,11 @@ gx_methods = {
         Method('LoadDataParametersINI_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Load data parameters from INI files..",
+               notes="""
+               Wholeplot data graphing parameters for each channel are stored
+               in the channel :class:`REG`. This function lets a user transfer pre-defined
+               settings to individual INI files (eg. cu.ini).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1821,6 +2112,13 @@ gx_methods = {
         Method('MaskPLY_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Set mask channel based on view selection polygon.",
+               notes="""
+               Data values inside the polygon area, and within the slice thickness
+               have their mask channel values set to 1.
+               If the specified mask channel does not exist, it is created.
+               :def_val:`DH_MASK_NEW` --- Mask is created new for each selected hole
+               :def_val:`DH_MASK_APPEND` --- Current selection is added to previous.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1865,6 +2163,11 @@ gx_methods = {
         Method('PlotHoleTraces_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Plot hole traces to a regular (plan) map.",
+               notes="""
+               Both the hole traces and data can be plotted.
+               The DHPLANHOLES GX uses the default plan map parameter file
+               "_plan.inp".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1878,6 +2181,11 @@ gx_methods = {
         Method('PlotHoleTraces3D_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Plot hole traces to an existing 3D map view.",
+               notes="""
+               Both the hole traces and data can be plotted.
+               The DH3DHOLES GX uses the default 3D map parameter file
+               "_3D.in3".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1928,6 +2236,7 @@ gx_methods = {
         Method('QADipAzCurvature_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data.",
+               notes="Checks all holes with Dip-Azimuth survey data",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1941,6 +2250,7 @@ gx_methods = {
         Method('QADipAzCurvature2_DH', module='geodh', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data for a single hole.",
+               notes="Checks single hole with Dip-Azimuth survey data",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1956,6 +2266,10 @@ gx_methods = {
         Method('QADipAzSurvey_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC on Dip/Az Survey data.",
+               notes="""
+               Error if no Dip-Azimuth survey database, or if
+               the requested line does not exist in the database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1973,6 +2287,7 @@ gx_methods = {
         Method('QAEastNorthCurvature_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data.",
+               notes="Checks all holes with East-North survey data",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1986,6 +2301,7 @@ gx_methods = {
         Method('QAEastNorthCurvature2_DH', module='geodh', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC Curvature checking on Dip Azimuth data for a single hole.",
+               notes="Checks single holes with East-North survey data",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2001,6 +2317,10 @@ gx_methods = {
         Method('QAEastNorthSurvey_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Do QA/QC on East/North Survey data.",
+               notes="""
+               Error if no East-North survey database, or if
+               the requested line does not exist in the database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2052,6 +2372,10 @@ gx_methods = {
         Method('QAWriteUnregisteredHoles_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Write out unregistered holes in a database.",
+               notes="""
+               Looks at each line in a database and sees if it is listed in
+               the collar tables' hole list.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2065,6 +2389,15 @@ gx_methods = {
         Method('ReplotHoles_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Replot holes on an existing drill map.",
+               notes="""
+               The parameter file must correspond to the plot Type.
+               The hDH->hMAP value must be set first, using :func:`SetMAP_DH`().
+               Overwrites existing hole and hole data groups.
+               Replots the legend if the legend is enabled.
+               This should only be used on a slightly modified version of the
+               INI file used to create the existing map, or things may not
+               work out (e.g. bad locations etc).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2078,6 +2411,7 @@ gx_methods = {
         Method('PlotHolesOnSection_DH', module='geodh', version='8.3.0',
                availability=Availability.EXTENSION, 
                doc="Plot the currently selected holes on an existing section view.",
+               notes="Plot the currently selected holes to a section view.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2093,6 +2427,10 @@ gx_methods = {
         Method('ReSurveyEastNorth_DH', module='geodh', version='5.1.3',
                availability=Availability.EXTENSION, 
                doc="Resurvey an East-North-RL survey.",
+               notes="""
+               Re-interpolates in X, Y and Z to proper depth interval
+               and returns depths for each point
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2122,6 +2460,16 @@ gx_methods = {
         Method('ReSurveyPolFit_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Use the polynomial fit resurveying method.",
+               notes="""
+               Uses the polynomial fit method to calculate (X, Y, Z)
+               locations down the hole from azimuth, dip, depth values.
+               The collar is assumed to be at zero depth, and depth is the
+               measure distance down the hole (even if it's horizontal).
+               A negative dip convention means vertical down is -90 degrees.
+               The polynomial order must be in the range 1-20, with 5 being adequate
+               for most smoothly curving holes. The order is reduced to no more than
+               the number of input points.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2163,6 +2511,13 @@ gx_methods = {
         Method('ReSurveyRadCurve_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Use radius of curvature resurveying method.",
+               notes="""
+               Uses the Radius of curvature method to calculate (X, Y, Z)
+               locations down the hole from azimuth, dip, depth values.
+               The collar is assumed to be at zero depth, and depth is the
+               measure distance down the hole (even if it's horizontal).
+               A negative dip convention means vertical down is -90 degrees.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2202,6 +2557,13 @@ gx_methods = {
         Method('ReSurveyStraight_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Resurvey a straight hole.",
+               notes="""
+               Assumes a straight hole to calculate (X, Y, Z)
+               locations down the hole from azimuth, dip, depth values.
+               The collar is assumed to be at zero depth, and depth is the
+               measure distance down the hole (even if it's horizontal).
+               A negative dip convention means vertical down is -90 degrees.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2239,6 +2601,14 @@ gx_methods = {
         Method('ReSurveyStraightSeg_DH', module='geodh', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Resurvey a hole with straight segments between locations.",
+               notes="""
+               Calculate (X, Y, Z) locations down the hole from azimuth, dip,
+               depth values, assuming each segment is straight, and the hole
+               bends at each successive azimuth, dip, depth value.
+               The collar is assumed to be at zero depth, and depth is the
+               measure distance down the hole (even if it's horizontal).
+               A negative dip convention means vertical down is -90 degrees.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2278,6 +2648,13 @@ gx_methods = {
         Method('SaveDataParametersINI_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Save data parameters to INI files..",
+               notes="""
+               Wholeplot data graphing parameters for each channel are stored
+               in the channel :class:`REG`. This function lets a user transfer pre-defined
+               settings to individual INI files (eg. cu.ini).
+               As of v6.3, the :class:`DH` object is NOT required for this function, and
+               is, in fact, ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2315,6 +2692,11 @@ gx_methods = {
         Method('SectionWindowSizeMM_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Deterine the size, in mm, of the section window",
+               notes="""
+               Given the current selection of windows (e.g. legend, plan),
+               paper size and orientation, return the size in mm of the
+               window used for plotting the section.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2337,6 +2719,10 @@ gx_methods = {
         Method('SelectHoles_DH', module='geodh', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Select holes by hole indices.",
+               notes="""
+               Indices less than 0 are skipped. This lets you use this function
+               after a call to :func:`FindItems_LST`, which returns -1 for indices not located.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2350,6 +2736,10 @@ gx_methods = {
         Method('SelectName_DH', module='geodh', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Select holes using a name mask.",
+               notes="""
+               Overwrite mode - all selections tested and selected or not selected
+               Append mode    - only holes matching the mask are selected or not selected.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2365,6 +2755,11 @@ gx_methods = {
         Method('SelectPLY_DH', module='geodh', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Select all holes in :class:`PLY` (Polygon) object.",
+               notes="""
+               This function operates the same as the call:
+               
+               :func:`SelectPLY2_DH`(Drill, 1, 0, 0);
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2376,6 +2771,27 @@ gx_methods = {
         Method('SelectPLY2_DH', module='geodh', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Select holes in :class:`PLY` (Polygon) object with options.",
+               notes="""
+               The various selection options give the following results:
+               
+               New/Select/inside: Unselect all holes, then
+                                  select all holes inside the polygon.
+               New/Select/outside: Unselect all holes, then
+                                  select all holes outside the polygon.
+               New/Deselect/inside: Select all holes, then
+                                  deselect all holes inside the polygon.
+               New/Deselect/outside: Select all holes, then
+                                  deselect all holes outside the polygon.
+               
+               Append/Select/inside: Select all holes inside the polygon.
+                                     Leave selections outside as is.
+               Append/Select/outside: Select all holes outside the polygon.
+                                     Leave selections inside as is.
+               Append/Deselect/inside: Deselect all holes inside the polygon
+                                     Leave selections outside as is.
+               Append/Deselect/outside: Deselect all holes outside the polygon.
+                                     Leave selections inside as is.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2393,6 +2809,7 @@ gx_methods = {
         Method('SetCrookedSectionIPJ_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Pass the Crooked projection required for plotting to a crooked section.",
+               notes="This might be extracted from an existing crooked section view, or created from a database line.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2404,6 +2821,7 @@ gx_methods = {
         Method('SetCurrentViewName_DH', module='geodh', version='7.2.0',
                availability=Availability.EXTENSION, 
                doc="Set the current map view name.",
+               notes="Can be used to specify the name of the view to plot into.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2415,6 +2833,11 @@ gx_methods = {
         Method('SetInfo_DH', module='geodh', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Set Collar Information.",
+               notes="""
+               If the DH_ELEV channel is requested it will also
+               search for the DH_RL channel, which is the new
+               name for the collar elevation.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2430,6 +2853,15 @@ gx_methods = {
         Method('SetIPJ_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Set the project :class:`IPJ`.",
+               notes="""
+               The projection for the project is the projection stored
+               in the DH_EAST channel in the collar table. This
+               function sets the projection of the (DH_EAST, DH_NORTH)
+               channel pairs in each of the project databases to the
+               input :class:`IPJ`.
+               The input :class:`IPJ` cannot be a geographic coordinate system
+               or this call will fail with an error message.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2441,6 +2873,11 @@ gx_methods = {
         Method('SetMAP_DH', module='geodh', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Store the current :class:`MAP` to the :class:`DH` object.",
+               notes="""
+               Use this before calling the ReplotHoles functions,
+               so that, instead of creating a new map, the plotting
+               functions use the existing one.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2452,6 +2889,10 @@ gx_methods = {
         Method('SetNewIPJ_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Set a new project database projection to collar table projection.",
+               notes="""
+               Gets the :class:`IPJ` of the collar table current x channel and copies it
+               into the named database (as long as it is in the project!)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2476,6 +2917,13 @@ gx_methods = {
         Method('SetTemplateBlob_DH', module='geodh', version='6.0.0',
                availability=Availability.EXTENSION, 
                doc="Store the import template to the database.",
+               notes="""
+               The template can later be retrieved in order to refresh the
+               database with a call to the DHIMPORT.GX.
+               
+               The import types correspond to the DHIMPORT.IMPTYPE variable:
+               0: ASCII, 1: Database/XLS, 2: ODBC
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2520,6 +2968,14 @@ gx_methods = {
         Method('TestImportLAS_DH', module='geodh', version='6.0.1',
                availability=Availability.EXTENSION, 
                doc="Tests import of LAS Data for problems.",
+               notes="""
+               See :func:`ImportLAS_DH`.
+               Determines if the import of the LAS data will result in data
+               being overwritten, interpolated or resampled. Warnings are written to a log
+               file, as in sImportLAS_DH. Warnings are not registered in cases
+               where data is merely extended at the start or the end with dummies
+               to match a different interval down the hole.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2579,6 +3035,12 @@ gx_methods = {
         Method('Wholeplot_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, 
                doc="Run a Wholeplot plot job.",
+               notes="""
+               The parameter file must correspond to the plot Type. The INI file
+               contains settings for all of the non-database data related
+               parameters (e.g. Map template, scale, boundaries,
+               section definitions, hole trace parameters etc...)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2609,6 +3071,7 @@ gx_methods = {
         Method('GetSHPNamesVV_DH', module='geodh', version='5.1.8',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Get generated :class:`SHP` file names.",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -2622,6 +3085,11 @@ gx_methods = {
         Method('iIsMultiDB_DH', module='geodh', version='5.1.2',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Is this a (new-style) multi-database Wholeplot project?",
+               notes="""
+               As of v6.3.0, old single-database Wholeplot GDBs cannot
+               be opened, so this check is obsolete. The function now always
+               returns TRUE (1).
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if it is a new-style Wholeplot database.",
                parameters = [

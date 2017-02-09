@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('AGG',
                  doc="""
-The :class:`AGG` class is used to handle image display on maps.
-An aggragate contains one or more image layers (LAY) with
-each layer representing a grid or image file. The :class:`AGG`
-will combine all the layers to form one image
-""")
+                 The :class:`AGG` class is used to handle image display on maps.
+                 An aggragate contains one or more image layers (LAY) with
+                 each layer representing a grid or image file. The :class:`AGG`
+                 will combine all the layers to form one image
+                 """)
 
 
 gx_defines = [
@@ -92,6 +92,11 @@ gx_methods = {
         Method('ChangeBrightness_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Change the brightness.",
+               notes="""
+               0.0 brightness does nothing.
+               -1.0 to 0.0 makes colours darker, -1.0 is black
+               0.0 to 1.0 makes colours lighter, 1.0 is white
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG",
@@ -109,6 +114,12 @@ gx_methods = {
         Method('CreateMap_AGG', module='geoengine.map', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Create :class:`AGG` from Map with Group name.",
+               notes="""
+               The Agg Group name must include the View name with a
+               backslash separating the view name and group name; e.g.
+               "Data\\AGG_test" (when used as a string, the double slash
+               represents as single \\).
+               """,
                return_type="AGG",
                return_doc=":class:`AGG` Object",
                parameters = [
@@ -130,6 +141,14 @@ gx_methods = {
         Method('GetLayerITR_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the :class:`ITR` of a layer",
+               notes="""
+               Layers are numbered from 0, consecutively in the order they are
+               placed in the aggregate.
+               
+               An error will occur if the layer does not exist.
+               
+               Caller must create/destroy :class:`ITR`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),
@@ -141,6 +160,11 @@ gx_methods = {
         Method('ILayerPIC_AGG', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Add a PIC as a layer in an aggregate.",
+               notes="""
+               This function creates a temporary PNG file in the temp directory.
+               The name is returned so that you can pack the map and remove the file
+               or copy the file elsewhere for later use.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),
@@ -154,6 +178,7 @@ gx_methods = {
         Method('iListImg_AGG', module='geoengine.core', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Lists file names of all the IMGs inside of the :class:`AGG`.",
+               notes="The returned :class:`VV` contains the file names.",
                return_type=Type.INT32_T,
                return_doc="The number of Imgs.",
                parameters = [
@@ -175,6 +200,7 @@ gx_methods = {
         Method('LayerIMG_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Add an image as a layer in an aggregate.",
+               see_also=":func:`LayerShadeIMG_AGG`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),
@@ -191,6 +217,7 @@ gx_methods = {
         Method('LayerIMGEx_AGG', module='geoengine.core', version='8.2',
                availability=Availability.PUBLIC, 
                doc="Add an image as a layer in an aggregate.",
+               see_also=":func:`LayerShadeIMG_AGG`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),
@@ -211,6 +238,14 @@ gx_methods = {
         Method('LayerShadeIMG_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Add a shaded image as a layer in an aggregate.",
+               notes="""
+               A new grid file will be created to hold the shaded
+               image data.  This file will have the same name as the
+               original grid but with "_s" added to the root name.
+               It will always be located in the workspace directory
+               regardless of the location of the original source image.
+               If the file already exists, it will replaced.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),
@@ -229,6 +264,19 @@ gx_methods = {
         Method('rGetBrightness_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the brightness setting of the :class:`AGG`",
+               notes="""
+               Brightness can range from -1.0 (black) to 1.0 (white).
+               This brightness control is relative to the normal colour
+               when the :class:`AGG` is created.
+               
+               :class:`AGG` brightness depends on the brightness of the :class:`ITR` of each layer.
+               Calling dGetBright_AGG will poll all layers, and if all have the same
+               brightness, this is returned.  If any of the layers have a different
+               brightness, the current brightness of each layer is changed to be
+               the reference brightness (0.0)and the brightness value of 0.0 is
+               returned.
+               """,
+               see_also=":func:`ChangeBrightness_AGG`, :func:`rGetBrightness_AGG`, :func:`ChangeBrightness_AGG`",
                return_type=Type.DOUBLE,
                parameters = [
                    Parameter('p1', type="AGG",
@@ -238,6 +286,14 @@ gx_methods = {
         Method('SetLayerITR_AGG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the :class:`ITR` of a layer",
+               notes="""
+               Layers are numbered from 0, consecutively in the order they are
+               placed in the aggregate.
+               
+               An error will occur if the layer does not exist.
+               
+               Caller must create/destroy :class:`ITR`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="AGG"),

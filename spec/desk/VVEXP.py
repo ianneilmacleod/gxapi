@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VVEXP',
                  doc="""
-The :class:`VVEXP` class is similar to the :class:`IEXP` class, but is used
-to apply math expressions to :class:`VV` objects.
-""")
+                 The :class:`VVEXP` class is similar to the :class:`IEXP` class, but is used
+                 to apply math expressions to :class:`VV` objects.
+                 """)
 
 
 

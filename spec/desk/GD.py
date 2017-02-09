@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('GD',
                  doc="""
-This class provides access to Geosoft grid files using an old interface.
-Only the :func:`SampleGD_DU` function uses this class.  Use the :class:`IMG` class
-instead.
-""")
+                 This class provides access to Geosoft grid files using an old interface.
+                 Only the :func:`SampleGD_DU` function uses this class.  Use the :class:`IMG` class
+                 instead.
+                 """)
 
 
 gx_defines = [

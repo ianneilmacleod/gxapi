@@ -1,14 +1,11 @@
-import importlib
-import glob
-import os
-import itertools
-from enum import Enum
+from .gxdefs import Type, Availability, SpecBase
 
-from .gxdefs import Type, Availability
 
-class Parameter:
+class Parameter(SpecBase):
     def __init__(self, name, type=Type.UNKNOWN, is_ref=False, is_val=False,
                  size_of_param=None, default_length=None, doc=None):
+        super().__init__()
+
         self.name = name
         self.type = type
         self.is_ref = is_ref
@@ -17,11 +14,14 @@ class Parameter:
         self.default_length = default_length
         self.doc = doc
 
-class Method:
+
+class Method(SpecBase):
     def __init__(self, name, module=None, version=None, external_name=None, availability=Availability.UNKNOWN,
                  is_obsolete=False, is_app=False, is_gui=False, no_gxh=False, no_csharp=False, no_cpp=False,
                  return_type=Type.UNKNOWN, return_doc=None,
-                 doc=None, parameters=[]):
+                 doc=None, notes=None, see_also=None, parameters=[]):
+        super().__init__()
+
         self.name = name
         self.module = module
         self.version = version
@@ -33,9 +33,11 @@ class Method:
         self.no_gxh = no_gxh
         self.no_csharp = no_csharp
         self.no_cpp = no_cpp
-        self.doc = doc
         self.return_type = return_type
         self.return_doc = return_doc
+        self.doc = doc
+        self.notes = notes
+        self.see_also = see_also
         self.parameters = parameters
 
 

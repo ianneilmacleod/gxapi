@@ -2,36 +2,36 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IMG',
                  doc="""
-The :class:`IMG` class performs read and write operations on grid
-file data. When efficient access along both rows and columns
-is desired the :class:`PG` class is recommended (see :class:`PG` and :class:`PGU`);
-the :class:`IMG` is first created, then the :class:`PG` is obtained from
-the :class:`IMG` using :func:`GetPG_IMG`.
-""",
+                 The :class:`IMG` class performs read and write operations on grid
+                 file data. When efficient access along both rows and columns
+                 is desired the :class:`PG` class is recommended (see :class:`PG` and :class:`PGU`);
+                 the :class:`IMG` is first created, then the :class:`PG` is obtained from
+                 the :class:`IMG` using :func:`GetPG_IMG`.
+                 """,
                  notes="""
-The :class:`IMG` methods use the XGD DATs to access grid files in different
-formats.  The characteristics of a grid can be controlled using
-decorations on a grid file name.  For example:
-
-:func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd");
--> creates a new grid file "mag.grd" with all defaults.
-
-:func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd(GRD;comp=none)");
--> creates a new grid file "mag.grd" with no compression.
-
-:func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd(GRD;comp=size;type=short");
--> creates a new grid file "mag.grd" compressed for size, numbers
-stored as 2-byte integers..
-
-See :def:`DAT_XGD`.DOC for information about file name decorations available
-for all :class:`DAT` types.
-
-Different grid types support different features.  For example, not all
-grid types support projection information.  Geosoft will always create
-a *.gi file that is used to store all such information that we require
-from a grid.  If the grid does support this information, both the grid
-and the *.gi file will contain the information.
-""")
+                 The :class:`IMG` methods use the XGD DATs to access grid files in different
+                 formats.  The characteristics of a grid can be controlled using
+                 decorations on a grid file name.  For example:
+                 
+                 :func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd");
+                 -> creates a new grid file "mag.grd" with all defaults.
+                 
+                 :func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd(GRD;comp=none)");
+                 -> creates a new grid file "mag.grd" with no compression.
+                 
+                 :func:`CreateNewFile_IMG`(:def_val:`GS_DOUBLE`,1,100,100,"mag.grd(GRD;comp=size;type=short");
+                 -> creates a new grid file "mag.grd" compressed for size, numbers
+                 stored as 2-byte integers..
+                 
+                 See :def:`DAT_XGD`.DOC for information about file name decorations available
+                 for all :class:`DAT` types.
+                 
+                 Different grid types support different features.  For example, not all
+                 grid types support projection information.  Geosoft will always create
+                 a *.gi file that is used to store all such information that we require
+                 from a grid.  If the grid does support this information, both the grid
+                 and the *.gi file will contain the information.
+                 """)
 
 
 gx_defines = [
@@ -111,6 +111,15 @@ gx_methods = {
         Method('Average2_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reduce the dimensions in a 2D pager by a factor of 2",
+               notes="""
+               This method is useful for reducing the dimensions in a 2D pager by a factor of 2.
+               The output pager retains the same origin, but the X and Y spacing is double that of the original. Essentially,
+               the process removes all the even-indexed rows and columns, while leaving the locations of all the remaining
+               data points in the "odd" rows and columns unchanged.
+               
+               The output values at the output data locations are created by performing an average of the original data point and
+               its valid surrounding data points; what is essentially a 3x3 smoothing filter.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -133,6 +142,7 @@ gx_methods = {
         Method('Create_IMG', module='geoengine.core', version='5.0.3',
                availability=Availability.PUBLIC, 
                doc="Creates an :class:`IMG` not tied to a file at all",
+               notes="Once destroyed all the data in this :class:`IMG` is lost.",
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -149,6 +159,12 @@ gx_methods = {
         Method('CreateFile_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates an Image object tied to a grid file.",
+               notes="""
+               When the :def_val:`GS_DOUBLE` data type is chosen the actual on-disk
+               type of the input image will be used instead of :def_val:`GS_DOUBLE`
+               if the on-disk values represent colour data as opposed
+               to real numbers.
+               """,
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -163,6 +179,7 @@ gx_methods = {
         Method('CreateMem_IMG', module='geoengine.core', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Creates an :class:`IMG` object that is backed only by memory.",
+               notes="Once destroyed all the data is lost. This is temporary.",
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -179,6 +196,20 @@ gx_methods = {
         Method('CreateNewFile_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates an output image file using User defined info.",
+               notes="""
+               Special Note for developers who use this function and
+               related functions to output ERMapper image (ERS, ECW) files:
+               
+               This function internally called ERMapper plugin to create ERS header
+               files. To find the location of ERMapper plugin library, a registry setting
+               needs to set. The key in the registry is HKEY_LOCAL_MACHINE\\SOFTWARE\\"MyProgram(libversion7.0)"
+               and in that key register a string BASE_PATH = D:\\Oasismontaj\\plugins\\er_mapper.
+               MyProgram is the name of your application and D:\\Oasismontaj\\plugins\\er_mapper
+               is the location of ERMapper library.
+               
+               It is recommended that this registry key is set during the installation
+               of your application.
+               """,
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -197,6 +228,12 @@ gx_methods = {
         Method('CreateOutFile_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates an output image file using input image info.",
+               notes="""
+               When the :def_val:`GS_DOUBLE` data type is chosen the actual on-disk
+               type of the input image will be used instead of :def_val:`GS_DOUBLE`
+               if the on-disk values represent colour data as opposed
+               to real numbers.
+               """,
                return_type="IMG",
                return_doc=":class:`IMG` Object",
                parameters = [
@@ -211,6 +248,10 @@ gx_methods = {
         Method('CreateProjected_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Applies a projection to an image.",
+               notes="""
+               The :class:`IMG` now appears to be in the projected coordinate
+               system space.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -222,6 +263,12 @@ gx_methods = {
         Method('CreateProjected2_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Applies a projection to an image, specify cell size.",
+               notes="""
+               The :class:`IMG` now appears to be in the projected coordinate
+               system space, with the specified cell size. If the cell
+               size is :def_val:`rDUMMY` (:def_val:`GS_R8DM`), one is automatically calculated,
+               as with :func:`CreateProjected_IMG`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -235,6 +282,21 @@ gx_methods = {
         Method('CreateProjected3_IMG', module='geoengine.core', version='6.3.1',
                availability=Availability.PUBLIC, 
                doc="Same as :func:`CreateProjected2_IMG`, but set expansion of bounds.",
+               notes="""
+               The :class:`IMG` now appears to be in the projected coordinate
+               system space, with the specified cell size. If the cell
+               size is :def_val:`rDUMMY` (:def_val:`GS_R8DM`), one is automatically calculated,
+               as with :func:`CreateProjected_IMG`.
+               The expansion percent expands the bounds of the projected grid
+               in order to allow for the curving of bounding edges. Normally,
+               edges are sampled in order to allow for curving, but this
+               parameter is set to 1.0 (for 1 percent) in the :func:`CreateProjected_IMG`
+               and :func:`CreateProjected2_IMG` wrappers, and will generally create a
+               white/dummy border around the new grid. This new method allows
+               you to specify the expansion, or turn it off (by setting it to 0).
+               If the value is set to :def_val:`rDUMMY`, then expansion is left at 1.0,
+               the legacy behaviour.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -259,6 +321,7 @@ gx_methods = {
         Method('GethPG_IMG', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Get the actual pager of a grid.",
+               see_also=":func:`GetPG_IMG` to get just a copy of the grid's pager.",
                return_type="PG",
                return_doc=":class:`PG` Object",
                parameters = [
@@ -310,6 +373,7 @@ gx_methods = {
         Method('GetPG_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a copy of the pager of a grid.",
+               see_also=":func:`GethPG_IMG` to get the actual pager of the grid.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -321,6 +385,12 @@ gx_methods = {
         Method('GetProjectedCellSize_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns default cell size from projected image.",
+               notes="""
+               Returns the cell size calculated by CreateProjected_PJIMG, or by
+               :func:`CreateProjected2_IMG` when
+               :def_val:`GS_R8DM` is entered as the optional cell size. No inheritance
+               is actually performed to the input :class:`IMG`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -357,6 +427,7 @@ gx_methods = {
         Method('iEType_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the element type.",
+               notes="Same as sElementType_IMG(img,1)",
                return_type=Type.INT32_T,
                return_doc="Element type",
                parameters = [
@@ -426,6 +497,15 @@ gx_methods = {
         Method('Inherit_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Inherit a projection/new cell size on the :class:`IMG`.",
+               notes="""
+               If cell size is :def_val:`GS_R8DM`, then "nice" values for the cell
+               size of the new projected grid will be determined so that
+               the new grid has about the same number of cells as the old.
+               If the cell size is specified, the inheritance will always
+               work, even if the input :class:`IPJ` is identical to the original
+               :class:`IPJ`, and the cell boundaries will be forced to be aligned
+               with the new cell size.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -480,6 +560,10 @@ gx_methods = {
         Method('iQuery_IMG', module='geoengine.core', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Query information about the :class:`IMG`",
+               notes="""
+               You can call either funtion to retrieve any data,
+               int or real.
+               """,
                return_type=Type.INT32_T,
                return_doc="Information requested, dummy if unknown or invalid.",
                parameters = [
@@ -530,6 +614,7 @@ gx_methods = {
         Method('LoadIMG_IMG', module='geoengine.core', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Loads an :class:`IMG` into a master :class:`IMG`.",
+               notes="The Cell sizes and projections must be the same.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -553,6 +638,13 @@ gx_methods = {
         Method('OptKX_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Force optimal KX as desired.",
+               notes="""
+               This will force loading an image into a :class:`PG` if it is not already
+               accessible in the direction requested.
+               
+               Subsequent calls to methods that use the optimal KX will use the
+               KX set here.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -658,6 +750,10 @@ gx_methods = {
         Method('ReportCSV_IMG', module='geoengine.core', version='6.4.2',
                availability=Availability.PUBLIC, 
                doc="Writes grid info as a line to a CSV file",
+               notes="""
+               Appends the stats as a CSV line to the input text file.
+               The header line should only be written to a new text file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -689,6 +785,10 @@ gx_methods = {
         Method('rQuery_IMG', module='geoengine.core', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Query information about the :class:`IMG`",
+               notes="""
+               You can call either funtion to retrieve any data,
+               int or real.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Information requested, dummy if unknown or invalid.",
                parameters = [
@@ -709,6 +809,10 @@ gx_methods = {
         Method('SetInfo_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets location information about this image.",
+               notes="""
+               Calls to this function should be made BEFORE calls to :func:`SetIPJ_IMG`,
+               as the latter function sets up the bounding rectangle in the metadata.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",
@@ -728,6 +832,10 @@ gx_methods = {
         Method('SetIPJ_IMG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the projection of a grid.",
+               notes="""
+               Calls to this function should be made AFTER calls to :func:`SetInfo_IMG`,
+               as :func:`SetIPJ_IMG` sets up the bounding rectangle in the metadata.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IMG",

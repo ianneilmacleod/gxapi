@@ -2,29 +2,30 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('LTB',
                  doc="""
-An :class:`LTB` object is typically created from a CSV (comma-separated values)
-file, and is a table of information that may be accessed by row
-or column. The :class:`LTB` class is recommended for use with small tables
-produced from short lists (of the order of 1000's or records) such
-as the different geographic projections and their defining parameters.
-Large tables, such as those required for table-lookup functions, should
-be accessed using the :class:`TB` class.
-""",
+                 An :class:`LTB` object is typically created from a CSV (comma-separated values)
+                 file, and is a table of information that may be accessed by row
+                 or column. The :class:`LTB` class is recommended for use with small tables
+                 produced from short lists (of the order of 1000's or records) such
+                 as the different geographic projections and their defining parameters.
+                 Large tables, such as those required for table-lookup functions, should
+                 be accessed using the :class:`TB` class.
+                 """,
                  notes="""
-An :class:`LTB` ASCII table file has the following structure:
-
-/ comments
-key_name,col_1,col_2,col_3,etc...    /field names
-key_1,token,token,token,etc...       /data lines
-key_2,token,token,token,etc...
-etc...
-
-The first column must be the key column (all entries unique).
-
-The header line is optional and can be used to find entries.
-
-Comment and empty lines are ignored.
-""")
+                 An :class:`LTB` ASCII table file has the following structure:
+                 
+                 / comments
+                 key_name,col_1,col_2,col_3,etc...    /field names
+                 key_1,token,token,token,etc...       /data lines
+                 key_2,token,token,token,etc...
+                 etc...
+                 
+                 The first column must be the key column (all entries unique).
+                 
+                 The header line is optional and can be used to find entries.
+                 
+                 Comment and empty lines are ignored.
+                 """,
+                 verbatim_gxh_defines='#define CreateCSV_LTB(A) Create_LTB(A,LTB_TYPE_HEADER,LTB_DELIM_COMMA,"")')
 
 
 gx_defines = [
@@ -71,6 +72,10 @@ gx_methods = {
         Method('AddRecord_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Add a new record.",
+               notes="""
+               If the record exists, the existing record is cleared
+               and the record number is returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -84,6 +89,16 @@ gx_methods = {
         Method('Contract_LTB', module='geoengine.core', version='5.1.0',
                availability=Availability.PUBLIC, 
                doc="Contract the contents of two same-key and same-fields tables.",
+               notes="""
+               The "Key" of the child must be the same as the "Key" of the Master.
+               The fields of two :class:`LTB` must be the same.
+               
+               Contracting takes place as follows:
+               
+               1. The Master :class:`LTB` is copied to the New :class:`LTB`.
+               2. All records in the contract LIB are deleted from the New :class:`LTB` (if there are any)
+               3. The New :class:`LTB` is returned.
+               """,
                return_type="LTB",
                return_doc="""
                x    - Handle to :class:`LTB` object
@@ -99,6 +114,7 @@ gx_methods = {
         Method('Create_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates a :class:`LTB` object from a file.",
+               notes='If the file has no header, field names are assumed to be "0", "1", etc.',
                return_type="LTB",
                return_doc="""
                x    - Handle to :class:`LTB` object
@@ -118,6 +134,7 @@ gx_methods = {
         Method('CreateCrypt_LTB', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Creates a :class:`LTB` object from an encrypted file.",
+               notes='If the file has no header, field names are assumed to be "0", "1", etc.',
                return_type="LTB",
                return_doc="""
                x    - Handle to :class:`LTB` object
@@ -141,6 +158,7 @@ gx_methods = {
         Method('CreateEx_LTB', module='geoengine.core', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="Creates a :class:`LTB` object from a file.",
+               notes='If the file has no header, field names are assumed to be "0", "1", etc.',
                return_type="LTB",
                return_doc="""
                x    - Handle to :class:`LTB` object
@@ -162,6 +180,10 @@ gx_methods = {
         Method('DeleteRecord_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Delete a record.",
+               notes="""
+               Record numbers after the deleted record will be reduced
+               by 1.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -182,6 +204,11 @@ gx_methods = {
         Method('GetConLST_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Populate a :class:`LST` with :class:`LTB` names from matching fields.",
+               notes="""
+               The :class:`LST` object will be in the order of the file.
+               The :class:`LST` names will be the :class:`LTB` key fields and the
+               :class:`LST` values will be the :class:`LTB` record numbers.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -199,6 +226,11 @@ gx_methods = {
         Method('GetLST_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Populate an :class:`LST` with :class:`LTB` names",
+               notes="""
+               The :class:`LST` object will be in the order of the file.
+               The :class:`LST` names will be the :class:`LTB` fields and the
+               :class:`LST` values will be the :class:`LTB` record numbers.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -212,6 +244,11 @@ gx_methods = {
         Method('GetLST2_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Populate an :class:`LST` with :class:`LTB` names and values",
+               notes="""
+               The :class:`LST` object will be in the order of the file.
+               The :class:`LST` names will come from the :class:`LTB` name field and the
+               :class:`LST` values will come from value field specified.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -267,6 +304,7 @@ gx_methods = {
         Method('IGetField_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a field name by index.",
+               notes="If the record or field are out of range, an empty string is returned.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -299,6 +337,10 @@ gx_methods = {
         Method('IGetString_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get an entry from the :class:`LTB`",
+               notes="""
+               If the record or field are out of range,
+               an empty string or dummy value is returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -316,6 +358,10 @@ gx_methods = {
         Method('IGetEnglishString_LTB', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="Get the English entry from the :class:`LTB`",
+               notes="""
+               If the record or field are out of range,
+               an empty string or dummy value is returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LTB",
@@ -362,6 +408,23 @@ gx_methods = {
         Method('Merge_LTB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Merge the contents of two same-key tables.",
+               notes="""
+               Merging takes place as follows:
+               
+               1. The "Key" of the child must be the same as the "Key" of the Master.
+               2. The fields of the Master :class:`LTB` are collected in-order.
+               3. Any new fields of the Child :class:`LTB` are added to the end of the list.
+               4. A new :class:`LTB` is created to contain the new field list (in-order).
+               5. The Child table contents are added to the New :class:`LTB`.
+               6. The Master table contents are added/replace the New :class:`LTB`.
+               7. The New :class:`LTB` is returned.
+               
+               If the fields of the Master and Child are the same, steps 4, 5, 6 are
+               replaced by:
+               
+               4. The Master :class:`LTB` is copied to the New :class:`LTB`.
+               5. Any New records found in the child are added to the New :class:`LTB`
+               """,
                return_type="LTB",
                return_doc="""
                x    - Handle to :class:`LTB` object

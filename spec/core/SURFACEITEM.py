@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('SURFACEITEM',
                  doc="""
-The :class:`SURFACEITEM` allows you to create, read and alter Geosurface files (*.geosoft_surface).
-A Geosurface file can contain one or more surface items (see :class:`SURFACE` class). A surface item can
-contains one or more triangular polyhedral meshes.
-""")
+                 The :class:`SURFACEITEM` allows you to create, read and alter Geosurface files (*.geosoft_surface).
+                 A Geosurface file can contain one or more surface items (see :class:`SURFACE` class). A surface item can
+                 contains one or more triangular polyhedral meshes.
+                 """)
 
 
 gx_defines = [
@@ -24,6 +24,7 @@ gx_methods = {
         Method('Create_SURFACEITEM', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`SURFACEITEM`",
+               see_also=":func:`SetProperties_SURFACEITEM` and :func:`SetDefaultRenderProperties_SURFACEITEM`",
                return_type="SURFACEITEM",
                return_doc=":class:`SURFACEITEM` Object",
                parameters = [
@@ -45,6 +46,7 @@ gx_methods = {
         Method('GetGUID_SURFACEITEM', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Gets the GUID of the surface item.",
+               notes="The value returned by this call will not be valid for newly created items until after a call to :func:`AddSurfaceItem_SURFACE`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SURFACEITEM",
@@ -58,6 +60,7 @@ gx_methods = {
         Method('SetProperties_SURFACEITEM', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Sets the properties of the surface item.",
+               see_also=":func:`GenerateGUID_SYS`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SURFACEITEM",
@@ -83,6 +86,7 @@ gx_methods = {
         Method('SetPropertiesEx_SURFACEITEM', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Sets the properties of the surface item (includes new properties introduced in 8.5).",
+               see_also=":func:`GenerateGUID_SYS`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SURFACEITEM",
@@ -190,6 +194,7 @@ gx_methods = {
         Method('SetDefaultRenderProperties_SURFACEITEM', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Sets default render properties of the surface item.",
+               see_also=":func:`iColor_MVIEW`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SURFACEITEM",
@@ -205,6 +210,7 @@ gx_methods = {
         Method('GetDefaultRenderProperties_SURFACEITEM', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Gets default render properties of the surface item.",
+               see_also=":func:`iColor_MVIEW`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="SURFACEITEM",

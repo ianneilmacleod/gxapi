@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VOX',
                  doc="""
-High Performance 3D Grid. Designed for accessing
-3D grids quickly using slices. It designed arround
-non-uniform multi-resolution  compressed storage.
-o sample a voxel at specific locations, use the :class:`VOXE` class.
-""")
+                 High Performance 3D Grid. Designed for accessing
+                 3D grids quickly using slices. It designed arround
+                 non-uniform multi-resolution  compressed storage.
+                 o sample a voxel at specific locations, use the :class:`VOXE` class.
+                 """)
 
 
 gx_defines = [
@@ -184,6 +184,7 @@ gx_methods = {
         Method('ExportDB_VOX', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Export a Voxel to a database",
+               notes="The database lines contain a slice of the voxel at a time.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX"),
@@ -219,6 +220,11 @@ gx_methods = {
         Method('ExportToGrids_VOX', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Export all layers of this :class:`VOX` into grid files, with optional cell size.",
+               notes="""
+               If the cell size is not specified, then:
+               1. If the cell sizes are uniform in a given direction, that size is used
+               2. If the cell sizes are variable in a given direction, then the smallest size is used
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -370,6 +376,7 @@ gx_methods = {
         Method('GenerateOrientedGOCAD_VOX', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Generate a :class:`VOX` from a GOCAD File",
+               notes="Allows the Orientation flag to be specified.",
                return_type="VOX",
                return_doc=":class:`VOX` Object",
                parameters = [
@@ -451,6 +458,7 @@ gx_methods = {
         Method('GeneratePGVV_VOX', module='geoengine.core', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Generate a :class:`VOX` from a 3D Pager, cells sizes passed in VVs.",
+               notes="The input cell size VVs' lengths must match the input :class:`PG` dimensions.",
                return_type="VOX",
                return_doc=":class:`VOX` Object",
                parameters = [
@@ -542,6 +550,10 @@ gx_methods = {
         Method('InitGenerateBySubsetPG_VOX', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Initialize the generate of a :class:`VOX` from a series of 3D subset pagers",
+               notes="""
+               Call :func:`InitGenerateBySubsetPG_VOX` first, then add a series of subset PGs using :func:`AddGenerateBySubsetPG_VOX`, and finally
+               serialize using :func:`EndGenerateBySubsetPG_VOX`
+               """,
                return_type="VOX",
                return_doc=":class:`VOX` Object",
                parameters = [
@@ -561,6 +573,7 @@ gx_methods = {
                Add a subset 3D  pagers. These should be "slabs", 16 wide in the input direction, and the size of the
                full voxel in the other two directions.
                """,
+               notes="See :func:`InitGenerateBySubsetPG_VOX` and :func:`EndGenerateBySubsetPG_VOX`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -576,6 +589,7 @@ gx_methods = {
         Method('EndGenerateBySubsetPG_VOX', module='geoengine.core', version='8.5.0',
                availability=Availability.PUBLIC, 
                doc="Output the voxel, after adding all the subset PGs.",
+               notes="You must begin by calling :func:`InitGenerateBySubsetPG_VOX` and add data using :func:`AddGenerateBySubsetPG_VOX`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -624,6 +638,10 @@ gx_methods = {
         Method('GetGOCADLocation_VOX', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the location of a voxel with origin and scaled xyz vectors for use with GOCAD.",
+               notes="""
+               This is used for GOCAD voxel calculations, and begins with the
+               origin at (0,0,0), not the actual location of the corner point.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -657,6 +675,24 @@ gx_methods = {
         Method('GetGridSectionCellSizes_VOX', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Get default cell sizes in X and Y for a section grid.",
+               notes="""
+               This function determines default cell sizes for a vertical grid
+               slicing a voxel. It tries to match the "X" and "Y" sizes (in the grid
+               coordinates) with the projection of the voxel's cells onto the grid
+               plane. It uses a few simple rules:
+               
+               If the voxel is rotated about a horizontal axis (i.e. if its own "Z" axis
+               is not vertical, then both cell sizes are set to the smallest voxel dimension
+               (a single volume pixel) in X, Y and Z.
+               
+               If the voxel is "horizontal", then the angle between the
+               section azimuth and the voxel's own X and Y axes is used to
+               calculate a value which varies between the minimum X size and the
+               minimum Y size, and this is used for the grid's "X" cell size.
+               (in other words, if the section is parallel to the voxel "X" axis,
+               then the returned "X" cells size is equal to the voxel's minimum "Y" cell size.
+               The grid's "Y" cell size is set to the voxel's minimum "Z" cell size.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -702,6 +738,10 @@ gx_methods = {
         Method('GetLimits_VOX', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Get the range of indices with non-dummy data.",
+               notes="""
+               Find the non-dummy volume of a :class:`VOX` object. If the voxel is all dummies,
+               returns :def_val:`iMAX` for the minima, and :def_val:`iMIN` for the maxima.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -723,6 +763,14 @@ gx_methods = {
         Method('GetLimitsXYZ_VOX', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Get the range in true XYZ of non-dummy data.",
+               notes="""
+               Find the non-dummy volume of a :class:`VOX` in true (X, Y, Z). This method
+               works for voxels which are rotated or oriented in 3D, and returns
+               the true min and max X, Y and Z limits in the data.
+               The bounds are the bounds for the voxel
+               center points. If the voxel is all dummies,
+               returns :def_val:`rMAX` for the minima, and :def_val:`rMIN` for the maxima.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -855,6 +903,14 @@ gx_methods = {
         Method('GetTPAT_VOX', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a copy of a thematic voxel's :class:`TPAT` object.",
+               notes="""
+               Each row in the :class:`TPAT` object corresponds to a stored index
+               value in the thematic voxel. The :class:`TPAT` should NOT be modified
+               by the addition or deletion of items, if it is to be
+               restored into the :class:`VOX` object, but the CODE, LABEL, DESCRIPTION
+               or COLOR info can be changed.
+               The :class:`TPAT` object is stored inside the :class:`VOX` :class:`META` object.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1060,6 +1116,13 @@ gx_methods = {
         Method('iIsThematic_VOX', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Is this a thematic voxel?",
+               notes="""
+               A thematic voxel is one where the stored integer values
+               represent indices into an internally stored :class:`TPAT` object.
+               Thematic voxels contain their own color definitions, and
+               normal numerical operations, such as applying ITRs for display,
+               are not valid.
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if :class:`VOX` is thematic",
                parameters = [
@@ -1070,6 +1133,10 @@ gx_methods = {
         Method('iIsVectorVoxel_VOX', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="Is this a vector voxel?",
+               notes="""
+               A vector voxel is one where each data element consists of 3 4-byte float values.
+               Vector voxels normally have the file type "geosoft_vectorvoxel".
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if :class:`VOX` is a vector voxel",
                parameters = [
@@ -1174,6 +1241,38 @@ gx_methods = {
         Method('Krig_VOX', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="A more compact and extensible form of :func:`LogGridPointsZEx_VOX`.",
+               notes="""
+               Optional Parameters.
+               
+               If these values are not set in the :class:`REG`, then default parameters will be used.
+               
+               ERROR_VOXEL:		Name of error :class:`VOX` ("" for none)
+               CELLSIZEZ:      Z Cell size string (space delimited, "" for default)
+               RADIUS_MIN:		Minimum Search Radius (REAL) (Default = 4) (Blanking Distance)
+               RADIUS_MAX:		Maximum Search Radius (REAL) (Default = 16)
+               SEARCH_MIN:		Minimum Search Points (INT) (Default = 16)
+               SEARCH_MAX:		Maximum Search Points (INT) (Default = 32)
+               VARIOGRAM_ONLY: Set to 1 to calculate the variogram only (INT) (Default = 0)
+               MODEL:				Variogram Model number 1-power, 2-sperical, 3-gaussian, 4-exponential  (INT) (Default = 2)
+               POWER:          Power (Default = DUMMY)
+               SLOPE:          Slope (REAL) (if input is DUMMY, value calculated and set on return)
+               RANGE:          Range (REAL) (if input is DUMMY, value calculated and set on return)
+               SILL :          Sill (REAL) (if input is DUMMY, value calculated and set on return)
+               STRIKE:				Strike (REAL) (Default = 0)
+               DIP:					Dip (REAL)	(Default = 90)
+               PLUNGE:				Plunge (REAL) (Default = 0)
+               STRIKE WEIGHT:	Along-Strike Weight (REAL) (Default = 1)
+               DIP_WEIGHT:      Down-Dip Weight (REAL) (Default = 1)
+               LOG_OPT:			One of :def:`VOX_GRID_LOGOPT` (Default = 0)
+               MIN_LOG:			Log Minimum (REAL)	(Default = 1)
+               MIN_X:				Minimum X (REAL) (default = DUMMY to determine from the data. If input, nearest lt. or eq. multiple of cell size chosen)
+               MAX_X:				Maximum X (REAL) (default = DUMMY to determine from the data. If input, nearest gt. or eq. multiple of cell size chosen)
+               MIN_Y:				Minimum Y (REAL) (default = DUMMY to determine from the data. If input, nearest lt. or eq. external multiple of cell size chosen)
+               MAX_Y:				Maximum Y (REAL) (default = DUMMY to determine from the data. If input, nearest gt. or eq. multiple of cell size chosen)
+               MIN_Z:				Minimum Z (REAL) (default = DUMMY to determine from the data. If input, nearest lt. or eq. multiple of cell size chosen)
+               MAX_Z:				Maximum Z (REAL) (default = DUMMY to determine from the data. If input, nearest gt. or eq. multiple of cell size chosen)A more compact and extensible form of :func:`LogGridPointsZEx_VOX`. Only the most
+               basic parameters are entered directly. Optional parameters are passed via a :class:`REG` object.
+               """,
                return_type="VOX",
                return_doc=":class:`VOX` Object",
                parameters = [
@@ -1198,6 +1297,7 @@ gx_methods = {
         Method('Math_VOX', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Produces a new voxes using a formula on existing voxels/Grids",
+               notes="The input voxels must all be of the same type.",
                return_type="VOX",
                return_doc="VOXEL handle",
                parameters = [
@@ -1293,6 +1393,11 @@ gx_methods = {
         Method('ResamplePG_VOX', module='geoengine.core', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Resample a voxel over an input volume to a :class:`PG`.",
+               notes="""
+               Creates and dummies a :class:`PG` object based on the input
+               dimensions, then resamples the voxel to the pager
+               at the locations determined by input projection, origin and spacings.
+               """,
                return_type="PG",
                return_doc=":class:`PG` object, terminates on error",
                parameters = [
@@ -1329,6 +1434,12 @@ gx_methods = {
         Method('RescaleCellSizes_VOX', module='geoengine.core', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Multiply all cell sizes by a fixed factor.",
+               notes="""
+               This is useful, for instance for converting sizes in one
+               unit to sizes in another unit if changing the projection
+               and the projection's unit changes, since the voxel inherits
+               its projection's units.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1340,6 +1451,16 @@ gx_methods = {
         Method('SampleCDI_VOX', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Sample a voxel at locations/elevations in a CDI database.",
+               notes="""
+               A "CDI" database does not need to be conductivity/depth.
+               It normally contains an array channel of depth values for
+               each (X, Y) location, with corresponding data array channels of
+               values taken at those (X, Y, Z) locations.
+               If the optional elevation channel is used, its value is used as an
+               offset to the depth channel values. Depths are positive down by
+               default; use the "Negative depths down" parameter if the depths
+               become more negative as you go deeper.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1395,6 +1516,7 @@ gx_methods = {
         Method('SampleVV_VOX', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="Sample a voxel at multiple locations.",
+               notes="Sample at voxel at XYZ locations input in VVs. Values returned in a :class:`VV`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1495,6 +1617,14 @@ gx_methods = {
         Method('SetTPAT_VOX', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a thematic voxel's :class:`TPAT` object.",
+               notes="""
+               Each row in the :class:`TPAT` object corresponds to a stored index
+               value in the thematic voxel. The :class:`TPAT` should NOT be modified
+               by the addition or deletion of items, if it is to be
+               restored into the :class:`VOX` object, but the CODE, LABEL, DESCRIPTION
+               or COLOR info can be changed.
+               The :class:`TPAT` object is stored inside the :class:`VOX` :class:`META` object.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1586,6 +1716,11 @@ gx_methods = {
         Method('WindowPLY_VOX', module='geoengine.core', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Window a :class:`VOX` to a :class:`PLY` file and Z.",
+               notes="""
+               The voxel is windowed horizontally to the input :class:`PLY` file.
+               Optionally, it will be windowed to the input Z range as well.
+               The output can be clipped to the non-dummied cells.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1607,6 +1742,10 @@ gx_methods = {
         Method('WindowXYZ_VOX', module='geoengine.core', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Window a :class:`VOX` to ranges in X, Y and Z.",
+               notes="""
+               The six minima and maxima are optional.
+               The output can be clipped to the non-dummied cells.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1769,6 +1908,27 @@ gx_methods = {
         Method('IDWGridDB_VOX', module='geoengine.core', version='8.4.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGridDB_VOX`     Inverse-distance weighting gridding method, :class:`DB` version, 3D.",
+               notes="""
+               3D cells take on the averaged values within a search radius, weighted inversely by distance.
+               
+               Weighting can be controlled using the power and slope properties;
+               
+               weighting = 1 / (distance^wtpower + 1/slope) where distance is in
+               units of grid cells (X dimenstion). Default is 0.0,
+               
+               If the blanking distance is set, all cells whose center point is not within the blanking distance of
+               at least one data point are set to dummy.
+               
+               :class:`REG` Parameters:
+               
+               X0, Y0, Z0, DX, DY, DZ: Voxel origin, and cell sizes (required)
+               WT_POWER (default=2), WT_SLOPE (default=1) Weighting function parameters
+               SEARCH_RADIUS: Distance weighting limit (default = 4 * CUBE_ROOT(DX*DY*DZ))
+               BLANKING_DISTANCE: Dummy values farther from data than this distance. (default = 4 * CUBE_ROOT(DX*DY*DZ))
+               LOG: Apply log transform to input data before gridding (0:No (default), 1:Yes)?
+               LOG_BASE: One of :def_val:`VV_LOG_BASE_10` (default) or :def_val:`VV_LOG_BASE_E`
+               LOG_NEGATIVE: One of :def_val:`VV_LOG_NEGATIVE_NO` (default) or :def_val:`VV_LOG_NEGATIVE_YES`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1790,6 +1950,17 @@ gx_methods = {
         Method('TINGridDB_VOX', module='geoengine.core', version='8.5.0',
                availability=Availability.LICENSED, 
                doc=":func:`TINGridDB_VOX`   :class:`TIN`-Gridding, :class:`DB` version, 3D.",
+               notes="""
+               Designed for data in array channels position vertically at single XY locations.
+               Creates a :class:`TIN` using the XY locations and uses the coefficients for the top layer on
+               each layer below to make it efficient.
+               
+               :class:`REG` Parameters:
+               
+               X0, Y0, Z0, DX, DY, DZ: Voxel origin, and cell sizes (required)
+               NX, NY, NZ: Voxel dimensions.
+               DZ and NZ are used only if the input cell sizes :class:`VV` is of zero length.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1817,6 +1988,7 @@ gx_methods = {
         Method('Sample_VOX', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Sample the Voxel",
+               notes="Never properly implemented. Use :func:`Profile_VOXE` instead.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",

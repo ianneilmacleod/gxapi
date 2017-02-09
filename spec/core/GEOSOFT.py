@@ -4,19 +4,181 @@ gx_class = Class('GEOSOFT',
                  no_csharp=True,
                  no_cpp=True,
                  doc="""
-This is not a class but a collection of global defines. It
-is used by all functions.
-""",
+                 This is not a class but a collection of global defines. It
+                 is used by all functions.
+                 """,
                  notes="""
-The following defines are not used by any methods but
-are usefull in general:
+                 The following defines are not used by any methods but
+                 are usefull in general:
+                 
+                 :def:`GEO_BOOL`
+                 :def:`GEO_VAR`
+                 :def:`GEO_DUMMY`
+                 :def:`GEO_LIMITS`
+                 :def:`GEO_FULL_LIMITS`
+                 :def:`GEO_STRING_SIZE`
+                 """,
+                 verbatim_gxh_defines="""
+//=========================================================================
+// OTHER Defines
+//=========================================================================
 
-:def:`GEO_BOOL`
-:def:`GEO_VAR`
-:def:`GEO_DUMMY`
-:def:`GEO_LIMITS`
-:def:`GEO_FULL_LIMITS`
-:def:`GEO_STRING_SIZE`
+// ---- convert GS_? type to simple type (INT, REAL or string) ---
+
+#define GS_SIMPLE_TYPE(A) switch (A) { case 0: case 1: case 2: case 3: A=INT; break; case 4: case 5: A=REAL;}
+
+
+// --- define macros and typedef's if not a C program ---
+
+#ifndef GX_C
+
+
+// --- 
+// HINTS will be TRUE if hints are on. 
+// Caller must provide sHints string variable at least 2 characters long.
+// ---
+#define HINTS (iInteractive_SYS() && \
+               (iGlobal_SYS("montaj.hints",sHints) == 0) && \
+               iCharComp_STR(sHints,"Y"))
+               
+
+// --- handles ---
+
+#define GX_HANDLE int
+typedef ACQUIRE;         
+typedef AGG;
+typedef BF;          
+typedef BIGRID;      
+typedef COM;         
+typedef CSYMB;       
+typedef DAT;         
+typedef DAP;         
+typedef DATA;      
+typedef DATALINKD;    
+typedef DATAMINE;  
+typedef DB;          
+typedef DBREAD;   
+typedef DBWRITE;   
+typedef DMPPLY;    
+typedef DOCU;       
+typedef DSEL;        
+typedef DSET;        
+typedef DGW;         
+typedef DH;          
+typedef DXFI;        
+typedef EDB;         
+typedef EDOC;         
+typedef EGRP;
+typedef EMAP;
+typedef EMAPTEMPLATE;        
+typedef EXP;         
+typedef EUL3;        
+typedef FFT;         
+typedef FFT2;        
+typedef GD;          
+typedef GIS;         
+typedef GEOSTRING;
+typedef GER;         
+typedef GOLEDB;
+typedef GRID;        
+typedef H3DN;        
+typedef HANDLE;      
+typedef HMAP;
+typedef HGD;        
+typedef HXYZ;        
+typedef HTTP;        
+typedef IEXP;        
+typedef IGRF;        
+typedef IMG;         
+typedef IMPT;
+typedef ITR;         
+typedef IP;          
+typedef IPJ;         
+typedef KGRD;        
+typedef LAYOUT;         
+typedef LL2;         
+typedef LPT;         
+typedef LST;         
+typedef LTB;         
+typedef MAP;
+typedef MXD;         
+typedef MAPTEMPLATE;         
+typedef MAPL;        
+typedef META;         
+typedef MR;          
+typedef MSTK;        
+typedef NREG;        
+typedef PAGG;        
+typedef PAT;         
+typedef PG;          
+typedef PGEXP;          
+typedef PIC;          
+typedef PLY;         
+typedef PJ;          
+typedef RA;
+typedef RAND;          
+typedef REG;         
+typedef RGRD;
+typedef SHP;        
+typedef SMOD;        
+typedef SUR;
+typedef SURFACE;
+typedef SURFACEITEM;
+typedef ST;          
+typedef ST2;         
+typedef STK;         
+typedef SBF;         
+typedef TB;          
+typedef TC;          
+typedef TIN;  
+typedef TPAT;       
+typedef TR;          
+typedef MVIEW;       
+typedef MVG;         
+typedef USERMETA;        
+typedef VM;          
+typedef VA;          
+typedef VOX;          
+typedef VOXD;          
+typedef VOXE;          
+typedef VV;          
+typedef VVEXP;        
+typedef WA;
+
+
+// --- ArcGIS Objects ---
+
+typedef ARCDB; 
+
+// --- TS Objects ---
+
+typedef NGRD;           // Nearest Neighbour gridding
+typedef GPX;           // Nearest Neighbour gridding
+typedef BHPIO;          // DFA Intrepid database import/export for BHP
+typedef KENGRAV;        // Kennecot gravity terrain correction
+
+
+// --- Handles that are really integers ---
+
+#define CRC          GX_HANDLE
+#define WND          GX_HANDLE
+#define PTMP         GX_HANDLE
+#define FILTER       GX_HANDLE
+#define DGW_OBJ      GX_HANDLE
+#define TB_FIELD     GX_HANDLE
+#define DB_SELECT    GX_HANDLE
+#define META_TOKEN   GX_HANDLE
+#define DB_SYMB      GX_HANDLE
+
+#define FALSE    0
+#define TRUE     1
+
+#define INT     0
+#define REAL    1
+
+
+// GX_C
+#endif
 """)
 
 

@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('PGEXP',
                  doc="""
-The :class:`PGEXP` class is similar to the :class:`EXP` class, but is used
-to apply math expressions to pagers (:class:`PG` objects).
-
-It works only on PGs of the same dimensions.
-""")
+                 The :class:`PGEXP` class is similar to the :class:`EXP` class, but is used
+                 to apply math expressions to pagers (:class:`PG` objects).
+                 
+                 It works only on PGs of the same dimensions.
+                 """)
 
 
 

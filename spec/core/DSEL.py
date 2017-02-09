@@ -33,6 +33,13 @@ gx_methods = {
         Method('DataSignificantFigures_DSEL', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Specify the data significant figures required",
+               notes="""
+               This is the number of significant figures that you require for the data.
+               You can reduce this number to achieve better compression ratios.
+               This should only be used when there is one data type in the data.
+               
+               See sSpatialResolution_DSEL to set the desired spatial resolution.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",
@@ -64,6 +71,7 @@ gx_methods = {
         Method('PictureQuality_DSEL', module='geoengine.core', version='5.1.4',
                availability=Availability.PUBLIC, 
                doc="Specify the quality of pictures being returned.",
+               notes="Affected Data Types: PICTURE",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",
@@ -86,6 +94,10 @@ gx_methods = {
         Method('SelectArea_DSEL', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Select a complex clipping area",
+               notes="""
+               The DAP server may not handle clipping and may return
+               more data than requested.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",
@@ -114,6 +126,17 @@ gx_methods = {
         Method('SelectResolution_DSEL', module='geoengine.core', version='5.0.3',
                availability=Availability.PUBLIC, 
                doc="Specify the resolution desired",
+               notes="""
+               Resolution must be specified in the units of the selection :class:`IPJ`.
+               
+               This will be the optimum data resoulution.  (grid cell for grids, data
+               separation for other data types).
+               You will normally get a reasonable resolution as near to or smaller than
+               this unless sRequireResolution_DSEL has been set.
+               
+               Call sRequireResolution_DSEL with TRUE to force the client to re-sample
+               the data to the resolution requested.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",
@@ -151,6 +174,15 @@ gx_methods = {
         Method('SetIPJ_DSEL', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Set the desired projection",
+               notes="""
+               If the server supports reprojection, the data will be
+               reprojected at the server.
+               
+               If reprojection is not forced, the data may come in any projection.
+               
+               The spatial resolution and accuracy are accumed to be in the
+               coordinate system defined by this :class:`IPJ`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",
@@ -164,6 +196,14 @@ gx_methods = {
         Method('SpatialAccuracy_DSEL', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Specify the spatial accuracy required.",
+               notes="""
+               Must be specified in the units of the selection :class:`IPJ`.
+               
+               The spatial accuracy is used improve compression performance for
+               the spatial component of the data returned.
+               You can reduce this number to achieve better compression ratios.
+               This should only be used when there is one data type in the data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DSEL",

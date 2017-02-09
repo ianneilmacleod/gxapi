@@ -1,12 +1,11 @@
-import importlib
-import glob
-import os
-import itertools
-from enum import Enum
+from .gxdefs import SpecBase
 
-class Class:
+
+class Class(SpecBase):
     def __init__(self, name, handle_name=None, no_gxh=False, no_csharp=False, no_cpp=False,
-                 doc=None, notes=None):
+                 doc=None, notes=None, verbatim_gxh_defines=None):
+        super().__init__()
+
         self.name = name
         self.handle_name = handle_name
         self.no_gxh = no_gxh
@@ -14,5 +13,4 @@ class Class:
         self.no_cpp = no_cpp
         self.doc = doc
         self.notes = notes
-
-
+        self.verbatim_gxh_defines = verbatim_gxh_defines

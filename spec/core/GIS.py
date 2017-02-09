@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('GIS',
                  doc="""
-The :class:`GIS` class is used for the import, export,
-and interrogation of :class:`GIS` Data stored in external formats,
-such as MapInfo® TAB files.
-""")
+                 The :class:`GIS` class is used for the import, export,
+                 and interrogation of :class:`GIS` Data stored in external formats,
+                 such as MapInfo® TAB files.
+                 """)
 
 
 gx_defines = [
@@ -62,6 +62,10 @@ gx_methods = {
         Method('CreateMap2D_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc=":func:`CreateMap2D_GIS`   Create a new 2D map for :class:`GIS` imports.",
+               notes="""
+               This function was created to minimize duplication in
+               creation of new maps with 2D views.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -88,6 +92,19 @@ gx_methods = {
         Method('GetBPRModelsLST_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Get a :class:`LST` of block models contained in a Gemcom BPR or BRP2 file",
+               notes="""
+               The Returned :class:`LST` has items in the following format:
+               
+               Name:  If there is only one sub-directory with models, then only
+               the block model name "Rock Type_5" is required to ensure uniqueness.
+               If there is more than one sub-directory, then the name is set
+               to (.e.g.) "[Standard]Rock Type_5"
+               Value: Sub-directory file path  "Standard\\Rock Type_5.BLK", (includes the extension).
+               
+               The Gemcom BPR and BPR2 files keep their block models in one
+               or more sub-directories, identified in the *.CAT file located
+               beside the input BPR or BPR2.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -101,6 +118,11 @@ gx_methods = {
         Method('GetIPJ_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the :class:`GIS` :class:`IPJ`",
+               notes="""
+               This is your copy, you must destroy it.
+               If the :class:`GIS` does not have an :class:`IPJ`, an :class:`IPJ` with
+               no warp and UNKNOWN projection is returned.
+               """,
                return_type="IPJ",
                return_doc="""
                :class:`IPJ` handle
@@ -146,6 +168,12 @@ gx_methods = {
         Method('iDatamineType_GIS', module='geoengine.interoperability', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Returns the type of a Datamine file.",
+               notes="""
+               Terminates if file is not a Datamine file.
+               A datamine file can contain fields from a multitude
+               of types, so use :func:`iAnd_MATH` or :func:`iOr_MATH` to determine if
+               the file contains the required data.
+               """,
                return_type=Type.INT32_T,
                return_doc="Datamine file types - bitwise AND of types.",
                parameters = [
@@ -169,6 +197,11 @@ gx_methods = {
         Method('iIsMIMapFile_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns TRUE if file is a MapInfo :class:`MAP` file.",
+               notes="""
+               It is important not to overwrite a MapInfo :class:`MAP` file
+               with a :class:`GEOSOFT` one. Use this function to test the :class:`MAP`
+               file (looks at the first few bytes).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if not a MapInfo :class:`MAP` file
@@ -195,6 +228,18 @@ gx_methods = {
         Method('iIsMIRotatedRasterTabFile_GIS', module='geoengine.interoperability', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Returns TRUE if file is a rotated MapInfo Raster TAB file.",
+               notes="""
+               Returns 1 if:
+               
+               a) This is a MapInfo RASTER file
+               b) A three-point warp is defined.
+               c) The warp requires a rotation in order to exactly map
+               the input and output warp points. The rotation must
+               be at least 1.e-6 radians.
+               
+               This function will register an error (and return 0)
+               if problems are encountered opening or reading the TAB file.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if not a rotated MapInfo Raster TAB file
@@ -208,6 +253,10 @@ gx_methods = {
         Method('iIsSHPFile3D_GIS', module='geoengine.interoperability', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Returns TRUE if an ArcView :class:`SHP` file is type POINTZ, ARCZ, POLYGONZ or MULTIPOINTZ",
+               notes="""
+               :class:`SHP` files come in 2D and 3D forms.
+               Fails if not :def_val:`GIS_TYPE_ARCVIEW`.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if the :class:`SHP` file is 2D
@@ -221,6 +270,7 @@ gx_methods = {
         Method('iIsSHPFilePoint_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Returns TRUE if an ArcView :class:`SHP` file is type POINT or POINTZ",
+               notes="Fails if not :def_val:`GIS_TYPE_ARCVIEW`.",
                return_type=Type.INT32_T,
                return_doc="""
                0 if the :class:`SHP` file is not points
@@ -254,6 +304,7 @@ gx_methods = {
         Method('IScanMIRasterTabFile_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Scan and set up a MapInf RASTER.",
+               notes="This will create a GI file for the raster image.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -269,6 +320,12 @@ gx_methods = {
         Method('LoadASCII_GIS', module='geoengine.interoperability', version='7.3.0',
                availability=Availability.PUBLIC, 
                doc="Save :class:`GIS` attribute table information (string fields) into a :class:`WA`.",
+               notes="""
+               All string fields (excluding X/Y and numerical fields) will be saved into the :class:`WA` columns.
+               
+               e field names are saved in the first line, followed by a blank line.
+               e field columns are seperated by a tab (delimited character).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -280,6 +337,17 @@ gx_methods = {
         Method('LoadGDB_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Load :class:`GIS` table information into a GDB.",
+               notes="""
+               All fields of the database will be loaded into the group.
+               
+               Channels will use the same name (or a allowable alias) as
+               the :class:`GIS` field name.
+               
+               If a channel does not exist, it will be created based on the
+               characteristics of the :class:`GIS` field.
+               
+               If a channel exists, it will be used as-is.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -291,6 +359,7 @@ gx_methods = {
         Method('LoadMAP_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Load :class:`GIS` table drawing into a :class:`MAP`.",
+               notes="The :class:`GIS` drawing will be drawin in the current group.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -302,6 +371,7 @@ gx_methods = {
         Method('LoadMAPEx_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Load :class:`GIS` table drawing into a :class:`MAP`.",
+               notes="The :class:`GIS` drawing will be drawin in the current group.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -315,6 +385,13 @@ gx_methods = {
         Method('LoadMetaGroupsMAP_GIS', module='geoengine.interoperability', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Load :class:`GIS` table drawing into a :class:`MAP`.",
+               notes="""
+               The :class:`GIS` drawing will be drawn in the current group.
+               A group will be created for every entity and data items
+               containing an entity's field will be added to the Meta
+               information of every group into the class specified.
+               Note that the map may grow very large for big datasets.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS"),
@@ -343,6 +420,19 @@ gx_methods = {
         Method('LoadShapesGDB_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Load :class:`GIS` shapes table information into separate lines in a GDB.",
+               notes="""
+               All fields of the database will be loaded into the group.
+               
+               Channels will use the same name (or a allowable alias) as
+               the :class:`GIS` field name.
+               
+               If a channel does not exist, it will be created based on the
+               characteristics of the :class:`GIS` field.
+               
+               If a channel exists, it will be used as-is.
+               
+               The shape ID will be used as the line numbers.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -354,6 +444,13 @@ gx_methods = {
         Method('SetDmWireframePtFile_GIS', module='geoengine.interoperability', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Specify the wireframe point file corresponding to the input file.",
+               notes="""
+               Datamine wireframe models are specified by pairs of files,
+               the first is the triangle node file, and the second gives
+               the XYZ locations of the node points. This
+               function allows you to specify the latter when reading the
+               first, so that the full model can be decoded.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -376,6 +473,11 @@ gx_methods = {
         Method('SetLST_GIS', module='geoengine.interoperability', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Save a :class:`LST` of items inside the :class:`GIS` object for special use.",
+               notes="""
+               If the :class:`GIS` :class:`LST` object already exists, it is destroyed and
+               recreated to match the size of the input :class:`LST`, before the
+               input :class:`LST` is copied to it.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GIS",
@@ -411,6 +513,7 @@ gx_methods = {
         Method('InvertWarp_GIS', module='geoengine.interoperability', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, 
                doc="DO NOT USE THIS FUNCTION - IT DOES NOTHING.",
+               notes="Obsolete, use ScanMIRaseterFile_GIS",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IPJ",

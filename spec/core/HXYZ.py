@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('HXYZ',
                  doc="""
-High Performance Data Point Storage. This is used
-to put Point data on a DAP server. It is compressed
-and uses a Quad-Tree design to allow very high speed
-data extraction. It is also multi-threaded.
-""")
+                 High Performance Data Point Storage. This is used
+                 to put Point data on a DAP server. It is compressed
+                 and uses a Quad-Tree design to allow very high speed
+                 data extraction. It is also multi-threaded.
+                 """)
 
 
 

@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IEXP',
                  doc="""
-The :class:`IEXP` class is similar to the :class:`EXP` class, but is used
-to apply math expressions to grids (:class:`IMG` objects).
-""")
+                 The :class:`IEXP` class is similar to the :class:`EXP` class, but is used
+                 to apply math expressions to grids (:class:`IMG` objects).
+                 """)
 
 
 

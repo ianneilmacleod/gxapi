@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('INTERNET',
                  doc="""
-This library provides functions for accessing the internet
-and MAPI-compliant e-mail services.
-Supported by Oasis montaj ONLY.
-""")
+                 This library provides functions for accessing the internet
+                 and MAPI-compliant e-mail services.
+                 Supported by Oasis montaj ONLY.
+                 """)
 
 
 
@@ -17,6 +17,11 @@ gx_methods = {
         Method('iDownloadHTTP_INTERNET', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Download :class:`HTTP` file from the internet to file.",
+               notes="""
+               The file must be stored on a server that supports
+               the :class:`HTTP` protocol and not require a password.
+               """,
+               see_also="iserver.gxh internet class.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -34,6 +39,10 @@ gx_methods = {
         Method('SendMail_INTERNET', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Prepaire an email for the user.",
+               notes="""
+               Requires a MAPI complient mail system to be installed
+               on the client machine.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

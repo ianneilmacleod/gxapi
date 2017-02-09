@@ -2,16 +2,16 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('PG',
                  doc="""
-Pager methods for large 2-D arrays
-This class handles very-large 2-D arrays in which efficient
-access is required along both rows and columns.
-""",
+                 Pager methods for large 2-D arrays
+                 This class handles very-large 2-D arrays in which efficient
+                 access is required along both rows and columns.
+                 """,
                  notes="""
-Typically a grid is accessed using the :class:`IMG` class, and a :class:`PG`
-is obtained from the :class:`IMG` using the :func:`GetPG_IMG` function.
-Following operations on the :class:`PG`, it can be written back to
-the :class:`IMG` using :func:`SetPG_IMG`.
-""")
+                 Typically a grid is accessed using the :class:`IMG` class, and a :class:`PG`
+                 is obtained from the :class:`IMG` using the :func:`GetPG_IMG` function.
+                 Following operations on the :class:`PG`, it can be written back to
+                 the :class:`IMG` using :func:`SetPG_IMG`.
+                 """)
 
 
 gx_defines = [
@@ -147,6 +147,7 @@ gx_methods = {
         Method('CopySubset_PG', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a subset of data from one pager to another.",
+               notes="2D Only",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -184,6 +185,7 @@ gx_methods = {
         Method('CreateS_PG', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a 2D :class:`PG` from serialized source.",
+               notes="For 3D pagers, use CreateBF_PG.",
                return_type="PG",
                return_doc=":class:`PG` Object",
                parameters = [
@@ -264,6 +266,7 @@ gx_methods = {
         Method('rGet_PG', module='geoengine.core', version='8.3.0',
                availability=Availability.LICENSED, 
                doc="Read a single value from a 2D :class:`PG`",
+               notes="This is a low-performance method.",
                return_type=Type.DOUBLE,
                parameters = [
                    Parameter('p1', type="PG",
@@ -324,6 +327,7 @@ gx_methods = {
         Method('Serial_PG', module='geoengine.core', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Serialize a 2D :class:`PG` to a :class:`BF`.",
+               notes="For 3D pagers, use :func:`WriteBF_PG`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG"),
@@ -380,6 +384,7 @@ gx_methods = {
         Method('CopySubset3D_PG', module='geoengine.core', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a subset of data from one pager to another.",
+               notes="2D Only",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -577,6 +582,7 @@ gx_methods = {
         Method('ReadRA_PG', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Read the contents of a 2D or 3D pager to from an :class:`RA`.",
+               notes="Each line must hold only 1 value",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -619,6 +625,7 @@ gx_methods = {
         Method('WriteWA_PG', module='geoengine.core', version='6.2.0',
                availability=Availability.LICENSED, 
                doc="Write the contents of a 2D or 3D pager to a :class:`WA`",
+               notes="Each line will hold only 1 value",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",

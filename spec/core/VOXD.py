@@ -13,6 +13,10 @@ gx_methods = {
         Method('Create_VOXD', module='geoengine.map', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Create a new :class:`VOXD`",
+               notes="""
+               Fails if the :class:`VOX` object is NOT thematic.
+               (See the :func:`CreateThematic_VOXD` function.)
+               """,
                return_type="VOXD",
                return_doc=":class:`VOXD` handle, terminates if creation fails",
                parameters = [
@@ -29,6 +33,10 @@ gx_methods = {
         Method('CreateITR_VOXD', module='geoengine.map', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Create a new :class:`VOXD` with our own :class:`ITR`",
+               notes="""
+               Fails if the :class:`VOX` object is thematic.
+               (See the :func:`CreateThematic_VOXD` function.)
+               """,
                return_type="VOXD",
                return_doc=":class:`VOXD` handle, terminates if creation fails",
                parameters = [
@@ -41,6 +49,18 @@ gx_methods = {
         Method('CreateThematic_VOXD', module='geoengine.map', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a new :class:`VOXD` for a thematic :class:`VOX` object.",
+               notes="""
+               A thematic voxel is one where the stored integer values
+               represent indices into an internally stored :class:`TPAT` object.
+               Thematic voxels contain their own color definitions, and
+               normal numerical operations, such as applying ITRs for display,
+               are not valid.
+               
+               To determine if a :class:`VOX` object is thematic, use the
+               :func:`iIsThematic_VOX` function.
+               
+               Fails if the :class:`VOX` object is NOT thematic.
+               """,
                return_type="VOXD",
                return_doc=":class:`VOXD` handle, terminates if creation fails",
                parameters = [

@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MAPTEMPLATE',
                  doc="""
-A :class:`MAPTEMPLATE` wraps and provides manipulation and usage for the XML content in map template files.
-See the annotated schema file maptemplate.xsd in the <:class:`GEOSOFT`>\\maptemplate folder and the accompanying
-documentation in that folder for documentation on the file format.
-""")
+                 A :class:`MAPTEMPLATE` wraps and provides manipulation and usage for the XML content in map template files.
+                 See the annotated schema file maptemplate.xsd in the <:class:`GEOSOFT`>\\maptemplate folder and the accompanying
+                 documentation in that folder for documentation on the file format.
+                 """)
 
 
 gx_defines = [
@@ -25,6 +25,10 @@ gx_methods = {
         Method('GetTmpCopy_MAPTEMPLATE', module='geoengine.map', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Get a temporary XML file for manipulation of the map template.",
+               notes="""
+               After manipulating contents the object may be updated by a call to
+               the UpdateFromTmpCopy method.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAPTEMPLATE"),
@@ -37,6 +41,12 @@ gx_methods = {
         Method('UpdateFromTmpCopy_MAPTEMPLATE', module='geoengine.map', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Update the object contents from a temporary XML file that may have bee manipulated externally.",
+               notes="""
+               This method will not modify the original contents of the file until a call to the
+               the Commit method is made or the object is destroyed. A call to the Discard method
+               will restore the contents to that of the original file. The temporary file is not deleted
+               and should be to not leak file resources.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAPTEMPLATE"),
@@ -57,6 +67,11 @@ gx_methods = {
         Method('Create_MAPTEMPLATE', module='geoengine.map', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`MAPTEMPLATE` from an existing file.",
+               notes="""
+               The base template name should be the file name part of a geosoft_maptemplate
+               file in the <geosoft>\\maptemplate or <geosoftuser>\\maptemplate folders. A base file
+               in the user folder will override any in the Geosoft install dir.
+               """,
                return_type="MAPTEMPLATE",
                return_doc=":class:`MAPTEMPLATE` Object",
                parameters = [
@@ -71,6 +86,7 @@ gx_methods = {
         Method('Destroy_MAPTEMPLATE', module='geoengine.map', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Destroy the :class:`MAPTEMPLATE` handle.",
+               notes="All changes to the :class:`MAPTEMPLATE` will be committed if it is not read-only.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAPTEMPLATE",
@@ -148,6 +164,11 @@ gx_methods = {
         Method('RenderPreviewMapProduction_MAPTEMPLATE', module='geoengine.map', version='6.4.0',
                availability=Availability.LICENSED, no_gxh=True, 
                doc="Render a preview for map sheet production purposes",
+               notes="""
+               This method can also be used to get the data view pixel location
+               by passing a null DC handle. This help to plot the view contents
+               preview from another location.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAPTEMPLATE",

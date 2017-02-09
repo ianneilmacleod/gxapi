@@ -65,6 +65,11 @@ gx_methods = {
         Method('ApplyFilterToMask_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Apply the filter to the mask channel",
+               notes="""
+               The mask channel is updated for the current data to reflect
+               the actions of the filter. Those values passing get 1, those
+               failing get 0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -84,6 +89,13 @@ gx_methods = {
         Method('ConvertDummies_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Convert dummies to zero values for assay channels.",
+               notes="""
+               The is operation is controlled by the Preferences
+               "Use dummies to indicate no data?" By default, this option is "yes"
+               so this function will return with no changes. However, if
+               "no", then all ASSAY class channels will have dummy values
+               converted to 0.0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -115,6 +127,12 @@ gx_methods = {
         Method('EditMapPlotParameters_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Alter parameters in an XYplot Triplot map.",
+               notes="""
+               The Parameters :class:`GUI` is loaded based on settings stored in
+               the map. The map is then re-plotted, overwriting the old one,
+               based on the new settings. Note that the selection of data
+               in the current :class:`DB` is used to replot the map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -132,6 +150,14 @@ gx_methods = {
         Method('EditPlotComponents_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Set group names and channels to plot in a template.",
+               notes="""
+               The "Components" group in the INI file is edited.
+               
+               Looks first in user\\etc, then in \\etc.
+               Looks first for file prefix "semtemplate" then "xyt" or "tri"
+               The altered template will be output to the user\\etc directory with
+               the file extension "semtemplate".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -143,6 +169,14 @@ gx_methods = {
         Method('EditPlotParameters_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Set TriPlot parameters in a template.",
+               notes="""
+               The "Parameters" group in the INI file is edited.
+               
+               Looks first in user\\etc, then in \\etc.
+               Looks first for file prefix "semtemplate" then "xyt" or "tri"
+               The altered template will be output to the user\\etc directory with
+               the file extension "semtemplate".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -154,6 +188,10 @@ gx_methods = {
         Method('ExportOverlay_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Create overlay map and file from a group.",
+               notes="""
+               The group is written to a new map, and an overlay file
+               is created which points to this map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -229,6 +267,14 @@ gx_methods = {
         Method('FilterLST_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Fill a :class:`LST` with existing :class:`SEMPLOT` filters",
+               notes="""
+               "Supplied" filters are stored in \\etc, while user-edited and new filters
+               are stored in user\\etc. This function finds all files with the extension
+               ".semfilter", first in user\\etc, then in \\etc, and adds the file names
+               (without the extension) to the :class:`LST`. The name with the extension is stored
+               as the value.
+               The :class:`LST` is cleared first.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -238,6 +284,12 @@ gx_methods = {
         Method('FilterMineralPosData_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Filter raw data by position and mineral values",
+               notes="""
+               The Mask channel will be updated so that those data values
+               which "pass" get "1" and those that "fail" get dummy "*"
+               NO DATA IS REMOVED.
+               Works on all selected lines of data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -268,6 +320,10 @@ gx_methods = {
         Method('GetCurrentMineralLST_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Retrieve :class:`LST` of minerals in selected lines.",
+               notes="""
+               If the mineral channel name is not specified, it returns
+               just the "X" (Unknown) item.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -310,6 +366,13 @@ gx_methods = {
         Method('GetGroupingLST_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Get list of items to group symbols by.",
+               notes="""
+               The first item is "Anomaly", which gives the line names, The second
+               item (if the channel exists in the database) is the Sample Number.
+               After this are included all string channels which are NOT oxides or
+               elements. (The list can include the mineral).
+               Channel symbol is the :class:`LST` value (except for the first item - "Anomaly")
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -390,6 +453,12 @@ gx_methods = {
         Method('IGetMineralChannelName_SEMPLOT', module='geoguilib', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Retrieve the mineral channel name.",
+               notes="""
+               First looks at the :class:`SEMPLOT`.MINERAL_CHANNEL value.
+               If not found, returns the first MINERAL class
+               channel found. If still not found, returns a
+               blank string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -403,6 +472,10 @@ gx_methods = {
         Method('IImportAsciiWizard_SEMPLOT', module='geoguilib', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Generate a :class:`SEMPLOT` ASCII import template.",
+               notes="""
+               If the anomaly name is not included, then
+               the input data must have an "Anom_Name" field.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -433,6 +506,22 @@ gx_methods = {
         Method('ImportBIN_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Import blocked binary or archive ASCII data",
+               notes="""
+               This wrapper is for :class:`SEMPLOT`, and does not require the import licence.
+               
+                  1. Binary import templates have extension .I2 by convention.  See
+                     BINARY.I2 for a description of the template format.
+                     Archive import templates have extension .I3 by convention. See
+                     ARCHIVE.I3 for a description of the template format.
+               
+                  2. Both the import template and data file must exist.
+               
+                  3. If a line already exists in the database, a new version is created
+                     unless a line name is passed in.  In this case, the specified name
+                     is used and the imported channels on the previous line will be
+                     destroyed.
+               """,
+               see_also=":func:`LabTemplate_DU` in du.gxh",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -463,6 +552,11 @@ gx_methods = {
         Method('InitGroupSymbolsUsed_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Initializes memory of symbols used in plotting.",
+               notes="""
+               Maintains a list of the symbols used in plotting. Call before
+               Plotting one or more legends - symbols are accumulated.
+               :func:`PlotSymbolLegend_SEMPLOT` uses this information to create a legend.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -486,6 +580,14 @@ gx_methods = {
         Method('iViewType_SEMPLOT', module='geoguilib', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Test to see if a view is an XYPlot or Triplot view.",
+               notes="""
+               First checks the view name to see if it starts with
+               "XYplt_" or "Triplt_". Failing that it looks in the
+               view :class:`REG` for a value for "Components.Type", which will
+               be either "XYPlot" or "TriPlot".
+               If the view does not appear to be an XYPlot or a TriPlot view,
+               the function returns :def_val:`SEMPLOT_PLOT_UNKNOWN`.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`SEMPLOT_PLOT`",
                parameters = [
@@ -498,6 +600,15 @@ gx_methods = {
         Method('MineralID_SEMPLOT', module='geoguilib', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Identify minerals from the oxide channels.",
+               notes="""
+               Finds the best mineral matching the composition for each
+               row of oxide values. Works using linear programming and
+               the simplex method to maximize the oxides used to create
+               each of the possible output minerals. The mineral leaving the
+               least leftover is selected, as long as the residual (measured
+               as a percent of the total) is less than or equal to the
+               input value.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -513,6 +624,7 @@ gx_methods = {
         Method('NewFilter_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Create a new selection filter.",
+               notes="Creates a new, empty filter file in the user\\etc directory",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -524,6 +636,18 @@ gx_methods = {
         Method('NewTemplate_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Create a new XYPlot or TriPlot template.",
+               notes="""
+               The new template is written to the user\\etc directory, with
+               the file extension "semfilter". The template contains a parameter
+               identifying it as an XY or Triplot.
+               
+               Model Template: Looks first in user\\etc, then in \\etc.
+               Looks first for file prefix "semtemplate" then "xyt" or "tri"
+               
+               Because there are so many shared parameters, it is possible to use
+               an XYPlot template as a model for a TriPlot, and vica-verca, with
+               few complications.  (e.g. needing to define a "Z" component)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -537,6 +661,10 @@ gx_methods = {
         Method('OverlayLST_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Fill a list with the available plot overlay names",
+               notes="""
+               Looks first in user\\etc, then in \\etc.
+               See :def:`SEMPLOT_EXT` definitions above for which files to look for.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -550,6 +678,18 @@ gx_methods = {
         Method('Plot_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Plot an XYPlot or TriPlot based on the template.",
+               notes="""
+               The "Components" and "Parameters" groups in the INI file
+               are used.
+               Only values with mask values of 1 are plotted, if the mask
+               channel is specified.
+               
+               Call ":func:`ResetUsedChannel_SEMPLOT`" prior to this function
+               in order to track the values actually plotted.
+               
+               Call :func:`InitGroupSymbolsUsed_SEMPLOT` prior to this function
+               to reset recording of the symbols used in plotting (for legends etc).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -571,6 +711,14 @@ gx_methods = {
         Method('PlotSymbolLegend_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Plot a symbol legend in a view.",
+               notes="""
+               This function depends on :func:`InitGroupSymbolsUsed_SEMPLOT`
+               before the plot for which this legend is created is made.
+               The symbols and groups to use in the legend are stored to
+               a database blob after the plot is made. These values are
+               recovered by this function to make the legend at the
+               specified location.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -590,6 +738,7 @@ gx_methods = {
         Method('PropSymb_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Plot a proportional symbol plot.",
+               notes="Replots map using proportional symbols",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -627,6 +776,16 @@ gx_methods = {
         Method('Replot_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Replot an existing :class:`SEMPLOT` plot based on current data.",
+               notes="""
+               Note that the selection of data
+               in the current :class:`DB` is used to replot the map.
+               
+               Call ":func:`ResetUsedChannel_SEMPLOT`" prior to this function
+               in order to track the values actually plotted.
+               
+               Call :func:`InitGroupSymbolsUsed_SEMPLOT` prior to this function
+               to reset recording of the symbols used in plotting (for legends etc).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -644,6 +803,11 @@ gx_methods = {
         Method('RePlotSymbolLegend_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Replot a symbol legend in a view.",
+               notes="""
+               Searches the VIEW :class:`REG` for information on a previously
+               created legend, and if it finds that info, replots the Legend,
+               using the current data, group key etc.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -666,6 +830,15 @@ gx_methods = {
         Method('ResetUsedChannel_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc='Set the "Plotted" channel to dummies',
+               notes="""
+               This function is called before one or a series of plots to initialize
+               the "Plotted" channel in all the selected lines to dummy values.
+               As the plots are created, those points used in the plot are set to 1,
+               so that at the end the database records which values have been plotted.
+               This information can then be used to make a symbol legend.
+               If the "Plotted" channel does not exist, it is created, associated,
+               loaded, and filled with dummies.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -694,6 +867,24 @@ gx_methods = {
         Method('SetChannelOrder_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Sets preset channel order.",
+               notes="""
+               Sets channel order as follows:
+               
+               Sample_No
+               X and Y Locations
+               Mineral
+               Grain_No
+               Position (e.g. center, edge etc.)
+               Grain Morph
+               Oxides (in the order they appear in Semplot_Oxides.csv)
+               Trace Elements (Ordered as in the periodic table)
+               Total
+               Mask
+               IsPlotted (flag set when a value is plotted)
+               Other channels
+               
+               Channel order is set for all "RawData" groups.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -705,6 +896,12 @@ gx_methods = {
         Method('SetChannelUnits_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Set units for oxides (%) and elements (ppm)",
+               notes="""
+               If the channel units are already set, then they are not changed.
+               Oxide channels are identified from the Semplot_Oxides.csv file.
+               Trace elements are identified from the periodic table of the
+               elements, except for "Y", if it is the current Y channel.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -758,6 +955,12 @@ gx_methods = {
         Method('TemplateLST_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Fill a list with the available plot template names",
+               notes="""
+               Looks first in user\\etc, then in \\etc.
+               Looks first for file prefix "semtemplate" then "xyt" or "tri"
+               (New-style templates with the "semtemplate" extentsion have the
+               plot type "triplot" or "xyplot" inside them.)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -774,6 +977,12 @@ gx_methods = {
         Method('TotalOxides_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, 
                doc="Calculate the total oxides channel.",
+               notes="""
+               The mineral channel is needed in order to adjust the total
+               with the Fe Corrected Ferric and Ferrous values, and these
+               require a mineral for their identification. If none is provided,
+               mineral "X" (unknown) is assumed.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -787,6 +996,11 @@ gx_methods = {
         Method('ImportAsciiWizard_SEMPLOT', module='geoguilib', version='6.2.0',
                availability=Availability.EXTENSION, is_obsolete=True, no_gxh=True, 
                doc="Generate a :class:`SEMPLOT` ASCII import template.",
+               notes="""
+               The new :func:`IImportAsciiWizard_SEMPLOT` returns
+               the specified anomaly name if no anomaly
+               name channel is in the database.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

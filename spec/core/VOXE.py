@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VOXE',
                  doc="""
-:class:`VOX` evaluator class. Used to sample values from
-the voxel.
-""")
+                 :class:`VOX` evaluator class. Used to sample values from
+                 the voxel.
+                 """)
 
 
 gx_defines = [

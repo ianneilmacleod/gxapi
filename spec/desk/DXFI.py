@@ -85,6 +85,7 @@ gx_methods = {
         Method('DXF2Map_DXFI', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Draw entities in a DXF file in a map",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -108,6 +109,12 @@ gx_methods = {
         Method('DXF2MapEx_DXFI', module='geogxx', version='5.0.6',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Draw entities in a DXF file in a map",
+               notes="""
+               The DXF will be drawin in the "*Data" view.  If a "*Data" view
+               does not exist, it will be created.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DXFI",
@@ -137,6 +144,7 @@ gx_methods = {
         Method('DXF2View_DXFI', module='geogxx', version='5.0.6',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Draw entities in a DXF file to a view in a map",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DXFI"),
@@ -164,6 +172,7 @@ gx_methods = {
         Method('MapExtents_DXFI', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Get map extent",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DXFI",
@@ -181,6 +190,7 @@ gx_methods = {
         Method('SetIPJ_DXFI', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Set the projection of the DXF.",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DXFI",

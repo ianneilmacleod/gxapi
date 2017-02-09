@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('3DN',
                  doc="""
-This class manages the rendering of a 3D view. It allows
-the positioning of the camera, specification of the zoom
-as well as some rendering controls for the axis. It is
-directly releated to the :class:`MVIEW` class.
-""")
+                 This class manages the rendering of a 3D view. It allows
+                 the positioning of the camera, specification of the zoom
+                 as well as some rendering controls for the axis. It is
+                 directly releated to the :class:`MVIEW` class.
+                 """)
 
 
 
@@ -209,6 +209,14 @@ gx_methods = {
         Method('SetScale_3DN', module='geoengine.map', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="Set the axis relative scales.",
+               notes="""
+               By default all scales are equal (1.0). By setting
+               these scales, relative adjustments to the overall
+               view of the 3D objects can be made. Note that they
+               are relative to each other. Thus, setting the scaling
+               to 5,5,5 is the same as 1,1,1. This is typically used
+               to exagerate one scale such as Z (1,1,5).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="3DN",

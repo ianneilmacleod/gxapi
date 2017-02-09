@@ -47,6 +47,11 @@ gx_methods = {
         Method('GetAzimuth_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get the azimuth of a given polygon.",
+               notes="""
+               The azimuth is the equivalent section azimuth,
+               equal to the azimuth of the normal vector plus
+               90 degrees.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -81,6 +86,11 @@ gx_methods = {
         Method('GetJoins_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get join lines for each vertex in a specific polygon.",
+               notes="""
+               If a specific vertex is not joined, the returned value is 0.
+               If the vertex is joined, then the index of the join line (1 to NJoins)
+               is returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -94,6 +104,13 @@ gx_methods = {
         Method('GetNormalVectors_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get the normal vectors of a given polygon.",
+               notes="""
+               Three normalized vectors are returned.
+               The first is horizontal, in the plane of the polygon.
+               The second is in the vertical plane, corresponding to the
+               "down-dip" direction.
+               The third is the normal vector to the polygon plane.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -123,6 +140,7 @@ gx_methods = {
         Method('GetPoly_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get a specific polygon from a :class:`DMPPLY` object.",
+               notes="Get the number of points from the :class:`VV` length.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -140,6 +158,11 @@ gx_methods = {
         Method('GetSwing_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get the swing of a given polygon.",
+               notes="""
+               The swing is the equivalent section swing,
+               equal to zero for vertical plates, and increasing
+               as the normal vector goes from horizontal upward.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -182,6 +205,10 @@ gx_methods = {
         Method('iNumPolys_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get the number of polygons in a :class:`DMPPLY` object.",
+               notes="""
+               The value returned is the "NP" used in function descriptions
+               below.
+               """,
                return_type=Type.INT32_T,
                return_doc="Number of polygons",
                parameters = [
@@ -192,6 +219,10 @@ gx_methods = {
         Method('iNumVertices_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Get the number of vertices in a polygon.",
+               notes="""
+               The value returned is the "NV" used in function descriptions
+               below.
+               """,
                return_type=Type.INT32_T,
                return_doc="Number of vertices in a polygon",
                parameters = [
@@ -234,6 +265,14 @@ gx_methods = {
         Method('ProjectPoly_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Project a polygon onto a vertical plane.",
+               notes="""
+               Gives the location in plane coordinates of a selected polygon,
+               after it has been projected perpendicularly onto the plane.
+               
+               Plane coodinates: X - horizontal in plane
+                                 Y - "vertical" in plane (can be a swing)
+                                 Z - horizontal, "perpendicular" to plane (RH)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -261,6 +300,12 @@ gx_methods = {
         Method('ReProjectPoly_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Recover polygon locations from 2D locations on vertical plane.",
+               notes="""
+               This is the inverse operation of :func:`ProjectPoly_DMPPLY`.
+               
+               Input the 2D locations on the projected vertical plane. These locations
+               are projected back onto the original polygon plane.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",
@@ -301,6 +346,7 @@ gx_methods = {
         Method('SetPoly_DMPPLY', module='geogxx', version='6.0.0',
                availability=Availability.LICENSED, 
                doc="Set a specific polygon into a :class:`DMPPLY` object.",
+               notes="Get the number of points from the :class:`VV` length.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DMPPLY",

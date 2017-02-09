@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('TB',
                  doc="""
-The :class:`TB` class is a high-performance table class used to
-perform table-based processing, such as leveling data in
-an OASIS database. The :class:`LTB` class is recommended for use
-with small tables produced from short lists such as the
-different geographic projections and their defining parameters.
-""")
+                 The :class:`TB` class is a high-performance table class used to
+                 perform table-based processing, such as leveling data in
+                 an OASIS database. The :class:`LTB` class is recommended for use
+                 with small tables produced from short lists such as the
+                 different geographic projections and their defining parameters.
+                 """)
 
 
 gx_defines = [
@@ -27,6 +27,10 @@ gx_methods = {
         Method('_SetSearchMode_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the search mode of a table.",
+               notes="""
+               If performance is an issue, you may want to test which search
+               mode provides the best performance with typical data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -38,6 +42,11 @@ gx_methods = {
         Method('Create_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Loads a table into memory and return a table handle.",
+               notes="""
+               If the table contains fewer data columns than are defined by the
+               the table header, the :class:`TB` object will read in the table and dummy
+               the elements of the missing data columns.
+               """,
                return_type="TB",
                return_doc=":class:`TB` Object",
                parameters = [
@@ -48,6 +57,13 @@ gx_methods = {
         Method('CreateDB_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a table from a database.",
+               notes="""
+               The table will contain fields for all channels in
+               the database.
+               
+               The database is not loaded with data.  Use the :func:`LoadDB_TB`
+               function to load data into the table.
+               """,
                return_type="TB",
                return_doc=":class:`TB` Object",
                parameters = [
@@ -194,6 +210,7 @@ gx_methods = {
         Method('LoadDB_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Load a database into a :class:`TB`",
+               notes="The line is appended to the data already in the table.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -235,6 +252,10 @@ gx_methods = {
         Method('SaveDB_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Save a :class:`TB` in a database line",
+               notes="""
+               Missing channels are created.
+               Data in existing channels on the line will be replaced.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -262,6 +283,21 @@ gx_methods = {
         Method('SetInt_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets an integer value into a table element.",
+               notes="""
+               The table field containing the element to be set MUST be
+               of type :def_val:`GS_BYTE`, :def_val:`GS_USHORT`, :def_val:`GS_SHORT`, or :def_val:`GS_LONG`.
+               If the field is :def_val:`GS_BYTE`, :def_val:`GS_USHORT`, or :def_val:`GS_LONG`, the new data
+               value will cause an overflow if the value is out of range of
+               the data type. The new element value will then be invalid.
+               
+               If the row of the new element exceeds the number of rows in
+               the table, then the table will AUTOMATICALLY be EXPANDED to
+               exactly as many rows needed to hold the new element. The new
+               element is placed in the proper field of the last row, and
+               all other field elements have invalid data. All fields of
+               the new rows up to the new element's row will also contain
+               invalid data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -277,6 +313,21 @@ gx_methods = {
         Method('SetReal_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets an real value into a table element.",
+               notes="""
+               The table field containing the element to be set MUST be
+               of type :def_val:`GS_FLOAT` or :def_val:`GS_DOUBLE`.
+               If the field is :def_val:`GS_FLOAT` the new data value will cause an
+               overflow if the value is out of range of the data type.
+               The new element value will then be invalid.
+               
+               If the row of the new element exceeds the number of rows in
+               the table, then the table will AUTOMATICALLY be EXPANDED to
+               exactly as many rows needed to hold the new element. The new
+               element is placed in the proper field of the last row, and
+               all other field elements have invalid data. All fields of
+               the new rows up to the new element's row will also contain
+               invalid data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -292,6 +343,18 @@ gx_methods = {
         Method('SetString_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets a string value into a table element.",
+               notes="""
+               The table field containing the element to be set MUST be
+               of 'string'.
+               
+               If the row of the new element exceeds the number of rows in
+               the table, then the table will AUTOMATICALLY be EXPANDED to
+               exactly as many rows needed to hold the new element. The new
+               element is placed in the proper field of the last row, and
+               all other field elements have invalid data. All fields of
+               the new rows up to the new element's row will also contain
+               invalid data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",
@@ -307,6 +370,16 @@ gx_methods = {
         Method('Sort_TB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sorts a table by a specified column.",
+               notes="""
+               If the column to sort by contains duplicated values, the
+               sorted table is NOT guaranteed to retain the ordering of
+               the duplicated values/
+               E.g. Given 2 rows of values:   xx   yy   1
+               bb   aa   1
+               If the table is sorted on column 3, the second row
+               may or may not come after the first row in the sorted
+               table.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="TB",

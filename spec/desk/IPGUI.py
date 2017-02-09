@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IPGUI',
                  doc="""
-This class is used in the :class:`IP` System for :class:`GUI` functions
-such as defining parameters for pseudo-section plots.
-""")
+                 This class is used in the :class:`IP` System for :class:`GUI` functions
+                 such as defining parameters for pseudo-section plots.
+                 """)
 
 
 
@@ -37,6 +37,7 @@ gx_methods = {
         Method('LaunchIPQCTool_IPGUI', module='geoguilib', version='8.1.0',
                availability=Availability.EXTENSION, 
                doc="Launch the In-Line :class:`IP` QC tool on a database.",
+               notes="The database should be a currently open database.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -50,6 +51,7 @@ gx_methods = {
         Method('LaunchOffsetIPQCTool_IPGUI', module='geoguilib', version='9.1.0',
                availability=Availability.EXTENSION, 
                doc="Launch the Offset :class:`IP` QC tool on a database.",
+               notes="The database should be a currently open database.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -63,6 +65,7 @@ gx_methods = {
         Method('iIPQCToolExists_IPGUI', module='geoguilib', version='8.1.0',
                availability=Availability.EXTENSION, 
                doc="See if there is an IPQC Tool (Offset or Inline) already open.",
+               notes="See if there is an IPQC Tool already open.",
                return_type=Type.INT32_T,
                return_doc="0 if not open, 1 if open")
     ]

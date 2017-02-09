@@ -2,19 +2,19 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VA',
                  doc="""
-The :class:`VA` class is the 2-Dimensional analogue to the :class:`VV` class.
-When displayed in a database, :class:`VA` objects are displayed graphically
-as profiles, one to a cell, and can also be displayed one column of
-data at a time by specifying an index; e.g. CH[0]. A :class:`VA` object is
-declared with a fixed number of columns, which cannot be altered.
-The number of rows, however can be changed, in the same way that
-the length of a :class:`VV` can be changed. Data can be added or extracted
-using VVs, either by row or column.
-
-A :class:`VA` is used to store an array of data in which each element may have
-multiple elements.  For example, 256-channel radiometric data can
-be stored in a :class:`VA` that is 256 elements wide.
-""")
+                 The :class:`VA` class is the 2-Dimensional analogue to the :class:`VV` class.
+                 When displayed in a database, :class:`VA` objects are displayed graphically
+                 as profiles, one to a cell, and can also be displayed one column of
+                 data at a time by specifying an index; e.g. CH[0]. A :class:`VA` object is
+                 declared with a fixed number of columns, which cannot be altered.
+                 The number of rows, however can be changed, in the same way that
+                 the length of a :class:`VV` can be changed. Data can be added or extracted
+                 using VVs, either by row or column.
+                 
+                 A :class:`VA` is used to store an array of data in which each element may have
+                 multiple elements.  For example, 256-channel radiometric data can
+                 be stored in a :class:`VA` that is 256 elements wide.
+                 """)
 
 
 gx_defines = [
@@ -87,6 +87,11 @@ gx_methods = {
         Method('AddElevationsVVToDepths_VA', module='geoengine.core', version='7.2.0',
                availability=Availability.LICENSED, 
                doc="Add one :class:`VV` value to each row of the :class:`VA`, output true elevation.",
+               notes="""
+               Adds each value in an input elevation :class:`VV` to all the values at
+               the same fid in a depths :class:`VA`. Includes an option for negative depths down
+               (e.g. a relative level).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -100,6 +105,10 @@ gx_methods = {
         Method('Append_VA', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Appends VAs",
+               notes="""
+               If the VAs have different numbers of columns, the smaller number
+               is used in the copy operation.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA"),
@@ -110,6 +119,13 @@ gx_methods = {
         Method('Average_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Average elements in a :class:`VA` by row or column",
+               notes="""
+               The output :class:`VV` will be dimensioned by the number of
+               rows or columns in the input :class:`VV` depending on the
+               :def:`VA_AVERAGE` setting.
+               
+               Dummies are not included in the average.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -134,6 +150,13 @@ gx_methods = {
         Method('Copy2_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Copy part of a vector into part of another vector.",
+               notes="""
+               1. Unlike :func:`Copy_VA` destination :class:`VA` is not reallocated, nor are
+               the dimensions changed. The caller must make any desired changes.
+               
+               2. All :class:`VA` types are supported and will be converted using
+               Convert_GS if necessary.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -171,6 +194,7 @@ gx_methods = {
         Method('CreateExt_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`VA`, using one of the :def:`GS_TYPES` special data types.",
+               notes="See :func:`Create_VV`",
                return_type="VA",
                return_doc=":class:`VA`, aborts if creation fails",
                parameters = [
@@ -185,6 +209,7 @@ gx_methods = {
         Method('CreateVV_VA', module='geoengine.core', version='7.2.1',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`VA` using the data in a :class:`VV`.",
+               notes="See :func:`Create_VV`",
                return_type="VA",
                return_doc=":class:`VA`, aborts if creation fails",
                parameters = [
@@ -208,6 +233,12 @@ gx_methods = {
         Method('GetFullVV_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the full :class:`VV` from the :class:`VA`.",
+               notes="""
+               No data is copied, this is the handle to the data :class:`VV` in the :class:`VA`.
+               The fid start/increment of the :class:`VA` is passed to the :class:`VV` at the time
+               of the call.  If a new :class:`VA` is read, you must call GetFull_VV_VA
+               to get the new fid in the :class:`VV`.
+               """,
                return_type="VV",
                return_doc=":class:`VV` Object",
                parameters = [
@@ -233,6 +264,7 @@ gx_methods = {
         Method('iCol_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Return number of columns in :class:`VA`",
+               notes=":func:`iLen_VA` returns the number of rows.",
                return_type=Type.INT32_T,
                return_doc="Columns in :class:`VA`",
                parameters = [
@@ -243,6 +275,10 @@ gx_methods = {
         Method('iGetInt_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get an integer element from a :class:`VA`.",
+               notes="""
+               Type conversions are performed if necessary.  Dummy values
+               are converted to "*" string.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                Element wanted, :def_val:`rDUMMY`, :def_val:`iDUMMY` or blank string
@@ -260,6 +296,13 @@ gx_methods = {
         Method('IGetString_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a string element from a :class:`VA`.",
+               notes="""
+               Returns element wanted, :def_val:`rDUMMY`, :def_val:`iDUMMY` or blank string
+               if the value is dummy or outside of the range of data.
+               
+               Type conversions are performed if necessary.  Dummy values
+               are converted to "*" string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -277,6 +320,7 @@ gx_methods = {
         Method('iLen_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Return length (number of rows) in a :class:`VA`.",
+               notes=":func:`iCol_VA` returns the number of columns.",
                return_type=Type.INT32_T,
                return_doc="Length of :class:`VA`",
                parameters = [
@@ -287,6 +331,10 @@ gx_methods = {
         Method('IndexOrder_VA', module='geoengine.core', version='5.1.0',
                availability=Availability.PUBLIC, 
                doc="Reorder a :class:`VA` based on an index :class:`VV`",
+               notes="""
+               Given a row index :class:`VV` (of type INT), this method reorders a
+               :class:`VA`. Please make sure that the index holds valid information.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -298,6 +346,11 @@ gx_methods = {
         Method('LookupIndex_VA', module='geoengine.core', version='6.4.2',
                availability=Availability.LICENSED, 
                doc="Lookup a :class:`VA` from another :class:`VA` using an index :class:`VV`.",
+               notes="""
+               Fractional values in the :class:`VV` will interpolate between the value
+               at the whole integer value and the next whole integer, dummy
+               if outside the :class:`VA`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -369,6 +422,10 @@ gx_methods = {
         Method('rGetReal_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a real element from a :class:`VA`.",
+               notes="""
+               Type conversions are performed if necessary.  Dummy values
+               are converted to "*" string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="""
                Element wanted, :def_val:`rDUMMY`, :def_val:`iDUMMY` or blank string
@@ -408,6 +465,11 @@ gx_methods = {
         Method('SetInt_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set an integer element in a :class:`VA`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VA` length, the :class:`VA` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -423,6 +485,10 @@ gx_methods = {
         Method('SetLn_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the length (number of rows) of the :class:`VA`",
+               notes="""
+               The number of columns in a :class:`VA` is fixed, and cannot be
+               altered once the :class:`VA` is created.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA"),
@@ -433,6 +499,11 @@ gx_methods = {
         Method('SetReal_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a real element in a :class:`VA`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VA` length, the :class:`VA` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -448,6 +519,11 @@ gx_methods = {
         Method('SetString_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a string element in a :class:`VA`.",
+               notes="""
+               Element being set cannot be < 0.
+               If the element is > current :class:`VA` length, the :class:`VA` length is
+               increased.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -478,6 +554,7 @@ gx_methods = {
         Method('Trans_VA', module='geoengine.core', version='7.2.0',
                availability=Availability.LICENSED, 
                doc="Translate (:class:`VA` + base ) * mult",
+               notes="Supports all :class:`VA` types using an internal double :class:`VV`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -491,6 +568,12 @@ gx_methods = {
         Method('Window_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Window a :class:`VA` to a :class:`VV` based in intergral frame",
+               notes="""
+               The defined window must be within the :class:`VA` element dimensions.
+               The windowed result will be the simple sum of all
+               values in the window.
+               If any values are dummy, the result will be dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -506,6 +589,12 @@ gx_methods = {
         Method('Window2_VA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Window a :class:`VA` to a :class:`VV` based on fractional frame",
+               notes="""
+               The defined window must be within the :class:`VA` element dimensions.
+               The windowed result will be the simple sum of all
+               values in the window.
+               If any values are dummy, the result will be dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",
@@ -521,6 +610,13 @@ gx_methods = {
         Method('iCheckForRepeating_VA', module='geoengine.core', version='8.2.0',
                availability=Availability.LICENSED, 
                doc="Window a :class:`VA` to a :class:`VV` based on fractional frame",
+               notes="""
+               Returns 1 if all rows contain values which match the input values.
+               Optionally, row values can be offset by amounts specified with a secondary :class:`VV`.
+               This function was designed to detect "depth" array channels, including those which might
+               have been offset with topography on each row.
+               An absolute tolerance can be specified to ignore numerical noise.
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if rows repeat, 0 if not.",
                parameters = [
@@ -539,6 +635,14 @@ gx_methods = {
         Method('iCheckForRepeating2_VA', module='geoengine.core', version='8.2.0',
                availability=Availability.LICENSED, 
                doc="Window a :class:`VA` to a :class:`VV` based on fractional frame",
+               notes="""
+               Returns 1 if all rows contain values which match the input values.
+               Optionally, row values can be offset by amounts specified with a secondary :class:`VV`.
+               This function was designed to detect "depth" array channels, including those which might
+               have been offset with topography on each row.
+               An absolute tolerance can be specified to ignore numerical noise.
+               This version returns the row and column index of first mismatch.
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if rows repeat, 0 if not.",
                parameters = [

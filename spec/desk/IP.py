@@ -2,17 +2,17 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('IP',
                  doc="""
-This class is used in the :class:`IP` System for the import, export
-and processing of Induced Polarization data.
-""",
+                 This class is used in the :class:`IP` System for the import, export
+                 and processing of Induced Polarization data.
+                 """,
                  notes="""
-The following defines are used in GX code but are not
-part of any functions:
-
-:def:`IP_ARRAY`
-:def:`IP_CHANNELS`
-:def:`IP_LINES`
-""")
+                 The following defines are used in GX code but are not
+                 part of any functions:
+                 
+                 :def:`IP_ARRAY`
+                 :def:`IP_CHANNELS`
+                 :def:`IP_LINES`
+                 """)
 
 
 gx_defines = [
@@ -198,6 +198,11 @@ gx_methods = {
         Method('ConvertUBCIP2DToGrid_IP', module='geogxx', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Convert a UBC 2D model to a regular grid.",
+               notes="""
+               Uses :class:`TIN` gridding to sample the model.
+               By setting the final value, a resistivity grid can be
+               created from conductivity data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -236,6 +241,11 @@ gx_methods = {
         Method('ExportUBCIP3_IP', module='geogxx', version='8.1',
                availability=Availability.EXTENSION, 
                doc="Export of :class:`IP` data to UBC format.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme IPINV2D.
+               Include error channel output and version-specific formatting.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -259,6 +269,11 @@ gx_methods = {
         Method('ExportUBCIPControl_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Export a control file for using in the UBC IPINV2D programme.",
+               notes="""
+               UBC Version 3 Control file.
+               Outputs a control file for use in the
+               UBC 2D :class:`IP` inversion programme IPINV2D.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -290,6 +305,7 @@ gx_methods = {
         Method('ExportUBCIPControlV5_IP', module='geogxx', version='8.1.0',
                availability=Availability.EXTENSION, 
                doc="Export a control file for using in the UBC IPINV2D programme.",
+               notes="UBC Version 5 Control file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -329,6 +345,12 @@ gx_methods = {
         Method('ExportUBCRes3_IP', module='geogxx', version='8.1.0',
                availability=Availability.EXTENSION, 
                doc="Export of :class:`IP` Resistivity data to UBC format.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme DCINV2D.
+               Voltage and current channels should be in units such that
+               V/I gives volts/amp (or mV/mA).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -354,6 +376,12 @@ gx_methods = {
         Method('ExportUBCResControl_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Export a control file for using in the UBC DCINV2D programme.",
+               notes="""
+               UBC Version 3.
+               Outputs a control file for use in the
+               UBC 2D resistivity inversion programme DCINV2D.
+               Superceded by ExportUBCResControl2_IP, which has a selection for output version number.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -383,6 +411,11 @@ gx_methods = {
         Method('ExportUBCResControlV5_IP', module='geogxx', version='8.1.0',
                availability=Availability.EXTENSION, 
                doc="Export a control file for using in the UBC DCINV2D programme.",
+               notes="""
+               UBC Version 5
+               			  Outputs a control file for use in the
+               UBC 2D resistivity inversion programme DCINV2D.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -418,6 +451,10 @@ gx_methods = {
         Method('ExportDataToUBC3D_IP', module='geogxx', version='9.2',
                availability=Availability.EXTENSION, 
                doc="Export of :class:`IP` data to UBC 3D :class:`IP` format.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC :class:`IP` 3D inversion programmes.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -447,6 +484,11 @@ gx_methods = {
         Method('ImportUBC2DMOD_IP', module='geogxx', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Import a MOD file from the UBC IPINV2D programme.",
+               notes="""
+               Imports the MOD file values to a :class:`PG` object.
+               The CON/CHG selection is necessary because the import sets
+               padding values to dummies based on the type of file.
+               """,
                return_type="PG",
                return_doc=":class:`PG` Object",
                parameters = [
@@ -459,6 +501,7 @@ gx_methods = {
         Method('ImportUBC2DMSH_IP', module='geogxx', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Import a MSH file from the UBC IPINV2D programme.",
+               notes="Imports the MSH file geometry.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -476,6 +519,10 @@ gx_methods = {
         Method('ImportUBC2DTopo_IP', module='geogxx', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Import a Topography file from the UBC IPINV2D programme.",
+               notes="""
+               Imports the maximum elevation (top of mesh)
+               as well as the topo (X, Z) values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -517,6 +564,12 @@ gx_methods = {
         Method('TrimUBC2DModel_IP', module='geogxx', version='7.1.0',
                availability=Availability.EXTENSION, 
                doc="Trim the padding cells from the UBC IPINV2D Model.",
+               notes="""
+               The cells are removed from the left, right and bottom.
+               The returned :class:`PG` is the trimmed version.
+               The input cell size VVs are also trimmed to match,
+               and the origin is updated (still upper left corner).
+               """,
                return_type="PG",
                return_doc=":class:`PG` Object",
                parameters = [
@@ -539,6 +592,7 @@ gx_methods = {
         Method('WriteDistantElectrodes_IP', module='geogxx', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="Write distant electrode locations to channels",
+               notes="Writes values for ALL lines.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -550,6 +604,7 @@ gx_methods = {
         Method('WriteDistantElectrodesLST_IP', module='geogxx', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Write distant electrode locations to channels for a :class:`LST` of lines",
+               notes="Writes values for lines in the input :class:`LST`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -565,6 +620,14 @@ gx_methods = {
         Method('AverageDuplicatesQC_IP', module='geogxx', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Average duplicate samples in a database.",
+               notes="""
+               Averages all values with shared station and N values,
+               as long as the mask channel is defined at that FID.
+               Previous averaged values (IP_DATA_AVG) are overwritten according to the
+               overwrite flag.
+               If the QC channel is selected, only those rows of data where the QC channel
+               value is "1" will be included in the average.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -597,6 +660,7 @@ gx_methods = {
         Method('ExportI2X_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Export line(s) to an Interpex RESIX I2X format file.",
+               notes='Exports a line to an ".I2X" file.',
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -660,6 +724,11 @@ gx_methods = {
         Method('ExportIPRED_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Exports pseudo-section in the Geosoft IPRED format.",
+               notes="""
+               The Fraser Filter weights apply to each N expansion above,
+               and are listed as w1,w2,w3,...   Unspecified values beyond
+               the list's end are set to 1.0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -687,6 +756,11 @@ gx_methods = {
         Method('ExportIPREDDir_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Exports pseudo-section in the Geosoft IPRED format in the specified directory",
+               notes="""
+               The Fraser Filter weights apply to each N expansion above,
+               and are listed as w1,w2,w3,...   Unspecified values beyond
+               the list's end are set to 1.0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -763,6 +837,12 @@ gx_methods = {
         Method('GetTopoLine_IP', module='geogxx', version='6.4.2',
                availability=Availability.EXTENSION, 
                doc="Get topography values for a line.",
+               notes="""
+               If topography info is available, returns values calculated for
+               the input line. If no topography is available, returned values
+               will be dummies. Values between actual data are interpolated using
+               the Akima spline. Ends are extrapolated using the end data points.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -872,6 +952,11 @@ gx_methods = {
         Method('ImportGrid_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports data from a grid",
+               notes="""
+               Data is imported to the specified channel.
+               The values are interpolated at each row's X and Y
+               positions.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -887,6 +972,10 @@ gx_methods = {
         Method('ImportI2X_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports an Interpex RESIX I2X format file to a line.",
+               notes="""
+               Imports a single ".I2X" file to a specified line.
+               If the line does not exist, it will be created.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -920,6 +1009,10 @@ gx_methods = {
         Method('ImportI2XEx_IP', module='geogxx', version='6.1.0',
                availability=Availability.EXTENSION, 
                doc="Same as :func:`ImportI2X_IP`, with Zonge data imported as well.",
+               notes="""
+               Imports a single ".I2X" file to a specified line.
+               If the line does not exist, it will be created.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -985,6 +1078,14 @@ gx_methods = {
         Method('ImportIPDATA2_IP', module='geogxx', version='5.1.0',
                availability=Availability.EXTENSION, 
                doc="Imports data in the Geosoft IPDATA format - up to two arrays.",
+               notes="""
+               The second channel may be specified for frequency domain data sets
+               with two array channels; e.g. amplitude and phase, or real and
+               imaginary parts. If the second channel is specified, and no
+               time or frequncy information is specified in the header (using
+               the T= or F= fields) then the import is assumed to be frequency
+               domain.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1002,6 +1103,10 @@ gx_methods = {
         Method('ImportIPRED_IP', module='geogxx', version='5.1.0',
                availability=Availability.EXTENSION, 
                doc="Imports data from the Geosoft IPRED format.",
+               notes="""
+               This import produces a limited :class:`IP` data set with no Current "I",
+               Voltage "Vp" or Apparent Resistivity "ResApp" values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1017,6 +1122,10 @@ gx_methods = {
         Method('ImportMergeIPRED_IP', module='geogxx', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Imports IPRED data to an existing line.",
+               notes="""
+               Exits with error if the line does not exist.
+               Data is merged on basis of Stn and N value.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1045,6 +1154,10 @@ gx_methods = {
         Method('ImportTopoCSV_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports topography data from a CSV line-station file",
+               notes="""
+               The elevation of each point in the current database
+               is interpolated from the input topography values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1058,6 +1171,10 @@ gx_methods = {
         Method('ImportTopoGrid_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports topography data from a grid",
+               notes="""
+               The elevation of each point in the current database
+               is interpolated from the input topography grid.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1071,6 +1188,7 @@ gx_methods = {
         Method('ImportZongeAVG_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports a Zonge AVG format file.",
+               notes="See :func:`ImportZongeFLD_IP`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1090,6 +1208,11 @@ gx_methods = {
         Method('ImportZongeFLD_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Imports a Zonge FLD format file.",
+               notes="""
+               The Zonge Line and Station numbers may not be the X or Y position
+               values, and a conversion is required.
+               The line direction is taken from the :class:`IP` setup values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1107,6 +1230,10 @@ gx_methods = {
         Method('NewXYDatabase_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc='Create a subset database using a mask channel, "N" value',
+               notes="""
+               A mask channel can be used to select a subset of the data.
+               A single N value can also be selected (Dummy for all).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1126,6 +1253,10 @@ gx_methods = {
         Method('PseudoPlot_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Create pseudo-sections of a single line using a control file.",
+               notes="""
+               The control file is created using the IPPLTCON GX. It may then
+               be modified by hand as required.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1143,6 +1274,10 @@ gx_methods = {
         Method('PseudoPlot2_IP', module='geogxx', version='5.1.8',
                availability=Availability.EXTENSION, 
                doc="Same as :func:`PseudoPlot_IP`, but specify a tag for grids created.",
+               notes="""
+               The control file is created using the IPPLTCON GX. It may then
+               be modified by hand as required.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1162,6 +1297,10 @@ gx_methods = {
         Method('PseudoPlot2Dir_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, 
                doc="Same as :func:`PseudoPlot2_IP`, but with directory specified.",
+               notes="""
+               The control file is created using the IPPLTCON GX. It may then
+               be modified by hand as required.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1183,6 +1322,10 @@ gx_methods = {
         Method('PSStack_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Create a stacked pseudo-section plot using a control file.",
+               notes="""
+               The control file is created using the IPSTAKCON GX. It may then
+               be modified by hand as required.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1240,6 +1383,10 @@ gx_methods = {
         Method('QCChanLST_IP', module='geogxx', version='7.3.0',
                availability=Availability.EXTENSION, 
                doc="Fill a list with QC channels.",
+               notes="""
+               Searches for the following QC channels existing in a database:
+               QC, QC_RES.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1253,6 +1400,24 @@ gx_methods = {
         Method('Recalculate_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Recalculate derived channel values.",
+               notes="""
+               This function recalculates "derived" channel values from
+               "core" data.
+               1. Recalculates the "STN" and "N" channels, using the TX1,
+                  TX2, RX1 and RX2 channels (depending on the system).
+               2. Recalculates the apparent resistivity "ResCalc",
+                  average "IP_Avg" and metal factor "MF" channels
+               3. Recalculates the "X" and "Y" channels. One of these will
+                  be equal to "STN", the other to the internally stored
+                  line number for the current line.
+               4. Recalculate the "Z" channel, based on the current "Topo"
+                  channel, and the "N" values.
+               
+               Warning: If you make a change to an electrode location, you
+               would have to call :func:`Recalculate_IP`, then recalculate "Topo"
+               (since the X and Y values would have changed), then call
+               :func:`RecalculateZ_IP`, since "Z" values are based on "Topo" values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1264,6 +1429,10 @@ gx_methods = {
         Method('RecalculateEx_IP', module='geogxx', version='8.0.0',
                availability=Availability.EXTENSION, 
                doc="Recalculate derived channel values, with option for including/excluding location calculations.",
+               notes="""
+               See :func:`Recalculate_IP`. This version allows you to suppress the recalculation of the
+               current X, Y and Z channel values from the station locations.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1277,6 +1446,14 @@ gx_methods = {
         Method('RecalculateZ_IP', module='geogxx', version='5.1.1',
                availability=Availability.EXTENSION, 
                doc="Recalculate Z channel values.",
+               notes="""
+               The "Z" channel values are calculated as follows:
+               If the "Topo" value is defined, then
+               Z = Topo - 0.5*N*A, where "N" is the N-spacing, and
+               A is the A-spacing. If the Topography is not defined, then
+               it is assumed to be equal to 0.
+               """,
+               see_also=":func:`Recalculate_IP`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1288,6 +1465,13 @@ gx_methods = {
         Method('RESIX_Zonge_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Runs the Interpex RESIX Zonge inversion on selected lines.",
+               notes="""
+               The IP2DI program is run in batch mode, and the
+               input file is overwritten with the new results, ready to
+               be imported using :func:`ImportI2X_IP`.
+               The three :class:`IP` channels are required only if joint Res/:class:`IP` inversion
+               is selected.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1315,6 +1499,13 @@ gx_methods = {
         Method('SetImportMode_IP', module='geogxx', version='6.3.0',
                availability=Availability.EXTENSION, 
                doc="When importing data to a line, set append/overwrite mode.",
+               notes="""
+               By default, importing data overwrites existing data.
+               Call this function before doing the import in order
+               to append imported data to existing data.
+               "Short" data channels will be dummied to the existing
+               data length before the new data is appended.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1326,6 +1517,14 @@ gx_methods = {
         Method('Window_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Window an :class:`IP` array channel to produce a normal channel.",
+               notes="""
+               The array channels cannot be used directly to produce sections.
+               :func:`Window_IP` allows the user to select one or more of the windows
+               and create a new channel. In time domain, if more than one channel
+               is selected a weighted sum is performed, according to window widths.
+               In frequency domain a simple sum is performed.
+               Window List Syntax:
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1418,6 +1617,10 @@ gx_methods = {
         Method('GetElectrodeLocationsAndMaskValues_IP', module='geogxx', version='9.0.0',
                availability=Availability.EXTENSION, 
                doc="Get unique electrodes, along with current mask info.",
+               notes="""
+               The mask values are determined from the first row where a given electrode is found.
+               Values returned for all currently selected lines.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1441,6 +1644,7 @@ gx_methods = {
         Method('SetElectrodeMaskValues_IP', module='geogxx', version='9.0.0',
                availability=Availability.EXTENSION, 
                doc="Set unique electrodes, along with current mask info.",
+               notes="Mask values are set for all included electrode locations, currently selected lines.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1466,6 +1670,14 @@ gx_methods = {
         Method('AverageDuplicates_IP', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Average duplicate samples in a database.",
+               notes="""
+               Averages all values with shared station and N values,
+               as long as the mask channel is defined at that FID.
+               Previous averaged values (IP_DATA_AVG) are overwritten according to the
+               overwrite flag.
+               
+               EPLACED BY: :func:`AverageDuplicatesQC_IP`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1481,6 +1693,10 @@ gx_methods = {
         Method('ExportUBCIP_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Export an :class:`IP` OBS file to use in the UBC IPINV2D programme.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme IPINV2D.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1500,6 +1716,10 @@ gx_methods = {
         Method('ExportUBCIP2_IP', module='geogxx', version='6.4.2',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Same as :func:`ExportUBCIP_IP`, with error channel output.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme IPINV2D.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1521,6 +1741,12 @@ gx_methods = {
         Method('ExportUBCRes_IP', module='geogxx', version='6.4.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Export a RES OBS file to use in the UBC DCINV2D programme.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme DCINV2D.
+               Voltage and current channels should be in units such that
+               V/I gives volts/amp (or mV/mA).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",
@@ -1542,6 +1768,12 @@ gx_methods = {
         Method('ExportUBCRes2_IP', module='geogxx', version='6.4.2',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Same as :func:`ExportUBCRes_IP`, with error channel output.",
+               notes="""
+               Outputs a *.:class:`DAT`" file of the survey data for use in the
+               UBC 2D inversion programme DCINV2D.
+               Voltage and current channels should be in units such that
+               V/I gives volts/amp (or mV/mA).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="IP",

@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('PLY',
                  doc="""
-The :class:`PLY` object contains the definitions for one or more
-polygons, and does import and export of polygon files.
-""")
+                 The :class:`PLY` object contains the definitions for one or more
+                 polygons, and does import and export of polygon files.
+                 """)
 
 
 gx_defines = [
@@ -68,6 +68,7 @@ gx_methods = {
         Method('ChangeIPJ_PLY', module='geoengine.core', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Set the projection.",
+               notes="The :class:`PLY` is re-projected to the new projection.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PLY",
@@ -124,6 +125,7 @@ gx_methods = {
         Method('Extent_PLY', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the extent of the current polygon.",
+               notes="If there are no polygons in the :class:`PLY` object, returns dummies.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PLY"),
@@ -235,6 +237,11 @@ gx_methods = {
         Method('iClipPLY_PLY', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Clip one polygon against another",
+               notes="""
+               Resulting clipped polygon only has inclusive
+               regions of the clipped area.  Exclusion polygons
+               are treated as included areas.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`PLY_CLIP`",
                parameters = [
@@ -283,6 +290,7 @@ gx_methods = {
         Method('rArea_PLY', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Compute the Area of a polygon",
+               notes="Excluded polygons have negative area.",
                return_type=Type.DOUBLE,
                return_doc="Area of a polygon",
                parameters = [
@@ -356,6 +364,7 @@ gx_methods = {
         Method('SetIPJ_PLY', module='geoengine.core', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Set the projection.",
+               notes="This changes the projection information only.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PLY",
@@ -367,6 +376,11 @@ gx_methods = {
         Method('Thin_PLY', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Thin polygons to a desired resolution",
+               notes="""
+               Points on the polygon that deviate from a line drawn between
+               neighboring points by more than the thining resolution will
+               be removed.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PLY",

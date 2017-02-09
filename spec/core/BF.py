@@ -2,11 +2,11 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('BF',
                  doc="""
-The :class:`BF` class is used to access (or create) Binary files and remove
-(or destroy) files from use. You can also perform a variety of
-additional tasks, such as positioning within files, reading from
-files and writing to files.
-""")
+                 The :class:`BF` class is used to access (or create) Binary files and remove
+                 (or destroy) files from use. You can also perform a variety of
+                 additional tasks, such as positioning within files, reading from
+                 files and writing to files.
+                 """)
 
 
 gx_defines = [
@@ -100,6 +100,10 @@ gx_methods = {
         Method('_Seek_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Moves file position",
+               notes="""
+               Terminates if attempt to move past the end of
+               a read-only file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -138,6 +142,19 @@ gx_methods = {
         Method('Create_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create :class:`BF` object.",
+               notes="""
+               Run-time specific directory paths may be added the the front of file names
+               as follows:
+               
+               <geosoft>      the main Geosoft installation directory
+               <geosoft2>     the secondary Geosoft installation directory
+               <geotemp>      the Geosoft temporary file directory
+               <windows>      the operating system Windows directory
+               <system>       the operating system system directory
+               <other>        other environment variables
+               
+               For example "<geosoft>/user/csv/datum.csv"
+               """,
                return_type="BF",
                return_doc=":class:`BF` Object",
                parameters = [
@@ -150,6 +167,7 @@ gx_methods = {
         Method('CreateSBF_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create :class:`BF` object inside an :class:`SBF`.",
+               notes="see sbf.gxh",
                return_type="BF",
                return_doc=":class:`BF` Object",
                parameters = [
@@ -164,6 +182,7 @@ gx_methods = {
         Method('Destroy_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Destroy :class:`BF` handle.",
+               notes="The DestroyEx call implies :def_val:`BF_KEEP`",
                return_type=Type.VOID,
                return_doc="nothing",
                parameters = [
@@ -248,6 +267,18 @@ gx_methods = {
         Method('ReadInt_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reads int data from current position in :class:`BF`",
+               notes="""
+               If the data source may be in byte order different from that
+               required by the reader, you can add the source byte-order
+               to the :class:`BF` elelment type.  The byte order will be swapped
+               if required.  For example, to write out a real number 3.5
+               with Most-Significant_Byte first (Mortorola) convention:
+               
+               :func:`WriteReal_BF`(hBF,:def_val:`BF_BYTEORDER_MSB`+:def_val:`GS_REAL`,3.5).
+               
+               If a byte order is not specified, the source is assumed to be
+               in the native byte order of the reading/writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -261,6 +292,18 @@ gx_methods = {
         Method('ReadReal_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Reads real data from current position in :class:`BF`",
+               notes="""
+               If the data source may be in byte order different from that
+               required by the reader, you can add the source byte-order
+               to the :class:`BF` elelment type.  The byte order will be swapped
+               if required.  For example, to write out a real number 3.5
+               with Most-Significant_Byte first (Mortorola) convention:
+               
+               :func:`WriteReal_BF`(hBF,:def_val:`BF_BYTEORDER_MSB`+:def_val:`GS_REAL`,3.5).
+               
+               If a byte order is not specified, the source is assumed to be
+               in the native byte order of the reading/writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -274,6 +317,18 @@ gx_methods = {
         Method('ReadVM_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Read data to a :class:`VM` from current position in :class:`BF`",
+               notes="""
+               If the data source may be in byte order different from that
+               required by the reader, you can add the source byte-order
+               to the :class:`BF` elelment type.  The byte order will be swapped
+               if required.  For example, to write out a real number 3.5
+               with Most-Significant_Byte first (Mortorola) convention:
+               
+               :func:`WriteReal_BF`(hBF,:def_val:`BF_BYTEORDER_MSB`+:def_val:`GS_REAL`,3.5).
+               
+               If a byte order is not specified, the source is assumed to be
+               in the native byte order of the reading/writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -287,6 +342,18 @@ gx_methods = {
         Method('ReadVV_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Read data to a :class:`VV` from current position in :class:`BF`",
+               notes="""
+               If the data source may be in byte order different from that
+               required by the reader, you can add the source byte-order
+               to the :class:`BF` elelment type.  The byte order will be swapped
+               if required.  For example, to write out a real number 3.5
+               with Most-Significant_Byte first (Mortorola) convention:
+               
+               :func:`WriteReal_BF`(hBF,:def_val:`BF_BYTEORDER_MSB`+:def_val:`GS_REAL`,3.5).
+               
+               If a byte order is not specified, the source is assumed to be
+               in the native byte order of the reading/writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -333,6 +400,13 @@ gx_methods = {
         Method('WriteInt_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Writes int to the :class:`BF`",
+               notes="""
+               See comments on byte order for the Read.. functions if you
+               want to enforce a certain byte order.
+               
+               If a byte order is not specified, the data is written
+               in the native byte order of the writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -346,6 +420,13 @@ gx_methods = {
         Method('WriteReal_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Writes real to the :class:`BF`",
+               notes="""
+               See comments on byte order for the Read.. functions if you
+               want to enforce a certain byte order.
+               
+               If a byte order is not specified, the data is written
+               in the native byte order of the writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -359,6 +440,13 @@ gx_methods = {
         Method('WriteVM_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Writes :class:`VM` to the :class:`BF`",
+               notes="""
+               See comments on byte order for the Read.. functions if you
+               want to enforce a certain byte order.
+               
+               If a byte order is not specified, the data is written
+               in the native byte order of the writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -372,6 +460,13 @@ gx_methods = {
         Method('WriteVV_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Writes :class:`VV` to the :class:`BF`",
+               notes="""
+               See comments on byte order for the Read.. functions if you
+               want to enforce a certain byte order.
+               
+               If a byte order is not specified, the data is written
+               in the native byte order of the writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -387,6 +482,7 @@ gx_methods = {
         Method('iCheckFileUNC_BF', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Check if this is UNICODE file.",
+               notes="Was not implemented.",
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL`",
                parameters = [
@@ -397,6 +493,18 @@ gx_methods = {
         Method('IReadString_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Reads string data from current position in :class:`BF`",
+               notes="""
+               If the data source may be in byte order different from that
+               required by the reader, you can add the source byte-order
+               to the :class:`BF` elelment type.  The byte order will be swapped
+               if required.  For example, to write out a real number 3.5
+               with Most-Significant_Byte first (Mortorola) convention:
+               
+               :func:`WriteReal_BF`(hBF,:def_val:`BF_BYTEORDER_MSB`+:def_val:`GS_REAL`,3.5).
+               
+               If a byte order is not specified, the source is assumed to be
+               in the native byte order of the reading/writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",
@@ -423,6 +531,13 @@ gx_methods = {
         Method('WriteString_BF', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Writes string to the :class:`BF`",
+               notes="""
+               See comments on byte order for the Read.. functions if you
+               want to enforce a certain byte order.
+               
+               If a byte order is not specified, the data is written
+               in the native byte order of the writing computer.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="BF",

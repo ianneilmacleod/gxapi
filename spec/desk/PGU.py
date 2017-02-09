@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('PGU',
                  doc="""
-A collection of methods applied to :class:`PG` objects, including
-fills, trending and 2-D :class:`FFT` operations.
-""")
+                 A collection of methods applied to :class:`PG` objects, including
+                 fills, trending and 2-D :class:`FFT` operations.
+                 """)
 
 
 gx_defines = [
@@ -90,6 +90,10 @@ gx_methods = {
         Method('DirectGriddingDAT_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Direct-gridding method, :class:`DAT` version.",
+               notes="""
+               Grid cells take on the specified statistic of the values inside the
+               cell area. Grid cells containing no data values are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -113,6 +117,10 @@ gx_methods = {
         Method('DirectGriddingDAT3D_PGU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Direct-gridding method, :class:`DAT` version, 3D.",
+               notes="""
+               3D grid cells take on the specified statistic of the values inside the
+               cell area. Grid cells containing no data values are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -140,6 +148,10 @@ gx_methods = {
         Method('DirectGriddingDB_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Direct-gridding method, :class:`DB` version.",
+               notes="""
+               Grid cells take on the specified statistic of the values inside the
+               cell area. Grid cells containing no data values are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -169,6 +181,10 @@ gx_methods = {
         Method('DirectGriddingDB3D_PGU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc="Direct-gridding method, :class:`DB` version, 3D.",
+               notes="""
+               3D grid cells take on the specified statistic of the values inside the
+               cell area. Grid cells containing no data values are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -204,6 +220,10 @@ gx_methods = {
         Method('DirectGriddingVV_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc="Direct-gridding method, :class:`VV` version.",
+               notes="""
+               Grid cells take on the specified statistic of the values inside the
+               cell area. Grid cells containing no data values are set to dummy.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -231,6 +251,7 @@ gx_methods = {
         Method('Expand_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Expand a pager by filling the dummies for expanded edges",
+               notes="3D pagers are expanded in X,Y direction the number of slices(Z) is unchanged .",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -326,6 +347,12 @@ gx_methods = {
         Method('GridPeak_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Pick grid peaks.",
+               notes="""
+               Blakey test limit defines how grid peaks are to be found.
+               For example, with the :def_val:`BLAKEY_TEST_ONESIDE`, a grid
+               point will be picked if its grid value is greater than
+               the value of one or more of its four neighouring points.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -343,6 +370,7 @@ gx_methods = {
         Method('IDWGriddingDAT_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGriddingDAT_PGU`     Inverse-distance weighting gridding method, :class:`DAT` version.",
+               notes="See the notes for :func:`IDWGriddingDB_PGU`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -356,6 +384,7 @@ gx_methods = {
         Method('IDWGriddingDAT3D_PGU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGriddingDAT3D_PGU`     Inverse-distance weighting gridding method, :class:`DAT` version, 3D.",
+               notes="See the notes for :func:`IDWGriddingDB3D_PGU`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -369,6 +398,27 @@ gx_methods = {
         Method('IDWGriddingDB_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGriddingDB_PGU`     Inverse-distance weighting gridding method, :class:`DB` version.",
+               notes="""
+               Grid cells take on the averaged values within a search radius, weighted inversely by distance.
+               
+               Weighting can be controlled using the power and slope properties;
+               
+               weighting = 1 / (distance^wtpower + 1/slope) where distance is in
+               units of grid cells (X dimenstion). Default is 0.0,
+               
+               If the blanking distance is set, all cells whose center point is not within the blanking distance of
+               at least one data point are set to dummy.
+               
+               :class:`REG` Parameters:
+               
+               X0, Y0, DX, DY: Grid origin, and cell sizes (required)
+               WT_POWER (default=2), WT_SLOPE (default=1) Weighting function parameters
+               SEARCH_RADIUS: Distance weighting limit (default = 4 * SQRT(DX*DY))
+               BLANKING_DISTANCE: Dummy values farther from data than this distance. (default = 4 * SQRT(DX*DY))
+               LOG: Apply log transform to input data before gridding (0:No (default), 1:Yes)?
+               LOG_BASE: One of :def_val:`VV_LOG_BASE_10` (default) or :def_val:`VV_LOG_BASE_E`
+               LOG_NEGATIVE: One of :def_val:`VV_LOG_NEGATIVE_NO` (default) or :def_val:`VV_LOG_NEGATIVE_YES`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -388,6 +438,27 @@ gx_methods = {
         Method('IDWGriddingDB3D_PGU', module='geogxx', version='8.0.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGriddingDB3D_PGU`     Inverse-distance weighting gridding method, :class:`DB` version, 3D.",
+               notes="""
+               3D cells take on the averaged values within a search radius, weighted inversely by distance.
+               
+               Weighting can be controlled using the power and slope properties;
+               
+               weighting = 1 / (distance^wtpower + 1/slope) where distance is in
+               units of grid cells (X dimenstion). Default is 0.0,
+               
+               If the blanking distance is set, all cells whose center point is not within the blanking distance of
+               at least one data point are set to dummy.
+               
+               :class:`REG` Parameters:
+               
+               X0, Y0, Z0, DX, DY, DZ: Grid origin, and cell sizes (required)
+               WT_POWER (default=2), WT_SLOPE (default=1) Weighting function parameters
+               SEARCH_RADIUS: Distance weighting limit (default = 4 * CUBE_ROOT(DX*DY*DZ))
+               BLANKING_DISTANCE: Dummy values farther from data than this distance. (default = 4 * CUBE_ROOT(DX*DY*DZ))
+               LOG: Apply log transform to input data before gridding (0:No (default), 1:Yes)?
+               LOG_BASE: One of :def_val:`VV_LOG_BASE_10` (default) or :def_val:`VV_LOG_BASE_E`
+               LOG_NEGATIVE: One of :def_val:`VV_LOG_NEGATIVE_NO` (default) or :def_val:`VV_LOG_NEGATIVE_YES`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -409,6 +480,7 @@ gx_methods = {
         Method('IDWGriddingVV_PGU', module='geogxx', version='7.3.0',
                availability=Availability.LICENSED, 
                doc=":func:`IDWGriddingVV_PGU`     Inverse-distance weighting gridding method, :class:`VV` version.",
+               notes="See the notes for :func:`IDWGriddingDB_PGU`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -429,6 +501,20 @@ gx_methods = {
                :func:`NumericToThematic_PGU`    Set index values in a pager based on a numeric pager with translation :class:`VV`.
                
                Returns			  Nothing
+               """,
+               notes="""
+               The values in the input data :class:`VV` represent the center-of-range
+               values of unique properties with indices 0 to N-1, where N
+               is the number of items in the input :class:`VV`.
+               
+               This :class:`VV` is sorted from smallest to largest, and each value in
+               in the input numeric :class:`PG` is tested to see into which range it goes.
+               The closest range value for each item is used, so the half-way point
+               is the dividing point. The top and bottom-most range widths are determined
+               by the "inside half-width" to the nearest range.
+               
+               The INDEX of the closest range is then inserted into the output :class:`PG`, so
+               it can be used in a thematic voxel (for instance).
                """,
                return_type=Type.VOID,
                parameters = [
@@ -460,6 +546,23 @@ gx_methods = {
         Method('PeakednessGrid_PGU', module='geogxx', version='5.0.8',
                availability=Availability.LICENSED, 
                doc="Create peakedneess grid from input grid.",
+               notes="""
+               This function creates a peakedneess grid from input grid.
+               Radius, is the maximum radius at which the value of the parent pixel is compared to
+               the value of surrounding pixels.
+               PercentLesser, is used to indicate the percentage of pixels at each radii smaller than
+               or equal to Radius that must have value lower than the parent pixel in order to call
+               that radius true or equal to 1.
+               Description:  For each pixel in the grid a series of radii are evaluated from 1 to Radius.
+               If the percentage of pixels for a given radius is less than PercentLesser the parent pixel
+               receives an additional 1.
+               For examples if the Radius is set to 5 and the PercentLesser is set to 70%.
+               And radius 1 = 90%, radius 2 = 85%, radius 3 = 75%, radius 4 = 70% and radius 5 = 65%
+               then the parent pixel would receive 1+1+1+1+0 = 4.
+               Use:  This function is useful in isolating the anomaly peaks in data that has a large
+               value range for anomalies. For example the 1 mV anomaly could quite possibly have
+               the same representation as the 100 mV anomaly using this function.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -475,6 +578,16 @@ gx_methods = {
         Method('RefFile_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a reference file (boolean mask flag) from pager.",
+               notes="""
+               A reference file is a binary file with the following format:
+               
+               The first 8 bytes are the pager dimensions NX and NY as longs.
+               The remaining bits, one bit per pager cell - (NX * NY)/8 bytes
+               are zero where the pager is dummy, and 1 where the pager is defined.
+               
+               The reference file is used in various operations where it is
+               necessary to mask some output to the original defined cells.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -486,6 +599,7 @@ gx_methods = {
         Method('SaveFile_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Writes a :class:`PG` to an image file.",
+               notes="The trend object and projection are optional.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -514,6 +628,15 @@ gx_methods = {
                Set numeric values in a pager based on an index pager with translation :class:`VV`.
                
                Returns			  Nothing
+               """,
+               notes="""
+               The items in the input data :class:`VV` are inserted into
+               the output :class:`PG` using the indices in the index :class:`PG`.
+               
+               This function is useful when converting a thematic voxel, which is
+               type :def_val:`GS_LONG` and contains indices into its own internal :class:`TPAT`
+               object, and you provide a numeric mapping :class:`VV`, calculated using
+               SetupTranslateToNumericVV_TPAT.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -555,6 +678,7 @@ gx_methods = {
         Method('AddScalar_PGU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Add a scalar value to a pager",
+               notes="Only available for FLOAT or DOUBLE pagers",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -566,6 +690,7 @@ gx_methods = {
         Method('MultiplyScalar_PGU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Multiply a scalar value and a pager",
+               notes="Only available for FLOAT or DOUBLE pagers",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -579,6 +704,12 @@ gx_methods = {
         Method('CorrelationMatrix_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find the correlations between columns in a matrix",
+               notes="""
+               The input matrix is M rows by N columns. The returned matrix
+               is a symmetric N by N matrix whose elements are the normalized
+               dot products of the columns of the input matrix with themselves.
+               The elements take on values from 0 (orthogonal) to 1 (parallel).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -603,6 +734,12 @@ gx_methods = {
         Method('InvertMatrix_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Inverts a square matrix using LU decomp. and back-substitution",
+               notes="""
+               This is an "in-place" operation, and set up so that the input and
+               output pagers may be the same handle. (If they are different, the
+               input pager remains unchanged).
+               Pagers and VVs must be type REAL.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -614,6 +751,10 @@ gx_methods = {
         Method('Jacobi_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find eigenvalues, eigenvectors of a real symmetric matrix.",
+               notes="""
+               The number of rows must equal the number of columns.
+               Eienvalues, vectors are sorted in descending order.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -627,6 +768,14 @@ gx_methods = {
         Method('LUBackSub_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Solve a linear system using LU decomposition and back-substitution.",
+               notes="""
+               Solves the system Ax = b for a given b, using the LU decomposition
+               of the matrix a
+               The LU decomposition and the permutation vector are obtained
+               from :func:`LUBackSub_PGU`.
+               Pagers and VVs must be type REAL except for the permutation vector,
+               which should be INT
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -642,6 +791,18 @@ gx_methods = {
         Method('LUDecomp_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Perform an LU decomposition on a square pager.",
+               notes="""
+               The L and U matrix are both contained in the returned pager; The
+               "L" matrix is composed of the sub-diagonal elements of the output
+               pager, as well as "1" values on the diagonal. The "U" matrix is
+               composed of the diagonal elements (sub-diagonal elements set to 0).
+               This is an "in-place" operation, and set up so that the input and
+               output pagers may be the same handle. (If they are different, the
+               input pager remains unchanged).
+               The LU decomposition, and the permutation vector are used for
+               :func:`LUBackSub_PGU`.
+               Pagers must be type REAL and the permutation vector type INT
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -655,6 +816,14 @@ gx_methods = {
         Method('MatrixMult_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Multiply two pagers as if they were matrices.",
+               notes="""
+               The matrices must be correctly dimensioned, taking into
+               account whether transposition should occur before
+               multiplication. The input matrices are not altered on output (even
+               if transposition is requested).
+               Assertions if: Matrices are not expected sizes
+               Dummies are treated as 0 values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -672,6 +841,14 @@ gx_methods = {
         Method('MatrixVectorMult_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Multiply a :class:`VV` by a pager like a matrix*vector multiply.",
+               notes="""
+               The matrix is input as an M rows (data) by N columns (variables) :class:`PG`.
+               The vector must be of length N. The output :class:`VV` is set to length M.
+               The :class:`PG` and VVs must be type :def_val:`GS_DOUBLE`.
+               Terminates if: Matrices, :class:`VV` are not expected sizes (taken from U)
+                              PGs are not REAL.
+               Dummies are treated as 0 values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -685,6 +862,18 @@ gx_methods = {
         Method('SVDecompose_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Do a singular value decomposition on a matrix stored as a :class:`PG`",
+               notes="""
+               The matrix is input as an N rows (data) by M columns (variables) :class:`PG`.
+               On return, the matrix is decomposed to A = U * W * Vt.
+               If M<N, then an error will be registered. In this case, augment the
+               "A" :class:`PG` with rows of zero values.
+               The input matrices must be A[M,N], U[M.N] and V[N,N]. The length of the W :class:`VV`
+               is set by sSVD_PGU to N.
+               The Pagers must be type REAL.
+               Terminates if: U is not M by N. (Taken from size of A)
+                              V is not N by N. (Taken from #columns in A).
+                              PGs, :class:`VV` are not REAL
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -700,6 +889,19 @@ gx_methods = {
         Method('SVRecompose_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Reconstitute the original matrix from an SVD.",
+               notes="""
+               The matrix is input as an N rows (data) by M columns (variables) :class:`PG`.
+               On return, the matrix is decomposed to A = U * W * Vt.
+               If M<N, then an error will be registered. In this case, augment the
+               "A" :class:`PG` with rows of zero values.
+               The input matrices must be A[M,N], U[M.N] and V[N,N]. The length of the W :class:`VV`
+               is set by sSVDecompose_PGU to N.
+               The Pagers must be type :def_val:`GS_DOUBLE`.
+               Terminates if: U is not M by N. (Taken from size of A)
+                              V is not N by N. (Taken from #columns in A).
+                              PGs, :class:`VV` are not REAL.
+               Dummies are treated as 0 values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -719,6 +921,11 @@ gx_methods = {
         Method('PCCommunality_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Determines principal component communalities.",
+               notes="""
+               Calculate communalities (sums of the squares of the column
+               values in each row)
+               Pagers and VVs must be type :def_val:`GS_DOUBLE`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -730,6 +937,18 @@ gx_methods = {
         Method('PCLoadings_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Compute the principal component loadings from the standardized data.",
+               notes="""
+               Works on columns of the :class:`PG`.
+               Calculates the correlation matrix from the columns of the
+               standardized data, then computes the eigen values and eigenvectors
+               of the correlation matrix. The loadings are the eigenvectors, ordered
+               by descending eigenvalues, scaled by the square root of the
+               eigenvalues. The returned pager must be sized the same as the
+               input pager.
+               Correlations are performed using ":def_val:`PGU_CORR_SIMPLE`", so if you want
+               Pearson correlations, or wish to use a modified correlation matrix,
+               use :func:`PCLoadings2_PGU` and input the correlation matrix directly.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -741,6 +960,7 @@ gx_methods = {
         Method('PCLoadings2_PGU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Same as PCLoading_PGU, but input correlation matrix.",
+               notes="See :func:`PCLoadings_PGU`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -752,6 +972,15 @@ gx_methods = {
         Method('PCScores_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Compute the principal component scores from the standardized data.",
+               notes="""
+               t  -1
+               Forms the product X Ap (Ap Ap),  where X is the
+               standardized data matrix, and Ap is the matrix of
+               principal component loadings (see :func:`PCLoadings_PGU`).
+               The loadings must be input, and can be calculated by calling
+               :func:`PCLoadings_PGU`.
+               Pagers and VVs must be type :def_val:`GS_DOUBLE`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -765,6 +994,7 @@ gx_methods = {
         Method('PCStandardize_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Remove/Replace mean and standard deviation",
+               notes="Works on columns of the :class:`PG`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -780,6 +1010,13 @@ gx_methods = {
         Method('PCStandardize2_PGU', module='geogxx', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Remove/Replace mean and standard deviation, subset values.",
+               notes="""
+               Like :func:`PCStandardize_PGU`, except that not all the values are
+               included in the calculation of the means and standard
+               deviations. The inclusion is controlled by a mask :class:`VV`,
+               The rows where the mask is dummy are not included
+               in the calculation, but ALL the values are standardized.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -797,6 +1034,17 @@ gx_methods = {
         Method('PCTransform_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Transform/De-transform data.",
+               notes="""
+               Works on columns of the :class:`PG`.
+               Forward direction: Applies the selected transform to the data.
+               Backward direction: Applies the inverse transform to the data.
+               The detection limits are input with a :class:`VV`. In the forward
+               transform, data values less than the detection limit are set
+               to the limit.
+               The factor limits are input with a :class:`VV`. In the forward
+               transform, data values greater than the maximum values are set
+               to the maximum.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -814,6 +1062,13 @@ gx_methods = {
         Method('PCVarimax_PGU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Perform the Kaiser Varimax transformation on pr. comp. loadings",
+               notes="""
+               Rotates the principal components using the Kaiser's varimax
+               scheme to move move each factor axis to positions so that
+               projections from each variable on the factor axes are either
+               near the extremities or near the origin.
+               Pagers must be type :def_val:`GS_DOUBLE`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -827,6 +1082,14 @@ gx_methods = {
         Method('rMaximumTerrainSteepness_PGU', module='geogxx', version='7.1.0',
                availability=Availability.LICENSED, 
                doc="Compute the Maximum Steepness of a topography Pager",
+               notes="""
+               Calculates forward-looking slopes SX and SY in the X and Y directions
+               using pager locations (ix, iy), (ix+size, iy), (ix, iy+isize)
+               and returns SX*SX + SY*SY.
+               The values in the last "size" rows and columns are not
+               processed.
+               The wrapper was created for testing and development purposes.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Maximum Terrain Steepness Computation.",
                parameters = [
@@ -844,6 +1107,19 @@ gx_methods = {
         Method('DirectGrid_PGU', module='geogxx', version='7.2.0',
                availability=Availability.LICENSED, is_obsolete=True, 
                doc="Direct-gridding method.",
+               notes="""
+               Grid cells take on the averaged values inside their bounds.
+               
+               Weighting can be controlled using the power and slope properties;
+               
+               weighting = 1 / (distance^wtpower + 1/slope) where distance is in
+               units of grid cells (X dimenstion). Default is 0.0,
+               
+               MADE OBSOLETE BECAUSE: Inverse-distance-weighting makes no sense with
+               this method, especially as no search radius is specified.
+               
+               REPLACED BY: DirectGridding_PGU.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -873,6 +1149,7 @@ gx_methods = {
         Method('FFT2Filter_PGU', module='geogxx', version='5.0.0',
                availability=Availability.UNKNOWN, is_obsolete=True, 
                doc="Carry out a fourier transform filter on a pager object",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",
@@ -892,6 +1169,7 @@ gx_methods = {
         Method('FFT2Trans_PGU', module='geogxx', version='5.0.0',
                availability=Availability.UNKNOWN, is_obsolete=True, 
                doc="Carry out a fourier transform on a pager object",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PG",

@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('EUL3',
                  doc="""
-This is a specialized class which performs 3D Euler deconvolution
-for potential field interpretation.
-""")
+                 This is a specialized class which performs 3D Euler deconvolution
+                 for potential field interpretation.
+                 """)
 
 
 gx_defines = [

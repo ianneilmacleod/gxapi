@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('REG',
                  doc="""
-The :class:`REG` class is used for storing and retrieving named
-variables. Many classes contain :class:`REG` objects for storing
-information particular to the class.  The :class:`META` class supersedes
-the :class:`REG` class and is gradually replacing the use of the
-:class:`REG` class in newer applications.
-""")
+                 The :class:`REG` class is used for storing and retrieving named
+                 variables. Many classes contain :class:`REG` objects for storing
+                 information particular to the class.  The :class:`META` class supersedes
+                 the :class:`REG` class and is gradually replacing the use of the
+                 :class:`REG` class in newer applications.
+                 """)
 
 
 gx_defines = [
@@ -91,6 +91,7 @@ gx_methods = {
         Method('GetInt_REG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Gets an int for a specified parameter in the :class:`REG` object",
+               notes="If parameter is not present in :class:`REG`, :def_val:`iDUMMY` is returned.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG",
@@ -123,6 +124,7 @@ gx_methods = {
         Method('GetReal_REG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Gets an real for a specified parameter in the :class:`REG` object",
+               notes="If parameter is not present in :class:`REG`, :def_val:`rDUMMY` is returned.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG",
@@ -146,6 +148,7 @@ gx_methods = {
         Method('LoadINI_REG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Load a registry from an INI file.",
+               notes='Items are loaded into the :class:`REG` in the format "GROUP.ITEM".',
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG"),
@@ -184,6 +187,12 @@ gx_methods = {
         Method('SaveINI_REG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Save a :class:`REG` to an INI file.",
+               notes="""
+               Only :class:`REG` parameters in the form "GROUP.ITEM" are
+               dumped to the INI file, because they match the INI format
+               which groups items under [GROUP] headings.
+               Single-word items (without a separating period) are skipped.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG"),
@@ -205,6 +214,14 @@ gx_methods = {
         Method('Set_REG', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets a string parameter in the :class:`REG` object",
+               notes="""
+               To remove a parameter completely, use one of the
+               following:
+               
+               :func:`SetInt_REG`(Reg, sParam, :def_val:`iDUMMY`);
+               or
+               :func:`SetReal_REG`(Reg, sParam, :def_val:`rDUMMY`);
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG",

@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('TR',
                  doc="""
-The :class:`TR` object contains trend information about a grid or
-grid pager. Currently, it is used only in conjunction with
-the :func:`GetTR_IMG`, :func:`SetTR_IMG`, and :func:`Trend_PGU` functions.
-""")
+                 The :class:`TR` object contains trend information about a grid or
+                 grid pager. Currently, it is used only in conjunction with
+                 the :func:`GetTR_IMG`, :func:`SetTR_IMG`, and :func:`Trend_PGU` functions.
+                 """)
 
 
 

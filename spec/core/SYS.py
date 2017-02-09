@@ -2,41 +2,48 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('SYS',
                  doc="""
-The :class:`SYS` library functions perform a wide range functions,
-including the storage and retrieval of named parameters
-from the current workspace; writing messages to the user;
-display of progress bars; retrieving file, date and time
-information from the operating system; and providing warning
-and error handling functions.
-""",
+                 The :class:`SYS` library functions perform a wide range functions,
+                 including the storage and retrieval of named parameters
+                 from the current workspace; writing messages to the user;
+                 display of progress bars; retrieving file, date and time
+                 information from the operating system; and providing warning
+                 and error handling functions.
+                 """,
                  notes="""
-PARAMETER CONTROL FUNCTIONS
-
-Parameters can be named with an index extension.
-For example, a parameter could be named as "PARM[1]".
-The index can be a positive number, or it can be a '*'.
-
-If the index is a '*' in ":func:`SetString_SYS`", then the value string
-will be parsed into multiple values. Commas are assumed to be delimiters.
-
-E.g.
-
-:func:`SetString_SYS`("group1",
-"multiparm[*]",
-"value1,\\"value,2\\",\\"value 3\\",  value4  ,\\"value 5 \\"");
-
-This call will set   multiparm[0] ="value1"
-multiparm[1] ="value,2"
-multiparm[2] ="value 3"
-multiparm[3] ="value4"
-multiparm[4] ="value 5"
-
-To read a parameter, name the parameter with the index.  Thre is no
-looped-reading ability.  For example:
-
-GetString_SYS("group1","multiparm[3]",sSetting);
-
-returns sSetting = "value4"
+                 PARAMETER CONTROL FUNCTIONS
+                 
+                 Parameters can be named with an index extension.
+                 For example, a parameter could be named as "PARM[1]".
+                 The index can be a positive number, or it can be a '*'.
+                 
+                 If the index is a '*' in ":func:`SetString_SYS`", then the value string
+                 will be parsed into multiple values. Commas are assumed to be delimiters.
+                 
+                 E.g.
+                 
+                 :func:`SetString_SYS`("group1",
+                 "multiparm[*]",
+                 "value1,\\"value,2\\",\\"value 3\\",  value4  ,\\"value 5 \\"");
+                 
+                 This call will set   multiparm[0] ="value1"
+                 multiparm[1] ="value,2"
+                 multiparm[2] ="value 3"
+                 multiparm[3] ="value4"
+                 multiparm[4] ="value 5"
+                 
+                 To read a parameter, name the parameter with the index.  Thre is no
+                 looped-reading ability.  For example:
+                 
+                 GetString_SYS("group1","multiparm[3]",sSetting);
+                 
+                 returns sSetting = "value4"
+                 """,
+                 verbatim_gxh_defines="""
+#define Prompt_SYS(A,B)						IiPrompt_SYS(A,B,sizeof(B))
+#define Destroy_SYS(A)						Destr_SYS((HANDLE)(A))
+#define iFindPathNameEx_SYS(A,B,C,D)	iFindPathEx_SYS(A,B,C,D,sizeof(D))
+#define GetDotNetGXEntries_SYS(a,b)  IiGetDotNetGXEntries_SYS(a,b,sizeof(b))
+#define iFindPathName_SYS(A,B,C)  iFindPath_SYS(A,B,C,sizeof(C))
 """)
 
 
@@ -521,6 +528,10 @@ gx_methods = {
         Method('rDate_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the current date in decimal years.",
+               notes="""
+               The FormatDate_STR function can be used to convert a date to
+               a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal years."),
 
@@ -575,6 +586,10 @@ gx_methods = {
         Method('rTime_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the current time in decimal hours.",
+               notes="""
+               The FormatTime_STR function can be used to convert a time to
+               a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Time in decimal hours."),
 
@@ -591,12 +606,20 @@ gx_methods = {
         Method('rUTCDate_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the current UTC date in decimal years.",
+               notes="""
+               The FormatDate_STR function can be used to convert a date to
+               a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal years."),
 
         Method('rUTCTime_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the current UTC time in decimal hours.",
+               notes="""
+               The FormatTime_STR function can be used to convert a time to
+               a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Time in decimal hours.")
     ],
@@ -656,6 +679,12 @@ gx_methods = {
         Method('IGetErrorMessageAP_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Return the error message text as a string.",
+               notes="""
+               This wrapper is mostly for use outside of GXs,
+               because in general if an error is registered in a GX
+               the GX would terminate before it could be called.
+               Use :func:`iNumErrorsAP_SYS` to get the number of registered errors.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -669,12 +698,22 @@ gx_methods = {
         Method('iNumErrorsAP_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the number of registered errors.",
+               notes="""
+               This wrapper is mostly for use outside of GXs,
+               because in general if an error is registered in a GX
+               the GX would terminate before it could be called.
+               """,
+               see_also="GetErrorMessageAP_SYS",
                return_type=Type.INT32_T,
                return_doc="The number of registered errors."),
 
         Method('SetServerMessagesAP_SYS', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Control the server message handling.",
+               notes="""
+               Should be set to false when dialogs should not
+               appear. This setting is thread specific.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -686,6 +725,16 @@ gx_methods = {
         Method('iRun_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Run a command line process.",
+               notes="""
+               The Default option for each define below is the first one
+               and is set to 0.
+               
+               We look for the command object in the following order:
+               
+               1. the local working directory
+               2. the <geosoft>\\bin directory
+               3. the system path
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                -1 if failed to execute task
@@ -703,6 +752,7 @@ gx_methods = {
         Method('iRunGS_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Run a GS.",
+               see_also=":func:`SetInteractive_SYS`, :func:`iRunGX_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                Exit status of the GS
@@ -718,6 +768,12 @@ gx_methods = {
         Method('iRunGX_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_gui=True, 
                doc="Run a GX.",
+               notes="""
+               If the called GX returns an error, they will not be
+               displayed until the "top" calling GX terminates, unless you
+               call :func:`ShowError_SYS`().
+               """,
+               see_also=":func:`iRunGXEx_SYS`, :func:`SetInteractive_SYS` and :func:`iRunGS_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                Exit status of the GX:
@@ -733,6 +789,7 @@ gx_methods = {
         Method('iRunGXEx_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_gui=True, 
                doc="Run a GX.",
+               see_also=":func:`iRunGX_SYS`, :func:`SetReturn_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                Exit status of the GX:
@@ -750,6 +807,11 @@ gx_methods = {
         Method('iRunPDF_SYS', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Run a PDF.",
+               notes="""
+               The group name of the PDF variables will be "group_pdf",
+               where "group" is the name given in the first argument,
+               and "pdf" is the root PDF file name.
+               """,
                return_type=Type.INT32_T,
                return_doc="Exit status of the task, 0 usually means success.",
                parameters = [
@@ -762,6 +824,14 @@ gx_methods = {
         Method('iShellExecute_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="MS ShellExecute function",
+               notes="""
+               Examples
+               
+               :func:`iShellExecute_SYS`(open;http://www.geosoft.com);
+               :func:`iShellExecute_SYS`(open;"mailto:geonet@lists.geosoft.com");
+               :func:`iShellExecute_SYS`(open;"mailto:majordomo@lists.geosoft.com?body=UNSUBSCRIBE%20gxnet");
+               """,
+               see_also=":func:`DoCommand_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                return value of ShellExecute command
@@ -784,6 +854,7 @@ gx_methods = {
         Method('SetReturn_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the return value of a GX.",
+               notes="This value is returned in the :func:`iRunGXEx_SYS` call only.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -795,6 +866,26 @@ gx_methods = {
         Method('DoCommand_SYS', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Execute an Oasis montaj command.",
+               notes="""
+               Commands syntax:  "[type] command"
+               
+               type     command
+               ----     -------
+               ID       Internal Menu Command
+               See "Internal Menu Commands" in GX Developer documentation.
+               GX       gx file name
+               GS       gs file name
+               DOTNET   dll file name
+               Use qualifiers to specify class and method e.g. [DOTNET] geogxnet.dll(Geosoft.GX.NewGDB.NewGDB;Run)
+               PDF      pdf file name
+               DOS      DOS style command
+               HLP      help file name
+               
+               The must be ONE space between the "]" and the command.  For example:
+               
+               :func:`DoCommand_SYS`("[ID] ID_EDIT_SELECT");  // bring up the line edit tool
+               """,
+               see_also="ShellExecute_SYS",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -804,6 +895,16 @@ gx_methods = {
         Method('Error_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Register an error message",
+               notes="""
+               Use this function to register your own error
+               messages when an error occurs in your code.  Your
+               errors can be provided in your own :class:`GER` file.  See
+               :class:`GEOSOFT`.:class:`GER` for an example of the :class:`GER` file format.
+               
+               If the error # is not found in your error file, the
+               OE32.:class:`GER` file, then the :class:`GEOSOFT`.:class:`GER` file will be
+               searched.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -817,6 +918,13 @@ gx_methods = {
         Method('ErrorTag_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set an error message tag string",
+               notes="""
+               Use this method to replace tag strings in your error
+               message text with run-time information.  For example,
+               Geosoft error messages often use the tag strings "%1",
+               "%2", etc. as place holders to be replaced by a string
+               which is only known at run-time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -828,6 +936,22 @@ gx_methods = {
         Method('iAssertGX_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="DLL function argument error assertion",
+               notes="""
+               Use this function to evaluate errors in passed
+               function arguments.  Functions called by GX programs
+               should be tolerant of all errors in the passed argument
+               list.  The :func:`iAssertGX_SYS` can be used to test each
+               argument before doing any work in the function.  If
+               an assertion fails, an error will be registered with
+               the name of the function and the parameter name and
+               a 1 will be returned.  The caller should immediatley
+               cleaning up (if necessary) and return.
+               
+               You could also test the validity of arguments and call
+               the :func:`Error_SYS`, :func:`ErrorTag_SYS` and :func:`Terminate_SYS`
+               functions if you would like to provide a more specific
+               error message.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 assertion passed
@@ -868,11 +992,42 @@ gx_methods = {
         Method('ShowError_SYS', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Display any errors to the user.",
+               notes="""
+               If you call a GX from another GX using :func:`iRunGX_SYS`, and
+               the called GX registers errors, they will not be displayed
+               until after the "top" GX exits.
+               If you wish to continue without exiting, call this function
+               so that errors are displayed immediately to the user. For
+               instance, when creating a new map from inside another GX:
+               
+               --- Run NEWMAP wizard. Keep trying if something is wrong (like a
+               too-small map scale), but exit if the user cancels (iRet==-1) ---
+               
+               do {
+               iRet = :func:`iRunGX_SYS`("newmap.gx");
+               if(iRet==1) :func:`ShowError_SYS`();     // Dump errors.
+               } while(iRet==1);
+               
+               This wrapper is not intended for use outside a GX, because it
+               uses the GX run-time machinery to display the error messages.
+               """,
                return_type=Type.VOID),
 
         Method('Terminate_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="DLL error termination",
+               notes="""
+               Call this function immediately before returning to
+               the caller after an error has occured inside the
+               DLL.  If an error has occured, you should clean-up
+               (free memory, close files), call :func:`Error_SYS` to register
+               your own error messages, call :func:`ErrorTag_SYS` to set any
+               error message tags, call :func:`Terminate_SYS` and return.
+               
+               Geosoft functions that detect an error will have
+               already registered their own errors and called
+               :func:`Terminate_SYS`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -917,6 +1072,10 @@ gx_methods = {
         Method('FindFilesVV_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Fill a :class:`VV` with files matching an input file mask.",
+               notes="""
+               Fill a :class:`VV` with files matching the input file mask.
+               The :class:`VV` should be of string type.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",
@@ -928,6 +1087,10 @@ gx_methods = {
         Method('IAbsoluteFileName_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Convert an abbreviated path name to a full path name.",
+               notes="""
+               This is mainly intended to convert ".\\name" to a full
+               name at run-time.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -985,6 +1148,11 @@ gx_methods = {
         Method('iDeleteGridFile_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Delete a grid file and its associated GI and XML files.",
+               notes="""
+               Deletes the grid file first, and, if they exist, the associated GI
+               and XML files.
+               No error is registered if a file is not found or cannot be deleted.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if grid file deleted.
@@ -1011,6 +1179,11 @@ gx_methods = {
         Method('iFileExist_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Check to see if a file exists",
+               notes="""
+               Use the FULL path for the file name. If the full
+               path is not specified, then the current working
+               directory is used for the path.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - File doesn't exist
@@ -1050,6 +1223,19 @@ gx_methods = {
         Method('iFindPath_SYS', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Get full path for a file with Geosoft subdirectory parameter.",
+               notes="""
+               Directories can be resolved from the Environment section of the
+               Geosoft registry, or from system environment variables that are
+               not defined in the Geosoft Environment registry.  The following
+               file prefixes will be replaced by the environment settings:
+               
+               <geosoft>      the main Geosoft installation directory
+               <geosoft2>     the secondary Geosoft installation directory
+               <geotemp>      the Geosoft temporary file directory
+               <windows>      the operating system Windows directory
+               <system>       the operating system system directory
+               <other>        other environment variables
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if file found.
@@ -1069,6 +1255,19 @@ gx_methods = {
         Method('iFindPathEx_SYS', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Get full path for a file.",
+               notes="""
+               Directories can be resolved from the Environment section of the
+               Geosoft registry, or from system environment variables that are
+               not defined in the Geosoft Environment registry.  The following
+               file prefixes will be replaced by the environment settings:
+               
+               <geosoft>      the main Geosoft installation directory
+               <geosoft2>     the secondary Geosoft installation directory
+               <geotemp>      the Geosoft temporary file directory
+               <windows>      the operating system Windows directory
+               <system>       the operating system system directory
+               <other>        other environment variable
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if file found.
@@ -1090,6 +1289,7 @@ gx_methods = {
         Method('IGetDirectory_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a directory path",
+               notes="The path will always end with the file separator character",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -1103,6 +1303,7 @@ gx_methods = {
         Method('IGetPath_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a Geosoft path",
+               notes="The path name will have a directory separator at the end.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -1166,6 +1367,10 @@ gx_methods = {
         Method('IRelativeFileName_SYS', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Convert a file name to a relative abbreviated path name",
+               notes="""
+               This will produce relative paths based on the workspace
+               directory into ".\\name".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1192,6 +1397,7 @@ gx_methods = {
         Method('ITempFileExt_SYS', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Generate a unique file name for this extension in the temp directory.",
+               notes="This is useful for created a unique tempory name for a file in the Geosoft temporary directory.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1205,6 +1411,13 @@ gx_methods = {
         Method('ITempFileName_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Generate a file name for this file in the temp directory.",
+               notes="""
+               This is useful for created a unique tempory name for a file in the Geosoft temporary directory.
+               
+               From version 7.0 The file extension will match the input file, but the
+               filename itself will be a process and thread unique value to ensure that
+               clashes does not happen.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1218,6 +1431,10 @@ gx_methods = {
         Method('ITransferPath_SYS', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Transfers file path to new file name.",
+               notes="""
+               The path and volume of from the input string is added to
+               file name from the output string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1231,6 +1448,11 @@ gx_methods = {
         Method('iValidFileName_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Check to see if a file name valid",
+               notes="""
+               Use the FULL path for the file name. If the full
+               path is not specified, then the current working
+               directory is used for the path.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - File name is not valid
@@ -1257,6 +1479,10 @@ gx_methods = {
         Method('rFileDate_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="File creation date in decimal years.",
+               notes="""
+               The FormatDate_STR function can be used to convert a date
+               to a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal years, :def_val:`rDUMMY` if the file does not exist.",
                parameters = [
@@ -1267,6 +1493,10 @@ gx_methods = {
         Method('rFileTime_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="File creation time in decimal hours.",
+               notes="""
+               The FormatTime_STR function can be used to convert a time
+               to a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal hours, :def_val:`rDUMMY` if the file does not exist.",
                parameters = [
@@ -1277,6 +1507,10 @@ gx_methods = {
         Method('rUTCFileDate_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="File creation UTC date in decimal years.",
+               notes="""
+               The FormatDate_STR function can be used to convert a date
+               to a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal years, :def_val:`rDUMMY` if the file does not exist.",
                parameters = [
@@ -1287,6 +1521,10 @@ gx_methods = {
         Method('rUTCFileTime_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="File creation UTC time in decimal hours.",
+               notes="""
+               The FormatTime_STR function can be used to convert a time
+               to a string.
+               """,
                return_type=Type.DOUBLE,
                return_doc="Date in decimal hours, :def_val:`rDUMMY` if the file does not exist.",
                parameters = [
@@ -1328,6 +1566,10 @@ gx_methods = {
         Method('GlobalWrite_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Modify the global parameters.",
+               notes="""
+               If the global parameters have been changed, use
+               this function to make the changes permanent,
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1337,6 +1579,25 @@ gx_methods = {
         Method('IiGlobal_SYS', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Get a global parameter setting.",
+               notes="""
+               The returned string will be empty if the parameter is
+               not found.
+               
+               Parameters are derived from :class:`GEOSOFT`.INI.
+               This is a standard Windows style INI
+               file that contains [GROUPS], PARAMETERS and SETTINGS
+               as follows
+               
+               [GROUP1]
+               PARAM1=setting1
+               PARAM2 setting2
+               PARAM3 "setting3 is text"
+               
+               To retrieve an entry, specify the group.parameter.  For
+               example, iGlobal_SYS("GROUP1.PARAM3",sSetting) will
+               retrieve the string "setting is text".  The double
+               quotes will not appear in the setting.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if parameter found.
@@ -1418,6 +1679,11 @@ gx_methods = {
         Method('IGetLicenseClass_SYS', module='geoengine.core', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="Get the current application license class.",
+               notes="""
+               String may be one of :  "ArcGIS"
+               "OasisMontaj"
+               "DapServer"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
@@ -1478,6 +1744,11 @@ gx_methods = {
         Method('CopyGeoFile_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.LICENSED, 
                doc="Copy a Geosoft data file and all associated files to a new folder",
+               notes="""
+               Grids are copied and the GI's are maintained - note that support
+               for non-geosoft grids is limited since this method does not
+               guarantee all grid files besides the main one are copied.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1489,6 +1760,11 @@ gx_methods = {
         Method('IBackupGeoFile_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.LICENSED, 
                doc="Backup a Geosoft data file and all associated files to a temporary folder.",
+               notes="""
+               Grids are copied and the GI's are maintained - note that support
+               for non-geosoft grids is limited since this method does not
+               guarantee all grid files besides the main one are copied.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1529,6 +1805,11 @@ gx_methods = {
         Method('RestoreGeoFile_SYS', module='geoengine.core', version='7.0.0',
                availability=Availability.LICENSED, 
                doc="Backup a Geosoft data file and all associated files to original location",
+               notes="""
+               Grids are copied and the GI's are maintained - note that support
+               for non-geosoft grids is limited since this method does not
+               guarantee all grid files besides the main one are copied.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1578,6 +1859,10 @@ gx_methods = {
         Method('GetLoadedMenus_SYS', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the loaded menus.",
+               notes="""
+               The names of the LSTs contain the menus and the values contain any exclusions. Exlusions 
+               are semicolon separated top level menu names and/or toolbar.geobar file names.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -1591,6 +1876,10 @@ gx_methods = {
         Method('SetLoadedMenus_SYS', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Load a list of menus",
+               notes="""
+               The names of the LSTs contain the menus and the values contain any exclusions. Exlusions 
+               are semicolon separated top level menu names and/or toolbar.geobar file names.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -1635,18 +1924,32 @@ gx_methods = {
         Method('CreateClipboardRA_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`RA` to read text from the clipboard.",
+               notes="""
+               Destroy the :class:`RA` as soon as possible. As long as it
+               open the clipboard is not accessible from any
+               application.
+               """,
                return_type="RA",
                return_doc=":class:`RA` to use for reading."),
 
         Method('CreateClipboardWA_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a :class:`WA` to write text on the clipboard.",
+               notes="""
+               Destroy the :class:`WA` as soon as possible. As long as it
+               open the clipboard is not accessible from any
+               application.
+               """,
                return_type="WA",
                return_doc=":class:`WA` to use for reading."),
 
         Method('Destr_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, no_cpp=True, 
                doc="Destroy ANY object made with a Create_? method",
+               notes="""
+               You can use this method instead of the Destroy_? methods
+               which are specific to each object.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="HANDLE",
@@ -1678,6 +1981,11 @@ gx_methods = {
         Method('FontLST_SYS', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="List all Windows and geosoft fonts.",
+               notes="""
+               To get TT and GFN fonts, call twice with the same list
+               and :def_val:`SYS_FONT_TT`, then :def_val:`SYS_FONT_GFN`, or vice-versa to
+               change order of listing.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="LST",
@@ -1691,6 +1999,11 @@ gx_methods = {
                doc="""
                Get the list of entry points that this assembly has
                exposed to Oasis montaj.
+               """,
+               notes="""
+               The list of entry points are passed back as one
+               string with each entry point seperated by a semi-colon.
+               For example: NewGDB|Run;NewGDB|RunEx
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -1734,12 +2047,18 @@ gx_methods = {
         Method('iGetThreadID_SYS', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Get the ID the current thread.",
+               notes="In a single threaded application this will always be 0.",
                return_type=Type.INT32_T,
                return_doc="x - ID"),
 
         Method('RunMultiUserScript_SYS', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Execute a script using multithreaded users",
+               notes="""
+               No access is provided in the script to EMAPS
+               or EDBS. Users must ensure that the resources
+               that are shared are protected.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1783,6 +2102,10 @@ gx_methods = {
         Method('DefaultInt_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Allows a default int to be set.",
+               notes="""
+               The value will only be set if there is no existing
+               setting.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1796,6 +2119,10 @@ gx_methods = {
         Method('DefaultReal_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Allows a default real to be set.",
+               notes="""
+               The value will only be set if there is no existing
+               setting.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1809,6 +2136,10 @@ gx_methods = {
         Method('DefaultString_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Allows a default string to be set.",
+               notes="""
+               The value will only be set if there is no existing
+               setting.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1822,6 +2153,21 @@ gx_methods = {
         Method('GetPattern_SYS', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Gets pattern parameters from the parameter block.",
+               notes="""
+               Gets all the user-definable pattern parameters from
+               a specified group. Parameters are:
+               "PAT_NUMBER"    0 is solid fill (default)
+               "PAT_SIZE"      pattern tile size in mm. (can return :def_val:`iDUMMY`)
+               "PAT_THICKNESS" pattern line thickness in percent of the tile size.
+               valid range is 0-100.
+               "PAT_DENSITY"   Tile spacing. A value of 1 means tiles are laid with no overlap.
+               A value of 2 means they overlap each other.
+               "PAT_COLOR"     The colour value.
+               "PAT_BACKCOLOR" Background colour value.
+               
+               Returned values may be DUMMY, but will be acceptable for use with
+               the :func:`iColorForm_GUI` function, to set defaults.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1854,6 +2200,10 @@ gx_methods = {
         Method('GtString_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns a string in the parameter block.",
+               notes="""
+               If the setting exits it is placed in the buffer, otherwise
+               the buffer will have zero length
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1941,6 +2291,11 @@ gx_methods = {
         Method('IReplaceString_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc='Replace "% %" tokens in a string with parameter values',
+               notes="""
+               If parameter does not exist, the token is removed.  Full parameter names,
+               such as "%group.name%", are used as-is.  Partial parameter names, such as
+               "%name%" will have the default group attached.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1992,6 +2347,7 @@ gx_methods = {
         Method('FilterParmGroup_SYS', module='geoengine.core', version='9.1.0',
                availability=Availability.PUBLIC, 
                doc="Controls filtering of specific group during logging.",
+               notes="This is useful to prevent certain utility GX parameters from being recorded during GS script runs where the parameters does not influence the actual script execution.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2016,6 +2372,22 @@ gx_methods = {
         Method('SetPattern_SYS', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Sets pattern parameters in the parameter block.",
+               notes="""
+               Sets all the user-definable pattern parameters to
+               a specified group. Parameters are:
+               "PAT_NUMBER"    0 is solid fill
+               "PAT_SIZE"      pattern tile size in mm.
+               "PAT_THICKNESS" pattern line thickness in percent of the tile size.
+               valid range is 0-100.
+               "PAT_DENSITY"   Tile spacing. A value of 1 means tiles are laid with no overlap.
+               A value of 2 means they overlap each other.
+               "PAT_COLOR"     The colour value.
+               "PAT_BACKCOLOR" Background colour value.
+               
+               Input values may be DUMMY.
+               
+               Designed for use along with the sPatternForm_GUI function.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2088,6 +2460,17 @@ gx_methods = {
         Method('iProgState_SYS', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Return current progress state (On/Off)",
+               notes="""
+               This is useful, for instance, when calling one GX from another,
+               especially if it is called multiple times in a loop.
+               The called GX may turn the progress ON/OFF on its own, which
+               means any progress tracking in the calling GX is disrupted.
+               The called GX should use this function to determine the original
+               progress state, and not turn off progress if it was already on.
+               
+               Returns				 0 - Progress is on
+               - Progress is off
+               """,
                return_type=Type.INT32_T),
 
         Method('ProgName_SYS', module='geoengine.core', version='5.0.0',
@@ -2181,6 +2564,7 @@ gx_methods = {
         Method('iRegistryDeleteKey_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Delete a registry value",
+               notes="All sub-keys and values will be deleted if they exist.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -2213,6 +2597,10 @@ gx_methods = {
         Method('RegistrySetVal_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set/create a registry value",
+               notes="""
+               This function will create the subkey and key if either do not
+               already exist.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -2239,6 +2627,7 @@ gx_methods = {
         Method('GetPTMP_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get temporary saves copy of parameter block.",
+               see_also=":func:`SavePTMP_SYS`, :func:`DestroyPTMP_SYS`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="PTMP",
@@ -2248,6 +2637,8 @@ gx_methods = {
         Method('SavePTMP_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Save a temporary copy of the parameter block.",
+               notes="All PTMP instances will be destroyed on exit.",
+               see_also=":func:`GetPTMP_SYS`, :func:`DestroyPTMP_SYS`",
                return_type="PTMP",
                return_doc="PTMP handle.",
                parameters = [
@@ -2311,6 +2702,11 @@ gx_methods = {
         Method('iGetTimer_SYS', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="return the elapsed time since the established time.",
+               notes="""
+               1st time through call the method with a flag of 1 to identify
+               the count start time, subsequent times the time will be the time
+               elapsed since the queried start time.  Do so by settign the flag to 0.
+               """,
                return_type=Type.INT32_T,
                return_doc="success if the delay has elapsed.",
                parameters = [
@@ -2428,6 +2824,10 @@ gx_methods = {
         Method('IiPrompt_SYS', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Asks the User to enter a string.",
+               notes="""
+               The User string is displayed as the default value in the prompt.
+               Empty the user string if no default is needed.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - User hit OK
@@ -2468,6 +2868,15 @@ gx_methods = {
         Method('SetCursor_SYS', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the cursor on the display.",
+               notes="""
+               Possible Cursors:
+               Normal, Horiz, Vert, Moving, Cross, Hand, NoEdit, Sun,
+               View, Group, ViewSel, GroupSel, BoxSelect, Shadow, Link,
+               Line, PolyLine, Polygon, Ellipse, Rectangle, Text, Symbol,
+               Zoom, Pan, Rotate, InteractiveZoom, PolyFill, GetFill,
+               SnapPoint, SnapLine, SnapOnPoint, SnapOnLine, NPolygon,
+               ExcludeRect, ExcludePoly, ExcludeNPoly, AddVertex, DelVertex, GeneralAdd and GeneralDelete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2489,6 +2898,11 @@ gx_methods = {
         Method('SetInteractive_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets the interactive mode.",
+               notes="""
+               Call to :func:`iInteractive_SYS` will return the value
+               set here.
+               """,
+               see_also=":func:`iInteractive_SYS`, :func:`iRunGX_SYS` and :func:`iRunGS_SYS`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -2500,6 +2914,16 @@ gx_methods = {
         Method('GetWorkspaceREG_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a copy of the workspace :class:`REG`;",
+               notes="""
+               The workspace :class:`REG` is separate from the reg used
+               to store :class:`SYS` parameters.
+               
+               Because :func:`GetWorkspaceREG_SYS` returns a copy of the
+               workspace :class:`REG`, and not the workspace :class:`REG` itself,
+               you must call :func:`SetWorkspaceREG_SYS` if you make changes
+               to your own :class:`REG` object and you wish them to take
+               effect in the workspace :class:`REG`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG",
@@ -2509,6 +2933,16 @@ gx_methods = {
         Method('SetWorkspaceREG_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the workspace :class:`REG`;",
+               notes="""
+               The workspace :class:`REG` is separate from the reg used
+               to store :class:`SYS` parameters.
+               
+               Because :func:`GetWorkspaceREG_SYS` returns a copy of the
+               workspace :class:`REG`, and not the workspace :class:`REG` itself,
+               you must call :func:`SetWorkspaceREG_SYS` if you make changes
+               to your own :class:`REG` object and you wish them to take
+               effect in the workspace :class:`REG`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="REG",
@@ -2607,6 +3041,7 @@ gx_methods = {
         Method('ClearCustomBar_SYS', module='None', version='5.1.5',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, 
                doc="Clear the workspaces custom toolbar",
+               notes="Obsolete",
                return_type=Type.VOID),
 
         Method('DisplayQuestion_SYS', module='None', version='5.0.0',
@@ -2615,6 +3050,7 @@ gx_methods = {
                Display a YES/NO type question. This method waits
                for the user to hit YES or NO.
                """,
+               notes="Obsolete, use :func:`iDisplayQuestion_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - user selected No
@@ -2633,6 +3069,7 @@ gx_methods = {
                Display a YES/NO/CANCEL type question. This method waits
                for the user to hit YES or NO or CANCEL.
                """,
+               notes="Obsolete, use :func:`iDisplayQuestionWithCancel_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - user selected No
@@ -2649,6 +3086,7 @@ gx_methods = {
         Method('iCheckLicense_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Check to see if a product is licenced",
+               notes="Obsolete",
                return_type=Type.INT32_T,
                return_doc="""
                1 - Product licenced
@@ -2677,6 +3115,7 @@ gx_methods = {
         Method('IGetLicenseInfo_SYS', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Retrieve information about the license",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -2696,6 +3135,7 @@ gx_methods = {
         Method('iListDocuments_SYS', module='None', version='5.0.5',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Load the open databases or maps into a :class:`VV`.",
+               notes="Obsolete",
                return_type=Type.INT32_T,
                return_doc="The number of documents listed in the :class:`VV`.",
                parameters = [
@@ -2708,6 +3148,7 @@ gx_methods = {
         Method('IPrompt_SYS', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Asks the User to enter a string.",
+               notes="Obsolete, use :func:`IiPrompt_SYS`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - User hit OK
@@ -2727,6 +3168,12 @@ gx_methods = {
                doc="""
                Appends a PATH string to the existing system
                environment variable.
+               """,
+               notes="""
+               1. This function is only supported on Windows NT 3.5,
+               3.51, 4.0 and 2000 operating systems.
+               2. User must have administrative priveleges in order
+               to use this function.
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -2752,11 +3199,22 @@ gx_methods = {
         Method('DisableGXDebugger_SYS', module='geogxdbg', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Disable GX Debugger :class:`GUI` if active",
+               notes="All breakpoints will be cleared by this call.",
                return_type=Type.VOID),
 
         Method('EnableGXDebugger_SYS', module='geogxdbg', version='5.0.0',
                availability=Availability.PUBLIC, is_gui=True, 
                doc="Enable GX Debugger :class:`GUI`",
+               notes="""
+               Takes as input two strings one a path that will be scanned
+               recursively for GXC source files and a second string without
+               a path of the GX where the first breakpoint should be set in (i.e. "gxname.gx").
+               The source of the GX should be found in the path (e.g. <path>\\somewhere\\gxname.gxc)
+               and a breakpoint will be set on the first executing line of this GX. Make sure the
+               GX binary is newer than the source file, otherwise unexpected results may occur. As
+               soon as the GX is run the :class:`GUI` will become visible and it will be possible to set more
+               breakpoints in any of the GXC files found in the path.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

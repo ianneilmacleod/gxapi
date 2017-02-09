@@ -2,46 +2,46 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('EMAPTEMPLATE',
                  doc="""
-The :class:`EMAPTEMPLATE` class provides access to a map template as displayed within
-Oasis montaj, but does not change data within the template itself.
-It performs functions such as setting the currently displayed area,
-or drawing "tracking" lines or boxes on the template (which are not
-part of the template itself).
-""",
+                 The :class:`EMAPTEMPLATE` class provides access to a map template as displayed within
+                 Oasis montaj, but does not change data within the template itself.
+                 It performs functions such as setting the currently displayed area,
+                 or drawing "tracking" lines or boxes on the template (which are not
+                 part of the template itself).
+                 """,
                  notes="""
-To obtain access to the map template itself, it is recommended practice
-to begin with an :class:`EMAPTEMPLATE` object, and use the Lock function to
-lock the underlying template to prevent external changes. The returned
-:class:`MAPTEMPLATE` object may then be safely used to make changes to the template itself.
-
-VIRTUAL :class:`EMAPTEMPLATE` SUPPORT
-
-These methods are only available when running in an external application.
-They allow the GX to open a map template and then create a Virtual :class:`EMAPTEMPLATE` from that
-map template. The GX can then call MakeCurrent and set the current :class:`EMAPTEMPLATE` so
-that code that follows sees this map template as the current :class:`MAPTEMPLATE`.
-
-Supported methods on Virtual EMAPTEMPLATEs are:
-
-  :func:`Current_EMAPTEMPLATE`
-  :func:`CurrentNoActivate_EMAPTEMPLATE`
-  :func:`MakeCurrent_EMAPTEMPLATE`
-  :func:`iHaveCurrent_EMAPTEMPLATE`
-  :func:`CurrentIfExists_EMAPTEMPLATE`
-
-  :func:`Lock_EMAPTEMPLATE`
-  :func:`UnLock_EMAPTEMPLATE`
-
-  :func:`IGetName_EMAPTEMPLATE`
-
-  :func:`iLoaded_EMAPTEMPLATE`
-  :func:`Load_EMAPTEMPLATE`
-  :func:`LoadNoActivate_EMAPTEMPLATE`
-  :func:`UnLoadVerify_EMAPTEMPLATE`
-  :func:`UnLoad_EMAPTEMPLATE`
-
-  :func:`CreateVirtual_EMAPTEMPLATE`
-""")
+                 To obtain access to the map template itself, it is recommended practice
+                 to begin with an :class:`EMAPTEMPLATE` object, and use the Lock function to
+                 lock the underlying template to prevent external changes. The returned
+                 :class:`MAPTEMPLATE` object may then be safely used to make changes to the template itself.
+                 
+                 VIRTUAL :class:`EMAPTEMPLATE` SUPPORT
+                 
+                 These methods are only available when running in an external application.
+                 They allow the GX to open a map template and then create a Virtual :class:`EMAPTEMPLATE` from that
+                 map template. The GX can then call MakeCurrent and set the current :class:`EMAPTEMPLATE` so
+                 that code that follows sees this map template as the current :class:`MAPTEMPLATE`.
+                 
+                 Supported methods on Virtual EMAPTEMPLATEs are:
+                 
+                   :func:`Current_EMAPTEMPLATE`
+                   :func:`CurrentNoActivate_EMAPTEMPLATE`
+                   :func:`MakeCurrent_EMAPTEMPLATE`
+                   :func:`iHaveCurrent_EMAPTEMPLATE`
+                   :func:`CurrentIfExists_EMAPTEMPLATE`
+                 
+                   :func:`Lock_EMAPTEMPLATE`
+                   :func:`UnLock_EMAPTEMPLATE`
+                 
+                   :func:`IGetName_EMAPTEMPLATE`
+                 
+                   :func:`iLoaded_EMAPTEMPLATE`
+                   :func:`Load_EMAPTEMPLATE`
+                   :func:`LoadNoActivate_EMAPTEMPLATE`
+                   :func:`UnLoadVerify_EMAPTEMPLATE`
+                   :func:`UnLoad_EMAPTEMPLATE`
+                 
+                   :func:`CreateVirtual_EMAPTEMPLATE`
+                 """)
 
 
 gx_defines = [
@@ -120,6 +120,10 @@ gx_methods = {
         Method('CurrentNoActivate_EMAPTEMPLATE', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method returns the Current Edited map template.",
+               notes="""
+               This function acts just like :func:`Current_EMAPTEMPLATE` except that the document is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EMAPTEMPLATE",
                return_doc=":class:`EMAPTEMPLATE` Object"),
 
@@ -135,6 +139,7 @@ gx_methods = {
         Method('Destroy_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Destroy :class:`EMAPTEMPLATE` handle.",
+               notes="This does not unload the map, it simply deletes the gx resource handle",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -268,6 +273,15 @@ gx_methods = {
         Method('Load_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads maps into the editor.",
+               notes="""
+               The last map in the list will be the current map.
+               
+               Maps may already be loaded.
+               
+               Only the first file in the list may have a directory path.
+               All other files in the list are assumed to be in the same
+               directory as the first file.
+               """,
                return_type="EMAPTEMPLATE",
                return_doc=":class:`EMAPTEMPLATE` Object to edited map.",
                parameters = [
@@ -278,6 +292,10 @@ gx_methods = {
         Method('LoadNoActivate_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads documents into the workspace",
+               notes="""
+               This function acts just like :func:`Load_EMAPTEMPLATE` except that the document(s) is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EMAPTEMPLATE",
                return_doc="""
                Handle to current edited document, which will be the last
@@ -310,6 +328,10 @@ gx_methods = {
         Method('UnLoad_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads a map template.",
+               notes="""
+               If the map template is not loaded, nothing happens.
+               Same as :func:`UnLoadVerify_EMAPTEMPLATE` with FALSE to prompt save.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -324,6 +346,10 @@ gx_methods = {
         Method('UnLoadVerify_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited map, optional prompt to save.",
+               notes="""
+               If the map is not loaded, nothing happens.
+               If "FALSE", map is saved without a prompt.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -346,6 +372,10 @@ gx_methods = {
         Method('iGetBox_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected box.",
+               notes="""
+               The coordinates are returned in the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -369,6 +399,10 @@ gx_methods = {
         Method('iGetLine_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the end points of a line.",
+               notes="""
+               The coordinates are returned in the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if line returned.
@@ -392,6 +426,10 @@ gx_methods = {
         Method('iGetPoint_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected point.",
+               notes="""
+               The coordinates are returned in the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -411,6 +449,10 @@ gx_methods = {
         Method('iGetRect_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Returns the coordinates of a user selected box starting at a corner.",
+               notes="""
+               The coordinates are returned in the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if point returned.
@@ -455,6 +497,7 @@ gx_methods = {
         Method('iGetItemSelection_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Gets info about the current selected item",
+               notes="If nothing is selected the string will be empty and the function will return :def_val:`GS_FALSE`;",
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL` Is item a view?",
                parameters = [
@@ -469,6 +512,7 @@ gx_methods = {
         Method('SetItemSelection_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Sets the current selected item",
+               notes="An empty string will unselect everything.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -482,6 +526,10 @@ gx_methods = {
         Method('GetDisplayArea_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the area you are currently looking at.",
+               notes="""
+               The coordinates are based on the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -499,6 +547,10 @@ gx_methods = {
         Method('GetTemplateLayoutProps_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get the base layout view properties.",
+               notes="""
+               This affects the display units and other related properties for the base
+               view of a map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -533,6 +585,10 @@ gx_methods = {
         Method('SetDisplayArea_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the area you wish to see.",
+               notes="""
+               The coordinates are based on the current template units
+               (See GetUnits and SetUnits in :class:`MAPTEMPLATE`)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -550,6 +606,10 @@ gx_methods = {
         Method('SetTemplateLayoutProps_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set the base layout view properties.",
+               notes="""
+               This affects the display units and other related properties for the base
+               view of a map.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -587,6 +647,14 @@ gx_methods = {
         Method('SetWindowArea_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Set the location of the map window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               if the max values are equal or less than the min values
+               the window will be mimimized. If any Min values are :def_val:`iMIN`
+               or any Max values are :def_val:`iMAX`, the window is maximized.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
@@ -604,6 +672,15 @@ gx_methods = {
         Method('GetWindowArea_EMAPTEMPLATE', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Get the location of the map window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               If the window is minimized, the max values will be
+               equal to the min values. If the window is maximized
+               X Min and Y min will be :def_val:`iMIN` and X max and Y max
+               will be :def_val:`iMAX`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",

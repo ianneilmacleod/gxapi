@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MSTK',
                  doc="""
-Multi-profile stack
-This class is used for storing data of multiple profiles and
-plotting profiles in a map. It is a container of :class:`STK` class objects.
-
-See also:         :class:`STK` class.
-""")
+                 Multi-profile stack
+                 This class is used for storing data of multiple profiles and
+                 plotting profiles in a map. It is a container of :class:`STK` class objects.
+                 
+                 See also:         :class:`STK` class.
+                 """)
 
 
 
@@ -19,6 +19,7 @@ gx_methods = {
         Method('AddSTK_MSTK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create and add a :class:`STK` object to :class:`MSTK`",
+               notes="Index to the added :class:`STK` object is the last one in :class:`MSTK` container.",
                return_type="STK",
                return_doc=":class:`STK`, fail if error",
                parameters = [
@@ -29,6 +30,10 @@ gx_methods = {
         Method('ChanListVV_MSTK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Save channel names in VVs based on channel types",
+               notes="""
+               Terms 'used' and 'unused' indicate that the a channel name
+               in database also 'in' and 'not in' the :class:`MSTK` object respectively
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MSTK",
@@ -91,6 +96,14 @@ gx_methods = {
         Method('FindSTK2_MSTK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find index of :class:`STK` from a string of group names and X/Y channels",
+               notes="""
+               Format of the input string:
+               
+               Map group name + " ( " + X channel name + " , " + Y channel name + " )"
+               
+               for example, string "DATA ( DIST , MAG )"  indicates a map group name of DATA,
+               X channel name of DIST and Y channel name of MAG.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MSTK",
@@ -121,6 +134,7 @@ gx_methods = {
         Method('IDelete_MSTK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Delete a :class:`STK` object",
+               notes="0 is the first one",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MSTK",
@@ -132,6 +146,14 @@ gx_methods = {
         Method('IFindSTK_MSTK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Find index of :class:`STK` from a string of group names and X/Y channels",
+               notes="""
+               Format of the input string:
+               
+               Map group name + " ( " + X channel name + " , " + Y channel name + " )"
+               
+               for example, string "DATA ( DIST , MAG )"  indicates a map group name of DATA,
+               X channel name of DIST and Y channel name of MAG.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MSTK",

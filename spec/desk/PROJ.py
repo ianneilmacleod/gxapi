@@ -54,6 +54,16 @@ gx_methods = {
         Method('iAddDocument_PROJ', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Adds (and opens) a document file in the current project.",
+               notes="""
+               The passed file name must be a valid
+               file name complete with an extension and
+               qualifiers (if applicable).
+               
+               The type string can be one of the following:
+               Database    Save and close only databases.
+               Map         Save and close only maps.
+               Grid        Save and close only grids.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -71,6 +81,17 @@ gx_methods = {
         Method('iAddDocumentWithoutOpening_PROJ', module='None', version='8.5.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Adds (and opens) a document file in the current project.",
+               notes="""
+               The passed file name must be a valid
+               file name complete with an extension and
+               qualifiers (if applicable).
+               
+               The type string can be one of the following:
+               Database    Save and close only databases.
+               Map         Save and close only maps.
+               Grid        Save and close only grids.
+               Voxel		Voxel file.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -98,6 +119,20 @@ gx_methods = {
         Method('iListDocuments_PROJ', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Fills a :class:`VV` with documents of a certain type.",
+               notes="""
+               GX will terminate if error.
+               
+               The type string can be one of the following:
+               Database         List Databases.
+               Grid             List Grids.
+               Map              List Maps.
+               Voxel            List Voxels.
+               VoxelInversion   List VOXI Documents.
+               :class:`MXD`              List ArcGIS MXDs.
+               GMS3D            List GM-:class:`SYS` 3D Models.
+               GMS2D            List GM-:class:`SYS` 2D Models.
+               All              Lists all files.
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of documents listed in the :class:`VV`.",
                parameters = [
@@ -113,6 +148,13 @@ gx_methods = {
                Fills an :class:`LST` object with tools of a certain type and
                notes the current visibility setting.
                """,
+               notes="""
+               GX will terminate if there is an error.
+               
+               :class:`LST` object will hold the tool name in the name column and
+               include whether the tool is currently visible in the value
+               column (1=visible, 0-hidden).
+               """,
                return_type=Type.INT32_T,
                return_doc="The number of tools found.",
                parameters = [
@@ -125,6 +167,11 @@ gx_methods = {
         Method('iRemoveDocument_PROJ', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Removes (and closes if visible) a document from the current project.",
+               notes="""
+               The passed file name must be a valid
+               file name complete with an extension and
+               qualifiers (if applicable).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -138,6 +185,7 @@ gx_methods = {
         Method('iRemoveTool_PROJ', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Removes (and closes if visible) a auxiliary tool from the current project.",
+               notes="Nothing",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -151,6 +199,17 @@ gx_methods = {
         Method('iSaveCloseDocuments_PROJ', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Saves and closes (if visible) documents contained in the current project.",
+               notes="""
+               This wrapper brings up the save dialog tool to allow
+               the user to save the modified documents for this project.
+               Only documents that have actually changed will be listed.
+               
+               The type string can be one of the following:
+               Database    Save and close only databases.
+               Map         Save and close only maps.
+               Grid        Save and close only grids.
+               All         Saves and closes all files.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0  - Ok
@@ -165,6 +224,7 @@ gx_methods = {
         Method('IGetName_PROJ', module='None', version='8.4.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Return the name of the project file.",
+               notes="Return the name of the project file.",
                return_type=Type.VOID,
                return_doc="Nothing.",
                parameters = [

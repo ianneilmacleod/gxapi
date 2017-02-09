@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MAP',
                  doc="""
-MAPs are containers for :class:`MVIEW` objects. A view is a 3-D translation
-and a clip window on a map. Graphic entities can be drawn in an :class:`MVIEW`.
-It is recommended that the :class:`MAP` class be instantiated by first creating
-an :class:`EMAP` object and calling the :func:`Lock_EMAP`() function.
-(See the explanation on the distinction between the :class:`MAP` and :class:`EMAP` classes).
-""")
+                 MAPs are containers for :class:`MVIEW` objects. A view is a 3-D translation
+                 and a clip window on a map. Graphic entities can be drawn in an :class:`MVIEW`.
+                 It is recommended that the :class:`MAP` class be instantiated by first creating
+                 an :class:`EMAP` object and calling the :func:`Lock_EMAP`() function.
+                 (See the explanation on the distinction between the :class:`MAP` and :class:`EMAP` classes).
+                 """)
 
 
 gx_defines = [
@@ -280,6 +280,11 @@ gx_methods = {
         Method('AGGList_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a list of all aggregates in this map.",
+               notes="""
+               List items are returned as view/agg/layer.
+               The layer name is optional
+               """,
+               see_also=":class:`LST` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -293,6 +298,11 @@ gx_methods = {
         Method('AGGListEx_MAP', module='geoengine.map', version='5.1.2',
                availability=Availability.PUBLIC, 
                doc="Get a list of aggregates in this map based on a mode",
+               notes="""
+               List items are returned as view/agg/layer.
+               The layer name is optional
+               """,
+               see_also=":class:`LST` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -364,12 +374,17 @@ gx_methods = {
         Method('Current_MAP', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method returns the Current map opened.",
+               notes="""
+               If there is no current map, and running interactively,
+               the user is prompted to open a map.
+               """,
                return_type="MAP",
                return_doc=":class:`MAP` Object"),
 
         Method('DeleteView_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Deletes a view in this map.",
+               notes="If the view does not exist, nothing happens.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -381,6 +396,7 @@ gx_methods = {
         Method('Destroy_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Destroy the :class:`MAP` handle.",
+               notes="All changes to the map will be committed.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -399,6 +415,16 @@ gx_methods = {
         Method('DupMap_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Duplicate copy of current map.",
+               notes="""
+               Before version 6.2. text in maps were displayed with a character set
+               defining how characters above ASCII 127 would be displayed. 6.2. introduced
+               Unicode in the core montaj engine that eliminated the need for such a setting and
+               greatly increased the number of symbols that can be used. The only caveat
+               of the new system is that text may appear corrupted (especially with GFN fonts) in
+               versions prior to 6.2. for maps that was created with a version after the port.
+               The constant :def_val:`DUPMAP_COPY_PRE62` provides a way to create maps that can be
+               distributed to versions prior to 6.2.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -439,6 +465,7 @@ gx_methods = {
         Method('GetMETA_MAP', module='geoengine.map', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Get the map's :class:`META`",
+               notes="If the map has no :class:`META`, an empty :class:`META` will be created.",
                return_type="META",
                return_doc=":class:`META` Object",
                parameters = [
@@ -449,6 +476,7 @@ gx_methods = {
         Method('GetREG_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the map's :class:`REG`",
+               notes="If the map has no :class:`REG`, an empty :class:`REG` will be created.",
                return_type="REG",
                return_doc=":class:`REG` Object",
                parameters = [
@@ -459,6 +487,15 @@ gx_methods = {
         Method('GroupList_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a list of all views/groups in this map.",
+               notes="""
+               Returns all groups in the form "ViewName\\GroupName"
+               To get a :class:`LST` of groups in a specific map view, use
+               the :func:`iListGroups_MVIEW` function.
+               """,
+               see_also="""
+               :class:`LST` class.
+               :func:`iListGroups_MVIEW`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -470,6 +507,7 @@ gx_methods = {
         Method('GroupListEx_MAP', module='geoengine.map', version='5.1.2',
                availability=Availability.PUBLIC, 
                doc="Get a list of views/groups in this map for this mode",
+               see_also=":class:`LST` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -515,6 +553,19 @@ gx_methods = {
         Method('IGetClassName_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a class name.",
+               notes="""
+               Map class names are intended to be used to record the
+               names of certain view classes in the map, such as the
+               "Data", "Base" and "Section" views.
+               
+               There can only be one name for each class, but it can
+               be changed.  This lets the "Data" class name change,
+               for example, so plotting can select which class to plot
+               to.
+               
+               If a name is not set, the class name is set and
+               returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -566,6 +617,12 @@ gx_methods = {
         Method('IUnPackFilesEx_MAP', module='geoengine.map', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="UnPack all files from map to workspace.",
+               notes="""
+               The option to force will simply overwrite the files.
+               When the non-force option is in effect the method will
+               stop if any files are going to be overwritting. These
+               file names will end up in the Errors string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -618,6 +675,10 @@ gx_methods = {
         Method('ResizeAll_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Resize a map to the extents of all views.",
+               notes="""
+               This is the same as :func:`ResizeAllEx_MAP` with
+               :def_val:`MVIEW_EXTENT_CLIP`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -627,6 +688,10 @@ gx_methods = {
         Method('ResizeAllEx_MAP', module='geoengine.map', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc=":func:`ResizeAll_MAP` with selection of view extent type selection.",
+               notes="""
+               :def_val:`MVIEW_EXTENT_VISIBLE` gives a more "reasonable" map size, and won't
+               clip off labels outside a graph window.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -638,6 +703,16 @@ gx_methods = {
         Method('rGetMapScale_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the current map scale",
+               notes="""
+               If there is a "Data" view, the scale is derived from
+               this view.
+               
+               If their is no data view, the scale is derived
+               from the first view that is not scaled in mm.
+               otherwise, the scale is 1000 (mm).
+               
+               All views must be closed, or open read-only.
+               """,
                return_type=Type.DOUBLE,
                return_doc="The current map scale",
                parameters = [
@@ -659,6 +734,19 @@ gx_methods = {
         Method('SetClassName_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a class name.",
+               notes="""
+               Map class names are intended to be used to record the
+               names of certain view classes in the map, such as the
+               "Data", "Base" and "Section" views.
+               
+               There can only be one name for each class, but it can
+               be changed.  This lets the "Data" class name change,
+               for example, so plotting can select which class to plot
+               to.
+               
+               If a name is not set, the class name is set and
+               returned.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -692,6 +780,10 @@ gx_methods = {
         Method('SetMapScale_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the current map scale",
+               notes="""
+               All views in the map will be resized for the new
+               map scale.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -703,6 +795,13 @@ gx_methods = {
         Method('SetMapSize_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set the size of the Map.",
+               notes="""
+               The map size is area on the :class:`MAP` that contains graphics
+               to be plotted.  The area can be bigger or smaller that
+               the current views.  In the absense of any other information
+               only the area defined by the map size is plotted.
+               """,
+               see_also="SetSizeViews_MAP",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -760,6 +859,7 @@ gx_methods = {
         Method('ViewList_MAP', module='geoengine.map', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a list of all views in this map.",
+               see_also=":class:`LST` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",

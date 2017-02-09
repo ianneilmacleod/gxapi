@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('STR',
                  doc="""
-This library is not a class. Use the :class:`STR` library functions
-to work with and manipulate string variables. Since the
-GX Programming Language does not provide string literal
-tokens, you must use these functions for any string operations
-you want to perform.
-""")
+                 This library is not a class. Use the :class:`STR` library functions
+                 to work with and manipulate string variables. Since the
+                 GX Programming Language does not provide string literal
+                 tokens, you must use these functions for any string operations
+                 you want to perform.
+                 """)
 
 
 gx_defines = [
@@ -88,6 +88,7 @@ gx_methods = {
         Method('rScanDate_STR', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Convert a date string to a GX real.",
+               notes="OLD usage, use ScanForm_STR instead.",
                return_type=Type.DOUBLE,
                return_doc="Resulting Real, :def_val:`rDUMMY` if conversion fails.",
                parameters = [
@@ -122,6 +123,7 @@ gx_methods = {
         Method('rScanTime_STR', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="Convert a time string to a GX real.",
+               notes="OLD usage, use ScanForm_STR instead.",
                return_type=Type.DOUBLE,
                return_doc="Resulting Real, :def_val:`rDUMMY` if conversion fails.",
                parameters = [
@@ -189,6 +191,10 @@ gx_methods = {
         Method('IGetMFile_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the indexed filepath from a multiple filepath string",
+               notes="""
+               The multifile string must use '|' as a delimiter.
+               Do not pass a string after calling :func:`iTokenize_STR`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -340,6 +346,26 @@ gx_methods = {
         Method('_Escape_STR', module='geoengine.core', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Convert/replace escape sequences in strings.",
+               notes="""
+               Escape characters:
+               
+               \\a      bell
+               \\b      backspace
+               \\f      formfeed
+               \\n      new line
+               \\r      carriage return
+               \\t      tab
+               \\v      vertical tab
+               \\"      quote character
+               \\x      take 'x' literally
+               \\      backslash
+               \\ooo    octal up to 3 characters
+               \\xhh    hex up to 2 characters
+               
+               A common use of this function is to convert double-quote characters in
+               a user unput string to \\" so the string can be placed in a tokenized
+               string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
@@ -379,6 +405,10 @@ gx_methods = {
         Method('IJustify_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Justify a string",
+               notes="""
+               If the string is too big to fit in the number of display characters,
+               the output string will be "**" justified as specified.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -396,6 +426,11 @@ gx_methods = {
         Method('IReplaceiMatchString_STR', module='geoengine.core', version='7.0.1',
                availability=Availability.PUBLIC, 
                doc="Replaces all occurances of match string by replacement string with case insensitive.",
+               notes="""
+               If the replacement string is "" (NULL character)
+               then the string to replace is removed from the
+               input string, and the string is shortened.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
@@ -411,6 +446,11 @@ gx_methods = {
         Method('IReplaceMatchString_STR', module='geoengine.core', version='7.0.1',
                availability=Availability.PUBLIC, 
                doc="Replaces all occurances of match string by replacement string with case sensitive.",
+               notes="""
+               If the replacement string is "" (NULL character)
+               then the string to replace is removed from the
+               input string, and the string is shortened.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
@@ -441,6 +481,18 @@ gx_methods = {
         Method('ISplitString_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Splits a string in two on a character.",
+               notes="""
+               The original string is modified by terminating it
+               at the character split.
+               
+               The part of the string past the character split is
+               copied to the split string.
+               
+               Split characters in quoted strings are ignored.
+               
+               This function is mainly intended to separate comments
+               from control file strings.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -500,6 +552,13 @@ gx_methods = {
         Method('iStriMask_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Case insensitive comparison of two strings.",
+               notes="""
+               Mask characters '*' - matches any one or more up to
+               next character
+               '?' - matches one character
+               
+               Test is case insensitive
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if string does not match mask.
@@ -515,6 +574,10 @@ gx_methods = {
         Method('IStrins_STR', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="This method inserts a string at a specified position.",
+               notes="""
+               If the specified position does not fall within the current string
+               the source string will simply be Concatenated.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
@@ -540,6 +603,13 @@ gx_methods = {
         Method('iStrMask_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Case sensitive comparison of two strings.",
+               notes="""
+               Mask characters '*' - matches any one or more up to
+               next character
+               '?' - matches one character
+               
+               Test is case sensitive
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if string does not match mask.
@@ -555,6 +625,13 @@ gx_methods = {
         Method('iStrMin_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Remove spaces and tabs and return length",
+               notes="""
+               String may be modified. This function should not be
+               used to determine if a file name string is defined, because
+               a valid file name can contain spaces, and once "tested" the
+               name will be altered. Instead, use :func:`iStrMin2_STR`, or use
+               :func:`iFileExist_SYS` to see if the file actually exists.
+               """,
                return_type=Type.INT32_T,
                return_doc="String length.",
                parameters = [
@@ -612,6 +689,11 @@ gx_methods = {
         Method('ISubstr_STR', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Extract part of a string.",
+               notes="""
+               The destination string length will be less than the
+               requested length if the substring is not fully enclosed
+               in the origin string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
@@ -664,6 +746,7 @@ gx_methods = {
         Method('MakeAlpha_STR', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Turns all non alpha-numeric characters into an _.",
+               notes="THE STRING IS MODIFIED.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -686,6 +769,10 @@ gx_methods = {
         Method('ReplaceChar_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Replaces characters in a string.",
+               notes="""
+               If the input replacement character is "", then the
+               string will be truncated at the first character to replace.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -699,6 +786,11 @@ gx_methods = {
         Method('ReplaceChar2_STR', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Replaces characters in a string, supports simple removal.",
+               notes="""
+               If the replacement character is "" (NULL character)
+               then the character to replace is removed from the
+               input string, and the string is shortened.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -712,6 +804,10 @@ gx_methods = {
         Method('ReplaceMultiChar_STR', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Replaces multiple characters in a string.",
+               notes="""
+               The number of characters to replace must equal
+               the number of replacement characters.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -725,6 +821,10 @@ gx_methods = {
         Method('ReplaceNonASCII_STR', module='geoengine.core', version='6.0.0',
                availability=Availability.PUBLIC, 
                doc="Replace non-ASCII characters in a string.",
+               notes="""
+               All characthers > 127 will be replaced by the first character
+               of the replacement string.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -747,6 +847,16 @@ gx_methods = {
         Method('TrimQuotes_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Remove double quotes.",
+               notes="""
+               THE STRING IS MODIFIED.
+               This method goes through the string and removes all spaces in a
+               string except those enclosed in quotes. It then removes
+               any quotes. It is usfull for trimming unwanted spaces from
+               an input string but allows the user to use quotes as well.
+               If a quote follows a backslash, the quote is retained and
+               the backslash is deleted. These quotes are NOT treated as
+               delimiters.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -756,6 +866,11 @@ gx_methods = {
         Method('TrimSpace_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Remove leading and/or trailing whitespace.",
+               notes="""
+               THE STRING IS MODIFIED.
+               Whitespace characters are defined as space, tab, carriage return,
+               new line, vertical tab or formfeed (0x09 to 0x0D, 0x20)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -767,6 +882,13 @@ gx_methods = {
         Method('UnQuote_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Remove double quotes from string",
+               notes="""
+               THE STRING IS MODIFIED.
+               The pointers will be advanced past a first character
+               quote and a last character quote will be set to .\\0'.
+               Both first and last characters must be quotes for the
+               triming to take place.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True,
@@ -781,6 +903,15 @@ gx_methods = {
                Generate a group name string
                from type string, database and channel(optional) strings..
                """,
+               notes="""
+               The output group name string is formed in the way of typestr_dbstr_chstr.
+               If the database/channel strings is too long to fit the output string
+               (max total length of 1040, including the NULL ending), then
+               the typestr will always be kept the full length to be the first part,
+               while the dbstr and/or chstr will be shortened to be the
+               second and/or third part of the output string.
+               """,
+               see_also="GenNewGroupName_MVIEW",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -800,6 +931,14 @@ gx_methods = {
         Method('iCountTokens_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Counts number of tokens.",
+               notes="""
+               Delimiters are "soft" in that one or more delimiters
+               is considered a single delimiter, and preceding and
+               trailing delimiters are ignored.
+               
+               DO NOT use this function except in GXC code. The corresponding
+               :func:`IGetToken_STR` function will not operate correctly in GX.Net code.
+               """,
                return_type=Type.INT32_T,
                return_doc="Number of tokens in the string.",
                parameters = [
@@ -812,6 +951,17 @@ gx_methods = {
         Method('IGetToken_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a token from a tokenized string.",
+               notes="""
+               Call :func:`iTokens_STR`  to prepare the tokenized
+               string.
+               You MUST NOT get tokens beyond number of tokens returned
+               by :func:`iTokens_STR` or :func:`iTokens2_STR`.
+               The first token has index 0.
+               
+               DO NOT use this function except in GXC code.
+               :func:`IGetToken_STR` function will not operate correctly in GX.Net code.
+               """,
+               see_also=":func:`iTokens_STR`, GetToken_STR",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
@@ -827,6 +977,38 @@ gx_methods = {
         Method('iTokenize_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Tokenize a string based on any characters.",
+               notes="""
+               This uses a finite state machine to tokenize on these
+               rules:
+               
+               1. Any one character following an escape delimiter is
+               treated as a normal character.
+               
+               2. Any characters inside a quote string are treated as
+               normal characters.
+               
+               3. Any number of Soft delimiters in sequence without a
+               hard delimiter are treated as one hard delimited.
+               
+               4. Any number of soft delimiters can preceed or follow
+               a hard delimiter and are ignored.
+               
+               
+               EXAMPLE
+               
+               Soft = [ ]   Hard = [,]   Escape = [\\]    Quote = ["]
+               
+               [this is a , , the "test," of   ,  \\,\\" my delimite  fi,]
+               
+               Results in:
+               
+               [this] [is] [a] [] [the] ["test,"] [of] [\\,\\"] [my] [delimite] [fi] []
+               
+               
+               NOT use this function except in GXC code. The corresponding
+               etToken_STR function will not operate correctly in GX.Net code.
+               """,
+               see_also="GetToken_STR",
                return_type=Type.INT32_T,
                return_doc="number of tokens",
                parameters = [
@@ -845,6 +1027,15 @@ gx_methods = {
         Method('iTokens_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Tokenize a string",
+               notes="""
+               Delimiters in the string are reduced to a single NULL.
+               Delimiters withing double quoted strings are ignored.
+               Use GetToken_STR to extract tokens.
+               
+               DO NOT use this function except in GXC code. The corresponding
+               :func:`IGetToken_STR` function will not operate correctly in GX.Net code.
+               """,
+               see_also=":func:`iTokens2_STR`, GetToken_STR",
                return_type=Type.INT32_T,
                return_doc="number of tokens, maximum is 2048",
                parameters = [
@@ -857,6 +1048,13 @@ gx_methods = {
         Method('iTokens2_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="General tokenize a string",
+               notes="""
+               This function is for old GX compatibility only.
+               See :func:`iTokenize_STR`.
+               
+               DO NOT use this function except in GXC code. The corresponding
+               :func:`IGetToken_STR` function will not operate correctly in GX.Net code.
+               """,
                return_type=Type.INT32_T,
                return_doc="Number of Tokens",
                parameters = [
@@ -875,6 +1073,15 @@ gx_methods = {
         Method('ParseList_STR', module='geoengine.core', version='5.0.1',
                availability=Availability.PUBLIC, 
                doc="Parse a tokenized list to get a selection list.",
+               notes="""
+               Given a list such as "1,3,4,6-9,12", it fills the
+               input buffer with 1 if the number is selected,
+               0 if not. The items are delimited with spaces
+               or commas, and ranges are acceptable, either using
+               a "-" or ":", e.g.  3-6 and 3:6 both mean 3,4,5, and 6.
+               Only values from 0 to one less than the buffer length
+               are used.  Out-of-range values are ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -891,6 +1098,16 @@ gx_methods = {
         Method('Substr_STR', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, no_gxh=True, 
                doc="Extract part of a string.",
+               notes="""
+               The destination string length will be less than the
+               requested length if the substring is not fully enclosed
+               in the origin string.
+               
+               The length of the destination string MUST be at least
+               the requested lenth plus 1.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',

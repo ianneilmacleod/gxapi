@@ -13,6 +13,7 @@ gx_methods = {
         Method('CreateArcLYR_DATALINKD', module='geoengine.map', version='6.4.0',
                availability=Availability.LICENSED, 
                doc="Create an :class:`DATALINKD` object from a ArcGIS LYR file",
+               notes="Needs ArcEngine licence.",
                return_type="DATALINKD",
                return_doc=":class:`DATALINKD` handle, terminates if creation fails",
                parameters = [
@@ -23,6 +24,7 @@ gx_methods = {
         Method('CreateArcLYREx_DATALINKD', module='geoengine.map', version='9.0.0',
                availability=Availability.LICENSED, 
                doc="Create an :class:`DATALINKD` object from a ArcGIS LYR file",
+               notes="Needs ArcEngine licence.",
                return_type="DATALINKD",
                return_doc=":class:`DATALINKD` handle, terminates if creation fails",
                parameters = [
@@ -35,6 +37,7 @@ gx_methods = {
         Method('CreateArcLYRFromTMP_DATALINKD', module='geoengine.map', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Create an :class:`DATALINKD` object from a temporary ArcGIS LYR file",
+               notes="Needs ArcEngine licence.",
                return_type="DATALINKD",
                return_doc=":class:`DATALINKD` handle, terminates if creation fails",
                parameters = [
@@ -45,6 +48,7 @@ gx_methods = {
         Method('CreateArcLYRFromTMPEx_DATALINKD', module='geoengine.map', version='9.0.0',
                availability=Availability.PUBLIC, 
                doc="Create an :class:`DATALINKD` object from a temporary ArcGIS LYR file",
+               notes="Needs ArcEngine licence.",
                return_type="DATALINKD",
                return_doc=":class:`DATALINKD` handle, terminates if creation fails",
                parameters = [

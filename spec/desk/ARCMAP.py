@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ARCMAP',
                  doc="""
-This library is not a class. It contains various utilities
-used in maps and layers by the Geosoft extensions for ArcGIS.
-""")
+                 This library is not a class. It contains various utilities
+                 used in maps and layers by the Geosoft extensions for ArcGIS.
+                 """)
 
 
 gx_defines = [
@@ -129,6 +129,16 @@ gx_methods = {
         Method('iLoadMAP_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Loads a Geosoft map into the ArcMap document.",
+               notes="""
+               The extra datasets CSV should contain the the following fields:
+               
+                ID          -  Unique identifier
+                DATASOURCE  -  Filename
+                TYPE        -  RASTER and SHAPE supported
+                MAPMATCH    -  Map to associate with (used for grouping logic)
+                VIEWMATCH   -  View to match with in associated map (used for grouping logic)
+                ZONEFILE    -  Used for type RASTER
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -149,6 +159,16 @@ gx_methods = {
         Method('iLoadMAPEx_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Loads a Geosoft map into the ArcMap document, specifying which View to use as Data view.",
+               notes="""
+               The extra datasets CSV should contain the the following fields:
+               
+                ID          -  Unique identifier
+                DATASOURCE  -  Filename
+                TYPE        -  RASTER and SHAPE supported
+                MAPMATCH    -  Map to associate with (used for grouping logic)
+                VIEWMATCH   -  View to match with in associated map (used for grouping logic)
+                ZONEFILE    -  Used for type RASTER
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -204,6 +224,16 @@ gx_methods = {
         Method('LoadMap_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Loads a Geosoft map into the current ArcMap document",
+               notes="""
+               The extra datasets CSV should contain the the following fields:
+               
+                   ID          -  Unique identifier
+                   DATASOURCE  -  Filename
+                   TYPE        -  RASTER and SHAPE supported
+                   MAPMATCH    -  Map to associate with (used for grouping logic)
+                   VIEWMATCH   -  View to match with in associated map (used for grouping logic)
+                   ZONEFILE    -  Used for type RASTER
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -240,6 +270,10 @@ gx_methods = {
         Method('LoadRaster_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Load a raster file to the current data frame",
+               notes="""
+               Loads any file type recognized as "raster" formats by ARC :class:`GIS`.
+               This includes geosoft GRD files.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -249,6 +283,11 @@ gx_methods = {
         Method('LoadShape_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`SHP` file to the current data frame",
+               notes="""
+               The input layer name is created using the (optional) prefix and suffix as follows:
+               
+               Prefix_NAME_Suffix
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -262,6 +301,14 @@ gx_methods = {
         Method('MapViewToShape_ARCMAP', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Create :class:`SHP` file(s) from a Geosoft Map view.",
+               notes="""
+               The output :class:`SHP` file name(s) are made up as follows
+               (where NAME is the input :class:`SHP` file name):
+               
+                     NAME_pt.shp    (point objects)
+                     NAME_ln.shp    (line or arc objects)
+                     NAME_pg.shp    (polygon objects)
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

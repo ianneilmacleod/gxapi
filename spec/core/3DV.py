@@ -31,6 +31,10 @@ gx_methods = {
         Method('ICopyToMAP_3DV', module='geoengine.map', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Copy the :class:`3DV`'s 3D :class:`MVIEW` into a map.",
+               notes="""
+               A :class:`3DV` packs all source files. This functions creates an unpacked map and
+               unpacks the packed files in the same way that UnPackFilesEx in the :class:`MAP` class does.
+               """,
                return_type=Type.VOID,
                return_doc="nothing",
                parameters = [

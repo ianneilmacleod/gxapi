@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('USERMETA',
                  doc="""
-The :class:`USERMETA` class handles user style metadata tied to real
-data.
-""")
+                 The :class:`USERMETA` class handles user style metadata tied to real
+                 data.
+                 """)
 
 
 gx_defines = [

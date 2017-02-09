@@ -65,6 +65,15 @@ gx_methods = {
         Method('GetFileMeta_DOCU', module='geogxx', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Get the document and place in a file with metadata.",
+               notes="""
+               If this document is only a URL link, the URL link will
+               be resolved and the document downloaded from the appropriate
+               server using the protocol specified.
+               
+               The document has metadata, and the native document does not
+               support metadata, the metadata will be placed in an associated
+               file "filename.extension.GeosoftMeta"
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),
@@ -128,6 +137,10 @@ gx_methods = {
         Method('Open_DOCU', module='geogxx', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="Open a document in the document viewer",
+               notes="""
+               On Windows, the default application for the file extension is
+               used to open the file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),
@@ -148,6 +161,40 @@ gx_methods = {
         Method('SetFile_DOCU', module='geogxx', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="Set the document from a file source.",
+               notes="""
+               Document types are normally identified by their extension.  If you
+               leave the document type blank, the extension of the document file
+               will be used as the document type.
+               
+               To resolve conflicting types, you can define your own unique type
+               by entering your own type "extension" string.
+               
+               The following types are pre-defined (as are any normal Geosoft
+               file types):
+               
+                  "htm"       HTML
+                  "html"      HTML
+                  "txt"       ASCII text file
+                  "doc"       Word for Windows document
+                  "pdf"       Adobe PDF
+                  "map"       Geosoft map file
+                  "mmap"      Mapinfo map file (real extension "map")
+                  "grd"       Geosoft grid file
+                  "gdb"       Geosoft database
+               
+               URL Document Links
+               
+               The document name can be a URL link to the document using one of
+               the supported protocols. The following protocols are supported:
+               
+                  http://www.mywebserver.com/MyFile.doc                 - :class:`HTTP`
+                  dap://my.dap.server.com/dcs?DatasetName?MyFile.doc    - DAP (DAP Document Access)
+                  ftp://my.ftp.server.com/Dir1/MyFile.doc               - FTP protocol
+               
+               The full file name will be stored but no data will be stored with
+               the :class:`DOCU` class and the document can be retrieved using the sGetFile_DOCU
+               method.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),
@@ -162,6 +209,23 @@ gx_methods = {
         Method('SetFileMeta_DOCU', module='geogxx', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Set the document from a file source with metadata.",
+               notes="""
+               See :func:`SetFile_DOCU`.
+               This function is the same as sSetFile_DOCU, plus insures that a
+               :class:`META` exists that includes the "Data" class.  If the file has
+               associated metadata, either supported natively in the file, or
+               through an associated file "filename.extension.GeosoftMeta",
+               that metadata will be loaded into the :class:`DOCU` meta, and a Data
+               class will be constructed if one does not exist.
+               
+               Also, the Document type Extension is very important in that it
+               specifies the document types that natively have metadata. The
+               ones currently supported are:
+               
+                  "map"       Geosoft map file
+                  "gdb"       Geosoft database
+                  "grd"       Geosoft grid file
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),

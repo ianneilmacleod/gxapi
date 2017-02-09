@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('ARCDB',
                  doc="""
-The :class:`ARCDB` class is used in ArcGIS to access table contents from
-data sources and layers.
-""")
+                 The :class:`ARCDB` class is used in ArcGIS to access table contents from
+                 data sources and layers.
+                 """)
 
 
 gx_defines = [
@@ -70,6 +70,12 @@ gx_methods = {
         Method('ExportToDB_ARCDB', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Export data from an :class:`ARCDB` table into a group in a Geosoft GDB using a template.",
+               notes="""
+               1. The import template can be in the local directory or the :class:`GEOSOFT`
+                  directory.
+               
+               3. If the line already exists, the data will overwrite the existing data.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ARCDB",
@@ -85,6 +91,10 @@ gx_methods = {
         Method('FieldLST_ARCDB', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Place the list of field names in a :class:`LST`.",
+               notes="""
+               If Z or M values are supported by the table geometry the strings
+               "<Z Values>" and "<M Values>" will be added accordingly.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ARCDB",
@@ -108,6 +118,10 @@ gx_methods = {
         Method('GetIPJ_ARCDB', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Get georeference information from a table.",
+               notes="""
+               If the table does not have an :class:`IPJ`, the :class:`IPJ` that is
+               returned will have an unknown projection.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="ARCDB",
@@ -171,6 +185,7 @@ gx_methods = {
         Method('SelTblGUI_ARCDB', module='geoarcgis', version='8.0.0',
                availability=Availability.PUBLIC, 
                doc="Select table :class:`GUI`.",
+               notes="Terminates with Cancel on cancel, returns :def_val:`ARCDB_NULL` if there are no valid tables in current document.",
                return_type="ARCDB",
                return_doc="Handle to the table")
     ]

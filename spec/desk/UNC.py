@@ -2,15 +2,15 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('UNC',
                  doc="""
-This library is not a class. Use the :class:`UNC` library functions
-to work with Unicode characters and strings. Since version 6.2
-all strings are represented internally in the the GX engine
-as UTF-8. The character set concept was discarded as a way to
-work with characters that does not fall within the normal
-ASCII range 0x01-0x7F. The utilities here aids with any new
-functionality that is now possible (e.g. an expanded symbol range
-with TrueType fonts).
-""")
+                 This library is not a class. Use the :class:`UNC` library functions
+                 to work with Unicode characters and strings. Since version 6.2
+                 all strings are represented internally in the the GX engine
+                 as UTF-8. The character set concept was discarded as a way to
+                 work with characters that does not fall within the normal
+                 ASCII range 0x01-0x7F. The utilities here aids with any new
+                 functionality that is now possible (e.g. an expanded symbol range
+                 with TrueType fonts).
+                 """)
 
 
 gx_defines = [
@@ -52,6 +52,7 @@ gx_methods = {
         Method('UTF16ValToSTR_UNC', module='geogxx', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Convert a UTF-16 value to a UTF-8 encoded string.",
+               notes="An empty string will be returned for invalid symbols",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -68,6 +69,7 @@ gx_methods = {
                High performance method to see if a set of symbols
                are valid in a particular font.
                """,
+               notes="Invalid symbols in the :class:`VV` will be set to -1 by this call. :class:`VV` has to be of type :def_val:`GS_LONG`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VV",

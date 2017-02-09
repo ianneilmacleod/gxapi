@@ -2,16 +2,16 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('EDB',
                  doc="""
-The :class:`EDB` class provides access to a database as displayed within
-Oasis montaj, but does not change data within the database itself.
-It performs functions such as setting the current line.
-""",
+                 The :class:`EDB` class provides access to a database as displayed within
+                 Oasis montaj, but does not change data within the database itself.
+                 It performs functions such as setting the current line.
+                 """,
                  notes="""
-To obtain access to the database itself, it is recommended practice
-to begin with an :class:`EDB` object, and use the :func:`Lock_EDB` function to
-lock the underlying map to prevent external changes. The returned
-:class:`DB` object (see :class:`DB`) may then be safely used to make changes to the map itself.
-""")
+                 To obtain access to the database itself, it is recommended practice
+                 to begin with an :class:`EDB` object, and use the :func:`Lock_EDB` function to
+                 lock the underlying map to prevent external changes. The returned
+                 :class:`DB` object (see :class:`DB`) may then be safely used to make changes to the map itself.
+                 """)
 
 
 gx_defines = [
@@ -192,6 +192,10 @@ gx_methods = {
         Method('CurrentNoActivate_EDB', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="This method returns the Current Edited Database.",
+               notes="""
+               This function acts just like :func:`Current_EDB` except that the document is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EDB",
                return_doc=":class:`EDB` Object"),
 
@@ -207,6 +211,7 @@ gx_methods = {
         Method('DelLine0_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Delete Line 0.",
+               notes="Deletes an empty line 0 from the database.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB")
@@ -215,6 +220,7 @@ gx_methods = {
         Method('Destroy_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Destroy :class:`EDB` handle.",
+               notes="This does not unload the database; it simply deletes the gx resource handle",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -224,6 +230,13 @@ gx_methods = {
         Method('DestroyView_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Removes the view from the workspace.",
+               notes="""
+               Can only be run in interactive mode. After this call the
+               :class:`EDB` object will become invalid. If this is the last view on
+               the document and the document has been modified the map will be
+               unloaded and optionally saved depending on the :def:`EDB_REMOVE`
+               parameter.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -371,6 +384,16 @@ gx_methods = {
         Method('GetProfileSplitVV_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get profile window splits.",
+               notes="""
+               The returned :class:`VV` is sized to the maximum number of profiles
+               that can be displayed. If a profile is not currently displayed,
+               its height fraction is 0.  The sum of all the fractions returned
+               is equal to 1.
+               
+               The profile splits refers to the relative sizes of the individual
+               profile windows. To get/set the fraction of the total database window
+               devoted to the profiles, use the :func:`SetSplit_EDB` and :func:`rGetSplit_EDB` functions.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -457,6 +480,13 @@ gx_methods = {
         Method('iAllChanList_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get a list of the all channels but in the way they are displayed.",
+               notes="""
+               The :class:`VV` elements must be INT.
+               
+               Displayed channel lists are filled in the order the channels
+               appear on the display, left to right.
+               """,
+               see_also=":func:`iDispChanList_EDB`",
                return_type=Type.INT32_T,
                return_doc="""
                Number of symbols in the list.
@@ -481,6 +511,13 @@ gx_methods = {
         Method('iDispChanList_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get a list of the displayed channel symbols.",
+               notes="""
+               The :class:`VV` elements must be INT.
+               
+               Displayed channel lists are filled in the order the channels
+               appear on the display, left to right.
+               """,
+               see_also=":func:`iDispChanLST_EDB`",
                return_type=Type.INT32_T,
                return_doc="""
                Number of symbols in the list.
@@ -496,6 +533,14 @@ gx_methods = {
         Method('iDispChanLST_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get a list of the displayed channel names.",
+               notes="""
+               Displayed channel lists are filled in the order the channels
+               appear on the display, left to right.
+               
+               The channel names will be placed in the "Name" part of
+               the list and the values are set to the symbol handle.
+               """,
+               see_also=":func:`iDispChanList_EDB`",
                return_type=Type.INT32_T,
                return_doc="""
                Number of channels in the list.
@@ -511,6 +556,17 @@ gx_methods = {
         Method('iDispClassChanLST_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get a list of the displayed channels in a given channel class.",
+               notes="""
+               Displayed channel lists are filled in the order the channels
+               appear on the display, left to right.
+               
+               The channel names will be placed in the "Name" part of
+               the list and the values are set to the symbol handle.
+               
+               Examples of channel classes in current use are "MASK" and
+               "ASSAY". (Searches are case tolerant).
+               """,
+               see_also=":func:`iDispChanList_EDB`",
                return_type=Type.INT32_T,
                return_doc="""
                Number of channels in the list.
@@ -567,6 +623,7 @@ gx_methods = {
         Method('IGetCurChan_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get current channel name.",
+               notes='returns "" if mark not currently in a channel.',
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -628,6 +685,13 @@ gx_methods = {
         Method('IGetCurrentSelection_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get current selection information.",
+               notes="""
+               Channel Name    Empty if no channel
+               Line Name       "[All]" if all lines are selected
+               Fid Range       "[All]" if all values in all lines are selected
+               "[None]"  if no values are selected
+               "10 to 20"  giving the range of values.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -668,6 +732,14 @@ gx_methods = {
         Method('iGetMarkChanVV_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get channel data for the current mark.",
+               notes="""
+               The current "mark" in this case is the start and
+               end fiducials and not the selected channel. You
+               can use this method to retrieve the selected range
+               from any channel, loaded or not.
+               
+               The :class:`VV` will be resized to the length of the data
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if successful.
@@ -685,6 +757,14 @@ gx_methods = {
         Method('iGetMarkChanVA_EDB', module='None', version='8.2.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Get channel data for the current mark.",
+               notes="""
+               The current "mark" in this case is the start and
+               end fiducials and not the selected channel. You
+               can use this method to retrieve the selected range
+               from any channel, loaded or not.
+               
+               The :class:`VA` will be resized to the length of the data
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if successful.
@@ -764,6 +844,10 @@ gx_methods = {
         Method('iProfileOpen_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Return TRUE or FALSE if profile window is open",
+               notes="""
+               This functions will return FALSE if requested window
+               is not supported in current version of Oasis montaj.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                TRUE if window is open
@@ -827,6 +911,7 @@ gx_methods = {
         Method('iShowProfileName_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Show a profile in the profile window",
+               notes="If the symbol is not loaded, it will be loaded.",
                return_type=Type.INT32_T,
                return_doc="Profile ID if loaded, -1 for error",
                parameters = [
@@ -862,6 +947,7 @@ gx_methods = {
         Method('LaunchHistogram_EDB', module='geochimera', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Launch histogram tool on a database.",
+               see_also=":func:`LaunchHistogram_CHIMERA` in chimera.gxh",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -873,6 +959,16 @@ gx_methods = {
         Method('LaunchScatter_EDB', module='geochimera', version='5.0.6',
                availability=Availability.PUBLIC, 
                doc="Launch scatter tool on a database.",
+               notes="""
+               The scatter tool uses the following INI parameters
+               
+               SCATTER.STM       name of the scatter template,"none" for none
+               SCATTER.STM_NAME  name of last template section, "" for none.
+               SCATTER.X         name of channel to display in X
+               SCATTER.Y         name of channel to display in Y
+               SCATTER.MASK      name of channel to use for mask
+               """,
+               see_also=":func:`LaunchScatter_CHIMERA` in chimera.gxh",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -882,6 +978,15 @@ gx_methods = {
         Method('Load_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads a list of databases into the workspace",
+               notes="""
+               The last listed database will become the current database.
+               
+               Databases may already be loaded.
+               
+               Only the first file in the list may have a directory path.
+               All other files in the list are assumed to be in the same
+               directory as the first file.
+               """,
                return_type="EDB",
                return_doc="""
                Handle to current edited database, which will be the last
@@ -895,6 +1000,10 @@ gx_methods = {
         Method('LoadNoActivate_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads documents into the workspace",
+               notes="""
+               This function acts just like :func:`Load_EDB` except that the document(s) is not activated (brought to foreground) and no
+               guarantee is given about which document is currently active.
+               """,
                return_type="EDB",
                return_doc="""
                Handle to current edited document, which will be the last
@@ -916,6 +1025,10 @@ gx_methods = {
         Method('LoadChan_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Load a channel into current database",
+               notes="""
+               If the channel does not exist, or if channel is already
+               loaded nothing happens.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -927,6 +1040,11 @@ gx_methods = {
         Method('LoadNew_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads a database into the workspace, flags as new.",
+               notes="""
+               See :func:`Load_EDB`. This is used for brand new databases, to set
+               an internal flag such that if on closing the user chooses
+               not to save changes, the database is deleted.
+               """,
                return_type="EDB",
                return_doc="Handle to the current edited database.",
                parameters = [
@@ -937,6 +1055,12 @@ gx_methods = {
         Method('LoadPass_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Loads a database into the editor with login and password.",
+               notes="""
+               The loaded database will become the current database.
+               
+               If the database is already loaded, it simply becomes
+               the current database.
+               """,
                return_type="EDB",
                return_doc="Handle to current edited database.",
                parameters = [
@@ -951,6 +1075,11 @@ gx_methods = {
         Method('LoadWithView_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Load an :class:`EDB` with the view from a current :class:`EDB`.",
+               notes="""
+               Can only be run in interactive mode. Is used by
+               dbsubset to create a new database with the same
+               view as previously.
+               """,
                return_type="EDB",
                return_doc="New :class:`EDB` handle.",
                parameters = [
@@ -1036,6 +1165,10 @@ gx_methods = {
         Method('RunChannelMaker_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Run the maker for a single channel.",
+               notes="""
+               Skips channels without makers; will not return an
+               error if the channel does not exist.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1046,6 +1179,7 @@ gx_methods = {
         Method('RunChannelMakers_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Recreate channels with makers.",
+               notes="Skips channels without makers.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB")
@@ -1135,6 +1269,10 @@ gx_methods = {
         Method('SetProfileRangeY_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set profile Y range and display option",
+               notes="""
+               If channel is not loaded or displayed, it will
+               loaded and/or displayed.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1181,6 +1319,14 @@ gx_methods = {
         Method('SetProfileSplitVV_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set profile splits",
+               notes="""
+               The input :class:`VV` values are the fractional heights for each
+               profile window. Values are summed, and normalized (so you can
+               enter "1,1,1", with a :class:`VV` of length 3, if you want 3 equal profile windows).
+               
+               :class:`VV` values beyond the maximum number of displayable
+               profiles (:def_val:`MAX_PROF_WND`) are ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1191,6 +1337,10 @@ gx_methods = {
         Method('SetSplit_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Set split ratio between spreadsheet and profile sections.",
+               notes="""
+               d = (spreadsheet window height/
+               (spreadsheet window height + entire profile window height))
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1211,6 +1361,7 @@ gx_methods = {
         Method('ShowProfile_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Show a profile in the profile window",
+               notes="If the symbol is not loaded, it will be loaded.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1223,6 +1374,7 @@ gx_methods = {
         Method('Statistics_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Add all currently selected data to the :class:`ST`.",
+               notes="Use :func:`Histogram_EDB` to get median or histogram.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -1234,6 +1386,10 @@ gx_methods = {
         Method('UnLoad_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited database.",
+               notes="""
+               If the database is not loaded, nothing happens.
+               Same as :func:`UnLoadVerify_EDB` with FALSE to prompt save.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1256,6 +1412,10 @@ gx_methods = {
         Method('UnLoadChan_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unload a channel into current database",
+               notes="""
+               If the channel does not exist, or if channel is already
+               loaded nothing happens.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -1267,6 +1427,7 @@ gx_methods = {
         Method('UnLoadDiscard_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads a database in the workspace, discards changes.",
+               notes="If the database is not loaded, nothing happens.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1276,6 +1437,13 @@ gx_methods = {
         Method('UnLoadVerify_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Unloads an edited database, optional prompt to save.",
+               notes="""
+               If the database is not loaded, nothing happens.
+               The user can be prompted to save before unloading.
+               If :def_val:`EDB_UNLOAD_NO_PROMPT`, data is always saved.
+               EDB_UNLOAD_MULTIPROMPT is now obsolete and
+               is equivalent to :def_val:`EDB_UNLOAD_SINGLE_PROMPT`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1349,6 +1517,72 @@ gx_methods = {
         Method('NoLoad_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Makes a database the Edited Database without loading it.",
+               notes="""
+               If the database is already loaded, this is identical to :func:`Load_EDB`.
+               
+               (Otherwise) This makes the database the current edited database without
+               actually loading it into the workspace. This is useful for
+               looping through a series of databases without bringing up
+               the database window for each. This is useful for GXs which
+               typically begin with
+               
+               EData = :func:`Current_EDB`();
+               Data = :func:`Lock_EDB`(EData);
+               
+               and end with
+               
+               :func:`UnLock_EDB`(EData);
+               
+               and do not actually use the :class:`EDB` handle for anything else.
+               After calling :func:`NoLoad_EDB`, the :func:`Current_EDB`() call does nothing
+               but store the name of the database defined by :func:`NoLoad_EDB`,
+               and :func:`Lock_EDB`(EData) functions as a call to :func:`Open_DB`(),
+               while :func:`UnLock_EDB` functions as a call to :func:`Destroy_DB`, and will
+               clear the "NoLoad" flag.
+               Calls to other :class:`EDB` functions will return an error after a
+               call to :func:`NoLoad_EDB`, as the database is not really being editted.
+               
+               The handle returned by this function does not behave in the same way
+               as it would by one returned from :func:`Load_EDB` within the same GX.
+               It was initially designed to "spoof" a loaded database right before
+               a call to :func:`iRunGX_SYS` where the GX loaded expects a database
+               using the :func:`Current_EDB` function. If you want to lock the handle WITHIN
+               the same GX you need to make a call to :func:`Current_EDB` before you can
+               lock the EData handle and use some _DB functions. Also after each
+               Unlock_EDB and before :func:`iRunGX_SYS` (where the GX run used a
+               :func:`Current_EDB`->:func:`Lock_EDB`->:func:`UnLock_EDB`) sequence :func:`NoLoad_EDB` has
+               to be called again. For example:
+               
+               {
+               ...
+               
+               EData = :func:`NoLoad_EDB`("database.gdb");
+               
+               :func:`iRunGX_SYS`("... // GX contains :func:`Current_EDB`->:func:`Lock_EDB`->:func:`UnLock_EDB`
+               
+               EData = :func:`NoLoad_EDB`("database.gdb");
+               EData = :func:`Current_EDB`();
+               Data = :func:`Lock_EDB`(EData);
+               
+               ...
+               ... Some _DB functions
+               ...
+               
+               :func:`UnLock_EDB`(EData);
+               
+               ....
+               
+               EData = :func:`NoLoad_EDB`("database.gdb");
+               
+               :func:`iRunGX_SYS`("... // GX contains :func:`Current_EDB`->:func:`Lock_EDB`->:func:`UnLock_EDB`
+               
+               :func:`UnLock_EDB`(EData);
+               
+               ...
+               }
+               
+               Obsolete
+               """,
                return_type="EDB",
                return_doc="Handle to current edited database",
                parameters = [
@@ -1359,6 +1593,16 @@ gx_methods = {
         Method('ReadDataViewBF_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Retrieve view info from the database via a :class:`BF`.",
+               notes="""
+               Returns info on loaded channels and profiles for a given line.
+               You can use :def_val:`NULLSYMB` to get the line view info from normal lines,
+               since the info is the same for all "regular" lines.
+               A typical usage would be to call :func:`ReadDataViewBF_EDB` to get view
+               info from one database, and then call :func:`WriteDataViewBF_EDB` to
+               load this information into another database.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -1372,6 +1616,16 @@ gx_methods = {
         Method('WriteDataViewBF_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Write the View info from a :class:`BF` into the database.",
+               notes="""
+               Set info on loaded channels and profiles for a given line.
+               You can use :def_val:`NULLSYMB` to get the line view info from normal lines,
+               since the info is the same for all "regular" lines.
+               A typical usage would be to call :func:`ReadDataViewBF_EDB` to get view
+               info from one database, and then call :func:`WriteDataViewBF_EDB` to
+               load this information into another database.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB",
@@ -1385,6 +1639,16 @@ gx_methods = {
         Method('SetWindowArea_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Set the location of the database window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               if the max values are equal or less than the min values
+               the window will be mimimized. If any Min values are :def_val:`iMIN`
+               or any Max values are :def_val:`iMAX`, the window is maximized.
+               
+               NOTE: Now Obsolete. Use :func:`SetWindowPosition_EDB`, which includes multi-monitor support.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
@@ -1401,6 +1665,17 @@ gx_methods = {
         Method('GetWindowArea_EDB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Get the location of the database window within the frame.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the bottom
+               left corner Oasis montaj frame window.
+               
+               If the window is minimized, the max values will be
+               equal to the min values. If the window is maximized
+               X Min and Y min will be :def_val:`iMIN` and X max and Y max
+               will be :def_val:`iMAX`.
+               
+               NOTE: Now Obsolete. Use :func:`GetWindowPosition_EDB`, which includes multi-monitor support.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),

@@ -66,6 +66,12 @@ gx_methods = {
         Method('AxisX_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Draw an X axis",
+               notes="""
+               When Log annotation is applied, nice tick intervals will be
+               calculated
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -86,6 +92,12 @@ gx_methods = {
         Method('AxisY_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Draw a  Y axis",
+               notes="""
+               When Log annotation is applied, nice tick intervals will be
+               calculated
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -106,6 +118,7 @@ gx_methods = {
         Method('Create_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a :class:`MVG` object",
+               notes="Obsolete",
                return_type="MVG",
                return_doc=":class:`MVG` handle (NULL if error)",
                parameters = [
@@ -134,6 +147,7 @@ gx_methods = {
         Method('Destroy_MVG', module='geogxx', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Destroy the :class:`MVG` handle.",
+               notes="Obsolete",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG",
@@ -143,6 +157,7 @@ gx_methods = {
         Method('GetMVIEW_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get the :class:`MVIEW` Handle of the Object.",
+               notes="Obsolete",
                return_type="MVIEW",
                return_doc=":class:`MVIEW` Handle",
                parameters = [
@@ -153,6 +168,15 @@ gx_methods = {
         Method('Grid_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Draw a grid in the current :class:`MVG`",
+               notes="""
+               The grid will be drawn in the current window.
+               
+               In the LOG and LOGLINEAR rescaling modes, grids will be
+               drawn in decades and the X/Y grid increments will be
+               ignored.  In addition, grid lines at 0 (zero) and LOGMIN will be drawn.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -175,6 +199,15 @@ gx_methods = {
         Method('LabelX_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Label annotations on the X axis",
+               notes="""
+               Label bounding will justify edge labels to be inside
+               the bar limits.
+               
+               When Log annotation is applied, labels will be drawn in decades.
+               
+               Obsolete
+               """,
+               see_also="sAxisX_MVG",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -197,6 +230,15 @@ gx_methods = {
         Method('LabelY_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Label annotations on the Y axis",
+               notes="""
+               Label bounding will justify edge labels to be inside
+               the bar limits.
+               
+               When Log annotation is applied, labels will be drawn in decades.
+               
+               Obsolete
+               """,
+               see_also="sAxisY_MVG",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -219,6 +261,16 @@ gx_methods = {
         Method('PolyLineVA_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Creates PolyLines/polygons from :class:`VV` and :class:`VA`.",
+               notes="""
+               If the :class:`VV` contains dummies, the polylines
+               will break at the dummies; the polygons
+               will skip the dummies.
+               
+               If wrapping is applied, POLYGON parameter is ignored and
+               only POLYLINES are drawn.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -237,6 +289,16 @@ gx_methods = {
         Method('PolyLineVV_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Creates PolyLines/polygons from :class:`VV` and :class:`VV`.",
+               notes="""
+               If the :class:`VV` contains dummies, the polylines
+               will break at the dummies; the polygons
+               will skip the dummies.
+               
+               If wrapping is applied, POLYGON parameter is ignored and
+               only POLYLINES are drawn.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG"),
@@ -253,6 +315,12 @@ gx_methods = {
         Method('RescaleXRange_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Re-scale horizontal axis",
+               notes="""
+               When RescaleX_MVG is used, only the scaling information
+               related to X axis will be considered
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG",
@@ -270,6 +338,12 @@ gx_methods = {
         Method('RescaleYRange_MVG', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Re-scale vertical axis",
+               notes="""
+               When RescaleY_MVG is used, only the scaling information
+               related to Y axis will be considered
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MVG",

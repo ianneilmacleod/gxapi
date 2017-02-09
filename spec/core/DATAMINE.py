@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DATAMINE',
                  doc="""
-:class:`DATAMINE` functions provide an interface to Datamine Software Limited files.
-See also :class:`GIS` for various other Datamine-specific functions.
-""",
+                 :class:`DATAMINE` functions provide an interface to Datamine Software Limited files.
+                 See also :class:`GIS` for various other Datamine-specific functions.
+                 """,
                  notes="None.")
 
 
@@ -27,6 +27,7 @@ gx_methods = {
         Method('CreateVoxel_DATAMINE', module='geoengine.interoperability', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Create a Geosoft Voxel file from a Datamine block model file.",
+               notes="Create a Geosoft Voxel file from a Datamine block model file.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -44,6 +45,11 @@ gx_methods = {
         Method('NumericFieldLST_DATAMINE', module='geoengine.interoperability', version='6.3.0',
                availability=Availability.LICENSED, 
                doc="Return a :class:`LST` containing the non-standard numeric fields in a Datamine file.",
+               notes="""
+               At this time, only :def_val:`GIS_DMTYPE_BLOCKMODEL` files are supported.
+               The field names go in the name part, and field indices (1 to N)
+               in the value part.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,

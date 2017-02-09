@@ -2,15 +2,15 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('STK',
                  doc="""
-The :class:`STK` class is used for plotting a single data profile in
-an :class:`MVIEW`. The :class:`MSTK` class (see :class:`MSTK`) is used to plot
-multiple :class:`STK` objects to a single map.
-
-Use :func:`AddSTK_MSTK` fuction to create a :class:`STK` object before
-using functions in this file
-
-SEE :class:`MSTK` FILE FOR DETAILED DESCRIPTIONS OF ALL FUNCTION PARAMETERS.
-""")
+                 The :class:`STK` class is used for plotting a single data profile in
+                 an :class:`MVIEW`. The :class:`MSTK` class (see :class:`MSTK`) is used to plot
+                 multiple :class:`STK` objects to a single map.
+                 
+                 Use :func:`AddSTK_MSTK` fuction to create a :class:`STK` object before
+                 using functions in this file
+                 
+                 SEE :class:`MSTK` FILE FOR DETAILED DESCRIPTIONS OF ALL FUNCTION PARAMETERS.
+                 """)
 
 
 gx_defines = [
@@ -55,6 +55,13 @@ gx_methods = {
         Method('GetTransParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get transformation parameters in :class:`STK` object",
+               notes="""
+               See above full description of each parameters
+               :class:`VV`'s for X channel transformation can be NULL if the
+               transformation is log or loglinear. The same for Y channel.
+               
+               See :class:`MSTK` for detailed description of all function parameters
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -80,6 +87,7 @@ gx_methods = {
         Method('iGetAxisFormat_STK', module='geogxx', version='5.1.5',
                availability=Availability.LICENSED, 
                doc="Get axis number display format.",
+               notes="By default, :def_val:`DB_CHAN_FORMAT_NORMAL`",
                return_type=Type.INT32_T,
                return_doc="The current format - :def:`DB_CHAN_FORMAT`",
                parameters = [
@@ -92,6 +100,10 @@ gx_methods = {
         Method('IGetAxisParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get parameters in :class:`STK` object relating drawing X/Y axis",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -123,6 +135,7 @@ gx_methods = {
         Method('IGetFidParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get parameters in :class:`STK` object relating drawing fid ticks",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -163,6 +176,7 @@ gx_methods = {
         Method('IGetGenParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get general parameters in :class:`STK` object",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -200,6 +214,10 @@ gx_methods = {
         Method('IGetGridParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get background grid parameters in :class:`STK` object",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -233,6 +251,12 @@ gx_methods = {
         Method('IGetLabelParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get parameters in :class:`STK` object relating X/Y axis labels",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               Sets the label format to GSF_NORMAL. To override this,
+               use the :func:`SetAxisFormat_STK` function AFTER calling this.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -268,6 +292,7 @@ gx_methods = {
         Method('IGetProfile_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get profile parameters in :class:`STK` object",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -313,6 +338,7 @@ gx_methods = {
         Method('IGetProfileEx_STK', module='geogxx', version='5.0.3',
                availability=Availability.LICENSED, 
                doc="Get profile parameters in :class:`STK` object (added Break on dummy option)",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -360,6 +386,7 @@ gx_methods = {
         Method('IGetSymbParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get parameters in :class:`STK` object relating drawing symbols",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -407,6 +434,10 @@ gx_methods = {
         Method('IGetTitleParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Get parameters in :class:`STK` object relating X/Y axis titles",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -461,6 +492,11 @@ gx_methods = {
         Method('SetArrayColors_STK', module='geogxx', version='5.0.1',
                availability=Availability.LICENSED, 
                doc="Set colours for individual channels in a :class:`VA`, via an :class:`ITR`",
+               notes="""
+               The :class:`ITR` is consulted by taking the channel index and dividing
+               by the number of channels; hence the :class:`ITR` maximum values should
+               be in the range: 0 > values >= 1.0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -472,6 +508,10 @@ gx_methods = {
         Method('SetAxisFormat_STK', module='geogxx', version='5.1.5',
                availability=Availability.LICENSED, 
                doc="Set axis number display format.",
+               notes="""
+               By default, :def_val:`DB_CHAN_FORMAT_NORMAL` is used to display the values,
+               or for values > 1.e7, :def_val:`DB_CHAN_FORMAT_EXP`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -485,6 +525,10 @@ gx_methods = {
         Method('SetAxisParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set parameters in :class:`STK` object relating drawing X/Y axis",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -514,6 +558,7 @@ gx_methods = {
         Method('SetFidParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set parameters in :class:`STK` object relating drawing fid ticks",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -535,6 +580,7 @@ gx_methods = {
         Method('SetGenParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set general parameters in :class:`STK` object",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -566,6 +612,10 @@ gx_methods = {
         Method('SetGridParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set background grid parameters in :class:`STK` object",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -597,6 +647,12 @@ gx_methods = {
         Method('SetLabelParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set parameters in :class:`STK` object relating X/Y axis labels",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               Sets the label format to GSF_NORMAL. To override this,
+               use the :func:`SetAxisFormat_STK` function AFTER calling this.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -628,6 +684,7 @@ gx_methods = {
         Method('SetLineParm_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set line parameter (of Y Chan) in :class:`STK` object",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -639,6 +696,7 @@ gx_methods = {
         Method('SetProfile_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set profile parameters in :class:`STK` object",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -676,6 +734,7 @@ gx_methods = {
         Method('SetProfileEx_STK', module='geogxx', version='5.0.3',
                availability=Availability.LICENSED, 
                doc="Set profile parameters in :class:`STK` object (added Break on dummy option)",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -715,6 +774,7 @@ gx_methods = {
         Method('SetSymbParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set parameters in :class:`STK` object relating drawing symbols",
+               notes="See :class:`MSTK` for detailed description of all function parameters",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -752,6 +812,10 @@ gx_methods = {
         Method('SetTitleParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set parameters in :class:`STK` object relating X/Y axis titles",
+               notes="""
+               See :class:`MSTK` for detailed description of all function parameters
+               ? mark in the note represent either X and Y
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -785,6 +849,12 @@ gx_methods = {
         Method('SetTransParms_STK', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Set transformation parameters in :class:`STK` object",
+               notes="""
+               See above full description of each parameters
+               :class:`VV`'s for X channel transformation can be NULL if the
+               transformation is log or loglinear. The same for Y channel.
+               See :class:`MSTK` for detailed description of all function parameters
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",
@@ -810,6 +880,11 @@ gx_methods = {
         Method('SetVAIndexStart_STK', module='geogxx', version='6.0.1',
                availability=Availability.LICENSED, 
                doc="Start array profile index labels at 0 or 1.",
+               notes="""
+               By default, the index labels for array channel profiles
+               begin at 0. Use this function to start them at either 0
+               or 1.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="STK",

@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('VAU',
                  doc="""
-This is not a class. These are methods that work on
-data stored in :class:`VA` objects
-""")
+                 This is not a class. These are methods that work on
+                 data stored in :class:`VA` objects
+                 """)
 
 
 gx_defines = [
@@ -55,6 +55,11 @@ gx_methods = {
         Method('Prune_VAU', module='geogxx', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Prune values from a :class:`VA` based on reference :class:`VA`",
+               notes="""
+               Pruning will shorten the :class:`VA` by removing values
+               that are either dummy or non-dummy in the reference
+               :class:`VA`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VA",

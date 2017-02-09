@@ -2,14 +2,19 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('DB',
                  doc="""
-The :class:`DB` class is used to create, open and work with databases and database symbols.
-Database symbols are objects inside databases, such as lines, channels and blobs
-""",
+                 The :class:`DB` class is used to create, open and work with databases and database symbols.
+                 Database symbols are objects inside databases, such as lines, channels and blobs
+                 """,
                  notes="""
-The follwing defines are not used by any methods but are
-used by GX's:
-
-:def_val:`DB_ACTIVITY_BLOB`
+                 The follwing defines are not used by any methods but are
+                 used by GX's:
+                 
+                 :def_val:`DB_ACTIVITY_BLOB`
+                 """,
+                 verbatim_gxh_defines="""
+#define LOCK_RW(A,B) LockSymb_DB(A,B,DB_LOCK_READWRITE,DB_WAIT_NONE)
+#define LOCK_R(A,B)  LockSymb_DB(A,B,DB_LOCK_READONLY,DB_WAIT_NONE)
+#define UNLOCK(A,B)  UnLockSymb_DB(A,B)
 """)
 
 
@@ -329,6 +334,10 @@ gx_methods = {
         Method('GetChanStr_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -348,6 +357,11 @@ gx_methods = {
         Method('GetChanVV_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Place the contents of a channel in a :class:`VV`.",
+               notes="""
+               If a :class:`VA` channel is specified, then element [0] of this
+               :class:`VA` channel is used to populated the :class:`VV`.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -367,6 +381,11 @@ gx_methods = {
                treaded as a :class:`VV` channel with multiple values per fid and the FID expation
                is set to the array size.
                """,
+               notes="""
+               This method is to be used in conjunction with the :func:`ReFidVV_VV` method
+               that will honor the FID Expansion setting.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -382,6 +401,10 @@ gx_methods = {
         Method('GetIPJ_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get georeference information in an :class:`IPJ`.",
+               notes="""
+               If the channel does not have an :class:`IPJ`, the :class:`IPJ` that is
+               returned will have an unknown projection.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -395,6 +418,11 @@ gx_methods = {
         Method('GetITR_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get :class:`ITR` for a channel.",
+               notes="""
+               If a channel does not have an :class:`ITR`, :func:`GetITR_DB` will not change
+               the passed :class:`ITR`.
+               Channel must be locked for READONLY or READWRITE.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -421,6 +449,25 @@ gx_methods = {
         Method('GetRegSymbSetting_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get a :class:`REG` string setting from a symbol reg",
+               notes="""
+               The symbol :class:`REG` is used to store a variety of attribute
+               about the symbol.  Following a conventionally used entries:
+               
+               UNITS                   - channel units
+               CLASS                   - symbol class name (i.e. "Assay")
+               _PJ_ipj                 - projection blob name
+               _PJ_x                   - projection coordinate pair
+               _PJ_y
+               _PJ_name                - projection GXF-style info
+               _PJ_ellipsoid
+               _PJ_projection
+               _PJ_units
+               _PJ_datum_transform
+               
+               This is a convenient but low-performance way to get/set :class:`REG`
+               settings.  If performance is an issue, and more than one
+               setting is to be Get and or Set, use the :class:`REG` directly.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -438,6 +485,11 @@ gx_methods = {
         Method('GetVaChanVV_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="Place the contents of a specific part of a channel in a :class:`VV`.",
+               notes="""
+               If a :class:`VA` channel is specified, then element [0] of this
+               :class:`VA` channel is used to populated the :class:`VV`.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -477,6 +529,10 @@ gx_methods = {
         Method('IFormatChan_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Format a real value based on a channel format.",
+               notes="""
+               If the passed string is too short, the result will be
+               "**".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -509,6 +565,12 @@ gx_methods = {
         Method('IGetChanClass_DB', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="This method gets a channel's label",
+               notes="""
+               The channel label is stored in the "CLASS" parameter
+               of the channel reg. If no class is defined, then an
+               empty string is returned.
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -527,6 +589,7 @@ gx_methods = {
                This method gets a channel's number of digits displayed
                to the right of the decimal point.
                """,
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc="Number of digits displayed to right of decimal",
                parameters = [
@@ -542,6 +605,10 @@ gx_methods = {
                This method Gets a channel's display format for a
                given channel handle.
                """,
+               notes="""
+               The returned format is one of the :def:`DB_CHAN_FORMAT`.
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.INT32_T,
                return_doc="Channel display format",
                parameters = [
@@ -554,6 +621,10 @@ gx_methods = {
         Method('iGetChanInt_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                Value, or dummy if out of range.
@@ -573,6 +644,12 @@ gx_methods = {
         Method('IGetChanLabel_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method gets a channel's label",
+               notes="""
+               The channel label is stored in the "LABEL" parameter
+               of the channel reg.  If the setting is empty, the
+               channel name is returned.
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -591,6 +668,7 @@ gx_methods = {
                This method Gets a channel's name for a
                given channel handle.
                """,
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -606,6 +684,7 @@ gx_methods = {
         Method('iGetChanProtect_DB', module='geoengine.core', version='6.0.1',
                availability=Availability.PUBLIC, 
                doc="This method gets a channel's read-only protection status.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc=":def:`DB_CHAN_PROTECTION`",
                parameters = [
@@ -621,6 +700,12 @@ gx_methods = {
                This method Gets a channel's type for a
                given channel handle.
                """,
+               notes="""
+               The type returned is one of the :def:`DB_CATEGORY_CHAN`.
+               Use the GS_SIMPLE_TYPE() macro to convert to INT,REAL
+               or string types.
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.INT32_T,
                return_doc="Channel type",
                parameters = [
@@ -633,6 +718,11 @@ gx_methods = {
         Method('IGetChanUnit_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method Gets a channel's unit",
+               notes="""
+               The unit label is stored in the "UNITS" parameter
+               of the channel reg.
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -651,6 +741,7 @@ gx_methods = {
                This method gets a channel's display width for a
                given channel handle.
                """,
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc="Channel display width",
                parameters = [
@@ -678,6 +769,14 @@ gx_methods = {
         Method('iGetRegSymbSetting_DB', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Get an integer-valued :class:`REG` setting from a symbol reg",
+               notes="""
+               Same as :func:`GetRegSymbSetting_DB`, but converts
+               the setting automatically to an integer value.
+               
+               This is a convenient but low-performance way to get/set :class:`REG`
+               settings.  If performance is an issue, and more than one
+               setting is to be Get and or Set, use the :class:`REG` directly.
+               """,
                return_type=Type.INT32_T,
                return_doc="The setting, or :def_val:`iDUMMY` if not found or not convertable.",
                parameters = [
@@ -692,6 +791,10 @@ gx_methods = {
         Method('IGetSymbName_DB', module='geoengine.core', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="This method gets a symbol's name",
+               notes="""
+               See GetChanName_DB for more information
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -707,6 +810,13 @@ gx_methods = {
         Method('iHaveITR_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns TRUE if channel has an :class:`ITR`.",
+               notes="""
+               If a channel has an :class:`ITR`, the :class:`ITR` colours are  used to
+               display channel values in the spreadsheet.
+               
+               If a channel does not have an :class:`ITR`, :func:`GetITR_DB` will not change
+               the passed :class:`ITR`.
+               """,
                return_type=Type.INT32_T,
                parameters = [
                    Parameter('p1', type="DB",
@@ -718,6 +828,11 @@ gx_methods = {
         Method('IiCoordPair_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get the matching coordinate pair of a channel.",
+               notes="""
+               If the channel does not have a matching coordinate
+               pair, or of the channel does not exist, the returned
+               string will be empty.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`DB_COORDPAIR`",
                parameters = [
@@ -771,6 +886,13 @@ gx_methods = {
         Method('PutChanVV_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Place the contents of a :class:`VV` in a channel.",
+               notes="""
+               If a :class:`VA` channel is specified, then element [0] of this
+               :class:`VA` channel will be populated with the :class:`VV`.
+               
+               There is a limit of 2000 elements for non-licensed users.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -786,6 +908,11 @@ gx_methods = {
         Method('PutVaChanVV_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.LICENSED, 
                doc="Place the contents of a :class:`VV` at a specific part of a channel.",
+               notes="""
+               If a :class:`VA` channel is specified, then element [0] of this
+               :class:`VA` channel will be populated with the :class:`VV`.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -818,6 +945,10 @@ gx_methods = {
         Method('rGetChanReal_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.DOUBLE,
                return_doc="""
                Value, or dummy if out of range.
@@ -837,6 +968,14 @@ gx_methods = {
         Method('rGetRegSymbSetting_DB', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Get a real-valued :class:`REG` setting from a symbol reg",
+               notes="""
+               Same as :func:`GetRegSymbSetting_DB`, but converts
+               the setting automatically to a real value.
+               
+               This is a convenient but low-performance way to get/set :class:`REG`
+               settings.  If performance is an issue, and more than one
+               setting is to be Get and or Set, use the :class:`REG` directly.
+               """,
                return_type=Type.DOUBLE,
                return_doc="The setting, or :def_val:`rDUMMY` if not found or not convertable.",
                parameters = [
@@ -851,6 +990,12 @@ gx_methods = {
         Method('SetAllChanProtect_DB', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets all the channels' read-only protection status.",
+               notes="""
+               Value to set must be either :def_val:`DB_CHAN_PROTECTED` or
+               :def_val:`DB_CHAN_UNPROTECTED`
+               This method does its own channel locking/unlocking.
+               Channels already lock :def_val:`DB_LOCK_READONLY` are ignored.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -862,6 +1007,11 @@ gx_methods = {
         Method('SetChanClass_DB', module='geoengine.core', version='5.1.8',
                availability=Availability.PUBLIC, 
                doc="Set a channel class",
+               notes="""
+               The channel class is stored in the "CLASS" parameter
+               of the channel reg.
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -878,6 +1028,10 @@ gx_methods = {
                This method sets a channel's number of digits displayed
                to the right of the decimal point.
                """,
+               notes="""
+               The number of display digits must be from 0 to 50.
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -891,6 +1045,7 @@ gx_methods = {
         Method('SetChanFormat_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a channel's display format.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -904,6 +1059,10 @@ gx_methods = {
         Method('SetChanInt_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -921,6 +1080,11 @@ gx_methods = {
         Method('SetChanLabel_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a channel label",
+               notes="""
+               The channel label is stored in the "LABEL" parameter
+               of the channel reg.
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -934,6 +1098,7 @@ gx_methods = {
         Method('SetChanName_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a channel's name.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -950,6 +1115,11 @@ gx_methods = {
                This method sets a channel's read-only protection
                status.
                """,
+               notes="""
+               Value to set must be either :def_val:`DB_CHAN_PROTECTED` or
+               :def_val:`DB_CHAN_UNPROTECTED`
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -963,6 +1133,10 @@ gx_methods = {
         Method('SetChanReal_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -980,6 +1154,10 @@ gx_methods = {
         Method('SetChanStr_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set individual elements in a channel.",
+               notes="""
+               These methods are slow and should only be used when
+               performance is not an issue.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -999,6 +1177,7 @@ gx_methods = {
                This method sets a channel's unit for a
                given channel handle.
                """,
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1012,6 +1191,10 @@ gx_methods = {
         Method('SetChanWidth_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a channel's display width",
+               notes="""
+               The number of display digits must be from 0 to 50.
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1039,6 +1222,10 @@ gx_methods = {
         Method('SetITR_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set :class:`ITR` for a channel.",
+               notes="""
+               Use :def_val:`ITR_NULL` to clear the channel :class:`ITR`.
+               Channel must be locked for READONLY or READWRITE.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1065,6 +1252,25 @@ gx_methods = {
         Method('SetRegSymbSetting_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Set a :class:`REG` string setting in a symbol reg",
+               notes="""
+               The symbol :class:`REG` is used to store a variety of attribute
+               about the symbol.  Following a conventionally used entries:
+               
+               UNITS                   - channel units
+               CLASS                   - symbol class name (i.e. "Assay")
+               _PJ_ipj                 - projection blob name
+               _PJ_x                   - projection coordinate pair
+               _PJ_y
+               _PJ_name                - projection GXF-style info
+               _PJ_ellipsoid
+               _PJ_projection
+               _PJ_units
+               _PJ_datum_transform
+               
+               This is a convenient but low-performance way to get/set :class:`REG`
+               settings.  If performance is an issue, and more than one
+               setting is to be Get and or Set, use the :class:`REG` directly.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1202,6 +1408,14 @@ gx_methods = {
         Method('DelLine0_DB', module='geoengine.core', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Delete Empty Line 0.",
+               notes="""
+               A new database is created with a single, empty line L0, but many processes
+               create databases then create their own lines, so the empty line L0 may remain
+               after the process finishes. This function will delete a line L0
+               a) If it exists and is empty
+               b) It is not the only line in the database.
+               """,
+               see_also=":func:`DelLine0_EDB` - deletes an empty line 0 from the currently edited database.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB")
@@ -1210,6 +1424,18 @@ gx_methods = {
         Method('Destroy_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method closes a database and destroys the :class:`DB` object.",
+               notes="""
+               This method has been largely superceded by the use of the :class:`EDB` object,
+               which when locked returns a :class:`DB` object that must NOT be destroyed.
+               
+               EData = :func:`Current_EDB`();       // get current edited database
+               Data = :func:`Lock_EDB`(EData);      // lock the database
+               ... (Process using the :class:`DB` object Data)
+               :func:`UnLock_EDB`(EData);           // unlock the database
+               
+               It may still be reasonably used to destroy a :class:`DB` handle returned when
+               a database is opened using a call to :func:`Open_DB`().
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1250,6 +1476,11 @@ gx_methods = {
         Method('iCanOpen_DB', module='geoengine.core', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="This method checks whether it is possible to open a database.",
+               notes="""
+               This method is useful to determine if another session already locked a database.
+               By using this method before an :func:`Open_DB` a GX may handle errors like this more gracefully.
+               """,
+               see_also=":func:`Open_DB`, :func:`OpenReadOnly_DB`, :func:`iCanOpenReadOnly_DB`",
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL`",
                parameters = [
@@ -1264,6 +1495,11 @@ gx_methods = {
         Method('iCanOpenReadOnly_DB', module='geoengine.core', version='6.4.2',
                availability=Availability.PUBLIC, 
                doc="This method checks whether it is possible to open a database in read-only mode.",
+               notes="""
+               This method is useful to determine if another session already locked a database.
+               By using this method before an :func:`OpenReadOnly_DB` a GX may handle errors like this more gracefully.
+               """,
+               see_also=":func:`Open_DB`, :func:`OpenReadOnly_DB`, :func:`iCanOpen_DB`",
                return_type=Type.INT32_T,
                return_doc=":def:`GEO_BOOL`",
                parameters = [
@@ -1294,6 +1530,11 @@ gx_methods = {
         Method('iIsEmpty_DB', module='geoengine.core', version='6.1.0',
                availability=Availability.PUBLIC, 
                doc="See if a database contains only empty lines.",
+               notes="""
+               This function does not check for other information or blobs,
+               it merely looks at all lines in the database to see if they
+               are empty. If all are empty, it returns 1.
+               """,
                return_type=Type.INT32_T,
                return_doc="1 if the database contains only empty lines.",
                parameters = [
@@ -1316,6 +1557,7 @@ gx_methods = {
         Method('Open_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method opens a database.",
+               see_also=":func:`OpenReadOnly_DB`, :func:`iCanOpen_DB`, :func:`iCanOpenReadOnly_DB`",
                return_type="DB",
                return_doc=":class:`DB` Object",
                parameters = [
@@ -1330,6 +1572,11 @@ gx_methods = {
         Method('OpenReadOnly_DB', module='geoengine.core', version='6.4.2',
                availability=Availability.PUBLIC, 
                doc="This method opens a database.",
+               notes="""
+               This method is useful to open multiple reader instances on the same database. This call will fail
+               if a :class:`DB` has already been opened with :func:`Open_DB` or locked in the application with :func:`Lock_EDB`.
+               """,
+               see_also=":func:`Open_DB`, :func:`iCanOpen_DB`, :func:`iCanOpenReadOnly_DB`",
                return_type="DB",
                return_doc=":class:`DB` Object",
                parameters = [
@@ -1368,6 +1615,10 @@ gx_methods = {
                on the specified line. The data is converted if such
                conversion in neccessary.
                """,
+               notes="""
+               All the data in the destination channel is destroyed along
+               with the fiducial start and increment.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1383,6 +1634,7 @@ gx_methods = {
         Method('iGetColVA_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the # of columns in a :class:`VA` channel.",
+               notes="If the channel is :class:`VV`, this function returns 1.",
                return_type=Type.INT32_T,
                return_doc="""
                # of columns
@@ -1398,6 +1650,10 @@ gx_methods = {
         Method('iGetChannelLength_DB', module='geoengine.core', version='8.1.0',
                availability=Availability.PUBLIC, 
                doc="Returns the # of elements in a channel.",
+               notes="""
+               Returns the actual number of data items (rows) in a channel. For :class:`VA` channels no correction is
+               necessary for the number of columns (which was true of the obsoleted function :func:`iGetLength_DB`).
+               """,
                return_type=Type.INT32_T,
                return_doc="# of elements",
                parameters = [
@@ -1466,6 +1722,12 @@ gx_methods = {
         Method('WindowVACh_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Copy a window of data in a channel into a new channel",
+               notes="""
+               This function normally used for :class:`VA` channels. A copy of the
+               original channel will be made if start and end column
+               numbers to copy are dummies.
+               All the columns including start and end columns will be copied
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1485,6 +1747,13 @@ gx_methods = {
         Method('WindowVACh2_DB', module='geoengine.core', version='5.0.1',
                availability=Availability.PUBLIC, 
                doc="Copy a windowed version of data in a channel into a new channel",
+               notes="""
+               Similar to :func:`WindowVACh_DB`, but the input and output channels must
+               contain the same number of columns. The input :class:`VV` tells which columns
+               to copy over; 0 values indicate that the output column is to be
+               dummied, and non-zero values indicate the column is to be copied.
+               The :class:`VV` length must be the same as the number of columns.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1542,6 +1811,7 @@ gx_methods = {
         Method('GetLineMapFid_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="This method gets a line map clip fiducial.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1580,6 +1850,11 @@ gx_methods = {
         Method('iIsChanName_DB', module='geoengine.core', version='7.2.0',
                availability=Availability.PUBLIC, 
                doc="Is this a valid channel name?",
+               notes="""
+               Channel names must only contain alpha-numeric characters or the
+               underscore character "_", and the first letter must be a letter
+               or an underscore.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                1 if it is a valid channel name
@@ -1642,6 +1917,7 @@ gx_methods = {
         Method('iLineCategory_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the category (group, line) of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc=":def:`DB_CATEGORY_LINE` or :def_val:`iDUMMY`.",
                parameters = [
@@ -1654,6 +1930,7 @@ gx_methods = {
         Method('iLineFlight_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the flight number of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc="Line Flight Number.",
                parameters = [
@@ -1666,6 +1943,19 @@ gx_methods = {
         Method('ILineLabel_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a line label",
+               notes="""
+               Label formats.
+               
+               example full format is
+               "L1023.4 13"   type "L"
+               number "1023"
+               version "4"
+               flight "13"
+               
+               formats can be added to get combined format
+               
+               Use LINK format to create a database link label.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1683,6 +1973,7 @@ gx_methods = {
         Method('iLineNumber_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the number of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc="Line Number.",
                parameters = [
@@ -1695,6 +1986,7 @@ gx_methods = {
         Method('ILineNumber2_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns the string form of the line number (can be alphanumeric)",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1710,6 +2002,7 @@ gx_methods = {
         Method('iLineType_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the type of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc=":def:`DB_LINE_TYPE`",
                parameters = [
@@ -1722,6 +2015,7 @@ gx_methods = {
         Method('iLineVersion_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the version number of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.INT32_T,
                return_doc="Line Number.",
                parameters = [
@@ -1736,6 +2030,12 @@ gx_methods = {
                doc="""
                This method sets up a line name given the line's number,
                type, and version.
+               """,
+               notes="""
+               This MUST be called to generate a line name when calls
+               are made to :func:`iExistSymb_DB`, :func:`CreateSymb_DB` or :func:`DeleteSymb_DB`
+               for an operation on a line.
+               See also SetLineName2_DB.
                """,
                return_type=Type.VOID,
                parameters = [
@@ -1754,6 +2054,13 @@ gx_methods = {
         Method('ISetLineName2_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Like SetLineName_DB, but can use alphanumeric for line number",
+               notes="""
+               This MUST be called to generate a line name when calls
+               are made to :func:`iExistSymb_DB`, :func:`CreateSymb_DB` or :func:`DeleteSymb_DB`
+               for an operation on a line.
+               The line number can be any combination of letters and numbers,
+               i.e. XU324, 98765, A, 23NGV etc.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1797,6 +2104,17 @@ gx_methods = {
         Method('rLineBearing_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="This method returns the bearing of a line.",
+               notes="""
+               The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`
+               
+               This function simply returns a value set using the :func:`SetLineBearing_DB`
+               function. It returns :def_val:`rDUMMY` for line categories other than
+               :def_val:`DB_CATEGORY_LINE_FLIGHT`.
+               
+               To calculate the line azimuth based on the first and
+               last non-dummy locations, use the :func:`rDirection_DU` function.
+               """,
+               see_also=":func:`SetLineBearing_DB`, :func:`rDirection_DU`",
                return_type=Type.DOUBLE,
                return_doc="Bearing value, :def_val:`rDUMMY` if not set.",
                parameters = [
@@ -1809,6 +2127,7 @@ gx_methods = {
         Method('rLineDate_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method returns the date of a line.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READONLY` or :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.DOUBLE,
                return_doc="Date value.",
                parameters = [
@@ -1832,6 +2151,20 @@ gx_methods = {
         Method('Select_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Select/deselect lines based on selection string",
+               notes="""
+               Selections/deselections are cumulative. If lines had already
+               been selected, then any further selection/deselection will
+               affect that set of selections.
+               
+               E.g. "L99:800" is the string to select all normal lines from
+               99 to 800. If :func:`Select_DB` is called again to select "L1000",
+               then lines 99 to 800 and 1000 would all be selected.
+               
+               Use a "T" prefix for Tie lines.
+               Use an "F" prefix to specify lines of a specific flight.
+               E.g. "F10" would select all lines of flight 10.
+               Use an empty string ("") to select/deselect ALL lines.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1845,6 +2178,15 @@ gx_methods = {
         Method('SetLineBearing_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="Sets a line's bearing.",
+               notes="""
+               The channel must be locked :def_val:`DB_LOCK_READWRITE`
+               
+               This function simply sets a value in the line's metadata
+               that is retrieved using the :func:`rLineBearing_DB`
+               function. It terminates for line categories other than
+               :def_val:`DB_CATEGORY_LINE_FLIGHT`.
+               """,
+               see_also=":func:`rLineBearing_DB`, :func:`rDirection_DU`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1858,6 +2200,7 @@ gx_methods = {
         Method('SetLineDate_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a line's date.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1871,6 +2214,7 @@ gx_methods = {
         Method('SetLineFlight_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a line's flight.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1884,6 +2228,10 @@ gx_methods = {
         Method('SetLineMapFid_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method changes a line map clip fiducial.",
+               notes="""
+               for full range, set Start Fid to :def_val:`rMIN` and End Fid to :def_val:`rMAX`.
+               for no data, set Start and End Fids to :def_val:`rDUMMY`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1899,6 +2247,7 @@ gx_methods = {
         Method('SetLineNum_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a line's number.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1912,6 +2261,7 @@ gx_methods = {
         Method('SetLineType_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a line's type.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1925,6 +2275,7 @@ gx_methods = {
         Method('SetLineVer_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="This method sets a line's version.",
+               notes="The channel must be locked :def_val:`DB_LOCK_READWRITE`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1938,6 +2289,7 @@ gx_methods = {
         Method('SetSelect_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Sets the Line Selections.",
+               notes="This method also destroys the DB_SELECT object.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -1999,6 +2351,15 @@ gx_methods = {
         Method('ChanLST_DB', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with database channels.",
+               notes="""
+               Populates a :class:`LST` with channel symbols.
+               The name is put into the "Name" part of the :class:`LST` (0),
+               and the handle, an integer value written as a string, is
+               placed in the value part of the :class:`LST` (1).
+               Array channels are included, as well as virtual channels (array channel single columns loaded in the database like \\"Chan[1]\\".
+               
+               The :class:`LST` is cleared first, and the items are sorted by name.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2010,6 +2371,7 @@ gx_methods = {
         Method('NormalChanLST_DB', module='geoengine.core', version='8.2.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with non-array database channels.",
+               notes="Like :func:`ChanLST_DB`, but does not include array channels or virtual channels.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2021,6 +2383,14 @@ gx_methods = {
         Method('ClassChanLST_DB', module='geoengine.core', version='5.0.3',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with channels in a particular class.",
+               notes="""
+               The Name of the symbol is placed in the
+               item name and the item value is set to the symbol handle.
+               Only channels with the given class name are included,
+               e.g. use "ASSAY" for assay channels in :class:`CHIMERA`.
+               
+               The :class:`LST` is cleared first, and the items are sorted by name.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2034,6 +2404,14 @@ gx_methods = {
         Method('ClassGroupLST_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with group lines in a particular class.",
+               notes="""
+               The Name of the symbol is placed in the
+               item name and the item value is set to the symbol handle.
+               Only group lines with the given class name are included,
+               e.g. use "TARGETS" for UX-Detect Target groups.
+               
+               The :class:`LST` is cleared first, and the items are sorted by name.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2047,6 +2425,36 @@ gx_methods = {
         Method('CreateSymb_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a new Symbol.",
+               notes="""
+               If symbol already exits, and it is the same type
+               simply returns a handle to the existing symbol.
+               
+               This method simple calls :func:`CreateSymbEx_DB` with the
+               extra info set to 1.
+               
+               STRING-type channels: To create a string-type channel,
+               enter a negative number for the channel category below.
+               For instance, "-32" will create a string channel with
+               32 characters per item.
+               
+               BLOBS: Blobs (Binary Large Objects) can be used for storing
+               miscellaneous data which does not fit well into any of the
+               other various storage objects, such as a :class:`REG`. Generally,
+               one or more objects is serialized to a :class:`BF` object, which
+               is then written to the blob using the sWriteBlobBF_DB()
+               function. Retrieval is done in the reverse order, using
+               sWriteBlobBF_DB() first, then extracting the objects from the
+               :class:`BF` object.
+               To avoid namespace problems, Geosoft reserves the following
+               name prefixes:
+               
+               OE.   (Core functions)
+               GS.   (Applications)
+               CS.   (Custom Solutions applications)
+               
+               Programmers should avoid using the above prefixes as the starting
+               letters of their blob names to avoid any possible conflicts.
+               """,
                return_type="DB_SYMB",
                return_doc="DB_SYMB Object",
                parameters = [
@@ -2065,6 +2473,35 @@ gx_methods = {
         Method('CreateSymbEx_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Create a new Symbol.",
+               notes="""
+               If symbol already exits it is returned.
+               
+               STRING-type channels: To create a string-type channel,
+               enter a negative number for the channel category below.
+               For instance, "-32" will create a string channel with
+               32 characters per item.
+               
+               Symbol name for :def_val:`DB_CATEGORY_LINE_FLIGHT` must conform to
+               the following line naming syntax:
+               
+               [type][number.version:flight]
+               
+               Type can be: L - normal line
+               B - base line
+               T - tie line
+               R - trend line
+               S - test line
+               P - special line
+               
+               Examples: L100,
+               T100.1:16
+               
+               Note the "Flight" is any whole number that may be useful
+               to differentiate processing tasks.
+               
+               The ability to create a :class:`VA` channel is not available in the
+               free interface and requires a Montaj license.
+               """,
                return_type="DB_SYMB",
                return_doc="DB_SYMB handle.",
                parameters = [
@@ -2085,6 +2522,14 @@ gx_methods = {
         Method('CSVChanLST_DB', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with channels in a comma-separated list.",
+               notes="""
+               The Name of the symbol is placed in the
+               item name and the item value is set to the symbol handle.
+               Only channels in the list which are present in the database
+               are included.
+               
+               The :class:`LST` is cleared first.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2130,6 +2575,11 @@ gx_methods = {
         Method('DupSymb_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="New Symbol by duplicating an existing symbol, LOCKED",
+               notes="""
+               The symbol will be locked READWRITE.
+               The new name must not already exist in the database.
+               """,
+               see_also=":func:`DupSymbNoLock_DB`",
                return_type="DB_SYMB",
                return_doc="New Symbol Handle",
                parameters = [
@@ -2144,6 +2594,11 @@ gx_methods = {
         Method('DupSymbNoLock_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="New Symbol by duplicating an existing symbol, NO LOCK.",
+               notes="""
+               The symbol will be NOT be locked.
+               The new name must not already exist in the database.
+               """,
+               see_also=":func:`DupSymb_DB`",
                return_type="DB_SYMB",
                return_doc="New Symbol Handle",
                parameters = [
@@ -2158,6 +2613,16 @@ gx_methods = {
         Method('FindChan_DB', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Get handle to the specified channel.",
+               notes="""
+               To work with a specific column from a :class:`VA` channel,
+               specify the :class:`VA` element number in square brackets as part
+               of the :class:`VA` channel name (e.g. "EM[3]" will treat the fourth
+               column of the :class:`VA` channel as a :class:`VV`).
+               
+               See notes for :func:`FindSymb_DB`.
+               Introduced in v5.1.3.
+               The new :func:`FindChan_DB` searches using the exact channel name.
+               """,
                return_type="DB_SYMB",
                return_doc="Channel Handle, :def_val:`NULLSYMB` if not defined",
                parameters = [
@@ -2170,6 +2635,28 @@ gx_methods = {
         Method('FindSymb_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Get handle to the specified symbol.",
+               notes="""
+               To work with a specific column from a :class:`VA` channel,
+               specify the :class:`VA` element number in square brackets as part
+               of the :class:`VA` channel name (e.g. "EM[3]" will treat the fourth
+               column of the :class:`VA` channel as a :class:`VV`).
+               
+               For backward compatibility with GXs not employing the
+               :func:`GetXYZChanSymb_DB` function, the following behaviour has
+               been introduced as of v5.1.3:  (also true for "Y").
+               
+               :func:`FindSymb_DB`(hDB, "X", :def_val:`DB_SYMB_CHAN`) is now equivalent to:
+               
+               :func:`GetXYZChanSymb_DB`(hDB, :def_val:`DB_CHAN_X`);
+               
+               In other words, the current X or Y is searched for, not
+               necessarily the literal "X" or "Y". This ensures that newer
+               databases, which might have "Easting" and "Northing"
+               (or other similar names) instead of "X" and "Y" will still
+               work with older GXs expecting "X" and "Y".
+               
+               The new :func:`FindChan_DB` searches using the exact channel name.
+               """,
                return_type="DB_SYMB",
                return_doc="Symbol Handle, :def_val:`NULLSYMB` if not defined",
                parameters = [
@@ -2219,6 +2706,13 @@ gx_methods = {
         Method('iClassChanList_DB', module='geoengine.core', version='5.0.5',
                availability=Availability.PUBLIC, 
                doc="Place a list of channels for a given class in a :class:`VV`.",
+               notes="""
+               This method generates a list of symbols in the database
+               and places their handles into a :class:`VV`. The list is not
+               sorted.
+               Only channels with the given class name are included,
+               e.g. use "ASSAY" for assay channels used in :class:`CHIMERA`.
+               """,
                return_type=Type.INT32_T,
                return_doc="Number of symbols.",
                parameters = [
@@ -2233,6 +2727,11 @@ gx_methods = {
         Method('iExistChan_DB', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="See if the specified channel exists in the database.",
+               notes="""
+               See notes for :func:`iExistSymb_DB`.
+               Introduced in v5.1.3.
+               :func:`iExistChan_DB` searches using the exact channel name.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Symbol does not exist in the database
@@ -2250,6 +2749,24 @@ gx_methods = {
                doc="""
                This method checks to see if the specified symbol exists
                in the database.
+               """,
+               notes="""
+               For backward compatibility with GXs not employing the
+               GetXYZChan_DB function, the following behaviour has
+               been introduced as of v5.1.3:  (also true for "Y").
+               
+               :func:`iExistSymb_DB`(hDB, "X", :def_val:`DB_SYMB_CHAN`) is now equivalent to:
+               
+               GetXYZChan_DB(hDB, :def_val:`DB_CHAN_X`, sXCh);
+               :func:`iExistSymb_DB`(hDB, sXCh, :def_val:`DB_SYMB_CHAN`);
+               
+               In other words, the current X or Y is searched for, not
+               necessarily the literal "X" or "Y". This ensures that newer
+               databases, which might have "Easting" and "Northing"
+               (or other similar names) instead of "X" and "Y" will still
+               work with older GXs expecting "X" and "Y".
+               
+               The new :func:`iExistChan_DB` searches using the exact channel name.
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -2297,6 +2814,10 @@ gx_methods = {
         Method('IGetXYZChan_DB', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Gets current X, Y or Z channel name",
+               notes="""
+               searches for the "current" X, Y or Z channel.
+               If none is defined, then returns "X", "Y" or "Z".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2326,6 +2847,13 @@ gx_methods = {
         Method('LineLST_DB', module='geoengine.core', version='6.3.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with database lines.",
+               notes="""
+               Populates a :class:`LST` with channel symbols.
+               The name is put into the "Name" part of the :class:`LST` (0),
+               and the handle, an integer value written as a string, is
+               placed in the value part of the :class:`LST` (1).
+               The :class:`LST` is cleared first, and the items are sorted in logical line order.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2352,6 +2880,18 @@ gx_methods = {
         Method('MaskChanLST_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with mask channels.",
+               notes="""
+               Loads a :class:`LST` with all channels with CLASS "MASK", as well
+               as all channels containing the string "MASK", as long
+               as the CLASS for these channels is not set to something
+               other than "" or "MASK".
+               
+               This function is a duplicate of the :func:`MaskChanLST_CHIMERA`
+               function, and can be used if :class:`CHIMERA` is not installed.
+               
+               The :class:`LST` is cleared first, and the items are sorted by name.
+               "None" is added at the end, with a handle value of "-1".
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2363,6 +2903,15 @@ gx_methods = {
         Method('SelectedLineLST_DB', module='geoengine.core', version='5.1.2',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with the selected lines.",
+               notes="""
+               This method populates a :class:`LST` object with all of the symbols
+               of the selected lines in the database.
+               The name is put into the "Name" part of the :class:`LST` (0),
+               and the handle, an integer value written as a string, is
+               placed in the value part of the :class:`LST` (1).
+               
+               Symbols are automatically sorted in logical line order.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2389,6 +2938,14 @@ gx_methods = {
         Method('SetXYZChan_DB', module='geoengine.core', version='5.1.3',
                availability=Availability.PUBLIC, 
                doc="Sets current X, Y or Z channel name",
+               notes="""
+               If the value specified is "", the internally stored value
+               is cleared, and GetXYZChan_DB will return "X", "Y" or "Z"
+               
+               This can be used, for instance, to make "Easting" and "Northing"
+               the current X and Y channels, and have GXs using the
+               :func:`GetXYZChanSymb_DB` function to load "X" and "Y" work as desired.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2402,6 +2959,14 @@ gx_methods = {
         Method('StringChanLST_DB', module='geoengine.core', version='6.2.0',
                availability=Availability.PUBLIC, 
                doc="Load a :class:`LST` with string-type channels.",
+               notes="""
+               The Name of the symbol is placed in the
+               item name and the item value is set to the symbol handle.
+               Only channels with the string-type data (sChanType_DB < 0)
+               are included.
+               
+               The :class:`LST` is cleared first, and the items are sorted by name.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2413,6 +2978,19 @@ gx_methods = {
         Method('SymbLST_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Populate a :class:`LST` with database symbols.",
+               notes="""
+               Populates a :class:`LST` with channel, line, blob or user symbols.
+               The name is put into the "Name" part of the :class:`LST` (0),
+               and the handle, an integer value written as a string, is
+               placed in the value part of the :class:`LST` (1).
+               
+               Line symbols are automatically sorted in logical line order.
+               
+               NOTE: The :class:`LST` is NOT cleared before being filled. If you
+               want to clear the :class:`LST` and get sorted values, use the
+               :func:`ChanLST_DB` and :func:`LineLST_DB` functions.
+               """,
+               see_also=":func:`ChanLST_DB`, :func:`LineLST_DB`, :func:`SelectedLineLST_DB`",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2448,6 +3026,15 @@ gx_methods = {
         Method('AddAssociatedLoad_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Add this channel to the auto-load feature of the group.",
+               notes="""
+               If the channel is not yet associated, it is first associated.
+               If the channel is already in the associated-load list, this
+               does nothing.
+               
+               As of v6.0, the load-status of channels is no longer stored
+               in the database, but in the project, so this function is
+               equivalent to calling :func:`Associate_DB`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2461,6 +3048,14 @@ gx_methods = {
         Method('AddComment_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Add a comment with a string to the activity log of the database.",
+               notes="""
+               The comment is written in the form:
+               
+               Comment: String2
+               
+               and is followed by a carriage return.
+               The activity log is created automatically if it does not exist.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2476,6 +3071,16 @@ gx_methods = {
         Method('AddIntComment_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Add a comment with an integer to the activity log of the database.",
+               notes="""
+               The comment is written in the form:
+               
+               Comment: Value
+               
+               and is followed by a carriage return.
+               The activity log is created automatically if it does not exist.
+               
+               See Notes in :func:`AddComment_DB`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2491,6 +3096,16 @@ gx_methods = {
         Method('AddRealComment_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Add a comment with a float value to the activity log of the database.",
+               notes="""
+               The comment is written in the form:
+               
+               Comment: Value
+               
+               and if followed by a carriage return.
+               The activity log is created automatically if it does not exist.
+               
+               See Notes in :func:`AddComment_DB`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2506,6 +3121,16 @@ gx_methods = {
         Method('AddTimeComment_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Add a comment with the date and time to the activity log of the database.",
+               notes="""
+               The comment is written in the form:
+               
+               Comment: 2001/12/31 23:59:59
+               
+               and is followed by a carriage return.
+               The activity log is created automatically if it does not exist.
+               
+               See Notes in :func:`AddComment_DB`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2519,6 +3144,20 @@ gx_methods = {
         Method('Associate_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Associate a channel with a group.",
+               notes="""
+               If it is already associated, or if the group has no
+               defined group class, does nothing.
+               
+               As of v6.3, if a group line has no class defined, then ALL
+               channels are assumed to be associated with it. This means
+               that you need to associate a new channel with a group only in
+               those cases where the group class is defined.
+               
+               If this function is used on a group with a group class, then
+               the channel is added to class's association list, and the
+               channel will be recognized as being associated with all
+               groups of that class.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2532,6 +3171,11 @@ gx_methods = {
         Method('AssociateAll_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Associate all channels with a group.",
+               notes="""
+               As of v6.3, if a group line has no class defined, then ALL
+               channels are already assumed to be associated with it, and this
+               function does nothing.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2543,6 +3187,10 @@ gx_methods = {
         Method('AssociateClass_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, 
                doc="Associate a channel with all groups of a specific class.",
+               notes="""
+               As of v6.3, if a group line has no class defined, then ALL
+               channels are automatically assumed to be associated with it.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2569,6 +3217,11 @@ gx_methods = {
         Method('GenValidLineSymb_DB', module='geoengine.core', version='6.4.0',
                availability=Availability.PUBLIC, 
                doc="Generate a valid line symb name string from given string.",
+               notes="""
+               The returned name is either the same size as the input
+               or shorter. Escapes, leading and trailing spaces are removed, then
+               all illegal characters are replaced with an underscore.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -2582,6 +3235,7 @@ gx_methods = {
         Method('GetChanVA_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Place the contents of a channel in a :class:`VA`.",
+               see_also=":class:`VA` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2597,6 +3251,7 @@ gx_methods = {
         Method('GetVAScaling_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Get base and range for :class:`VA` channel cell display.",
+               notes="See :func:`SetVAScaling_DB`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2612,6 +3267,7 @@ gx_methods = {
         Method('GetVAWindows_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Get the range of windows displayed for a :class:`VA` channel.",
+               notes="See :func:`SetVAWindows_DB`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2627,6 +3283,7 @@ gx_methods = {
         Method('SetVABaseCoordinateInfo_DB', module='geoengine.core', version='8.2',
                availability=Availability.PUBLIC, 
                doc="Set the array channel base coordinate type, offset and values.",
+               notes="See :func:`GetVABaseCoordinateInfo_DB`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2648,6 +3305,7 @@ gx_methods = {
         Method('GetVABaseCoordinateInfo_DB', module='geoengine.core', version='8.2',
                availability=Availability.PUBLIC, 
                doc="Set the array channel base coordinate type, offset and values.",
+               notes="See :func:`SetVABaseCoordinateInfo_DB`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2669,6 +3327,13 @@ gx_methods = {
         Method('IGetGroupClass_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Set the Class name for a group line.",
+               notes="""
+               This method fails if the line is not a group line.
+               Group classes are used to identify group lines used for
+               special purposes, e.g.: "COLLAR" for the Wholeplot collar table,
+               or "TARGETS" for the UX-Detect Targets list.
+               """,
+               see_also=":func:`iLineCategory_DB` - to see if a line is a group line.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2696,6 +3361,7 @@ gx_methods = {
         Method('IGetVAProfColorFile_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Get colours for a :class:`VA` channel when displayed in the profile window.",
+               notes="See :func:`SetVAProfColorFile_DB`.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2726,6 +3392,7 @@ gx_methods = {
         Method('IGetVASectColorFile_DB', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Get colours for a :class:`VA` channel when displayed section in the profile window.",
+               notes="Fails in the channel is not an array channel",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2760,6 +3427,7 @@ gx_methods = {
         Method('iIsWholeplot_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Is this a Wholeplot database?",
+               notes="Currently checks to see if the DH_COLLAR line exists.",
                return_type=Type.INT32_T,
                return_doc="""
                1 if it is a Wholeplot database
@@ -2773,6 +3441,7 @@ gx_methods = {
         Method('PutChanVA_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Place the contents of a :class:`VA` in a channel.",
+               see_also=":class:`VA` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2788,6 +3457,21 @@ gx_methods = {
         Method('SetGroupClass_DB', module='geoengine.core', version='5.0.8',
                availability=Availability.PUBLIC, 
                doc="Set the Class name for a group line.",
+               notes="""
+               This method fails if the line is not a group line.
+               Group classes are used to identify group lines used for
+               special purposes. All group lines with the same class share
+               the same list of associated channels.
+               
+               As of v6.3, if a group line has no class defined, then ALL
+               channels are assumed to be associated with it. This means
+               that a group class should only be defined when you wish to
+               associate a subset of the available channels to group line.
+               """,
+               see_also="""
+               :func:`iLineCategory_DB` - to see if a line is a group line.
+               :func:`Associate_DB` - Associate a channel with a group.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2801,6 +3485,45 @@ gx_methods = {
         Method('SetVAProfColorFile_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Set colours for a :class:`VA` channel when displayed in the profile window.",
+               notes="""
+               Fails in the channel is not an array channel, if the
+               file does not exist, or if it is not a valid colour zone file.
+               
+               The individual columns in the array channel are displayed using the input
+               zone file colours. A linear :class:`ITR` from 0 to 1 is created on the colour zones
+               to map to individual channel indices (expressed as a fraction as shown below).
+               
+               For instance, for a file with 8 colours the ranges are as follows:
+               
+               Colour Range
+               Colour 1    0        > value >=  0.125
+               Colour 2    0.125    > value >=  0.25
+               Colour 3    0.25     > value >=  0.375
+               Colour 4    0.375    > value >=  0.5
+               Colour 5    0.5      > value >=  0.625
+               Colour 6    0.625    > value >=  0.75
+               Colour 7    0.75     > value >=  0.875
+               Colour 8    0.875    > value >=  1.0
+               
+               When an array channel is displayed, the index of each element (column) is mapped
+               into the corresponding range above using the following formula:
+               
+               value = (column index) / (# of columns - 1)
+               
+               For an array with 8 columns, you get the following values:
+               
+               Column   Value    Colour
+               0        0        1
+               1        0.14     2
+               2        0.28     3
+               3        0.43     4
+               4        0.57     5
+               5        0.71     6
+               6        0.86     7
+               7        1.0      8
+               
+               The colour file search path is: Local directory, then oasismontaj\\tbl.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2827,6 +3550,12 @@ gx_methods = {
         Method('SetVAScaling_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Set base and range for :class:`VA` channel cell display.",
+               notes="""
+               By default, :class:`VA` profiles autoscale to fit in the database cell.
+               This lets the user set a single base and range for all cells.
+               If either input is a dummy, both are set as dummies, and autoscaling
+               is used.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2842,6 +3571,10 @@ gx_methods = {
         Method('SetVASectColorFile_DB', module='geoengine.core', version='5.1.6',
                availability=Availability.PUBLIC, 
                doc="Set colours for a :class:`VA` channel when displayed section in the profile window.",
+               notes="""
+               Fails in the channel is not an array channel, if the
+               file does not exist, or if it is not a valid colour zone file.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2855,6 +3588,10 @@ gx_methods = {
         Method('SetVAWindows_DB', module='geoengine.core', version='5.1.5',
                availability=Availability.PUBLIC, 
                doc="Set the range of windows to display for a :class:`VA` channel.",
+               notes="""
+               Use to display a subset of the :class:`VA` channel windows in the GDB.
+               Windows index from 0.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2875,6 +3612,10 @@ gx_methods = {
         Method('CreateSymbEx2_DB', module='geoengine.core', version='6.3.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Create a new Symbol.",
+               notes="""
+               This method is identical to :func:`CreateSymbEx_DB` but does not
+               have any restrictions based on license.
+               """,
                return_type="DB_SYMB",
                return_doc="DB_SYMB handle.",
                parameters = [
@@ -2895,12 +3636,31 @@ gx_methods = {
         Method('Current_DB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="This method returns the Current Database opened (obsolete)",
+               notes="""
+               This method combines the operations:
+               
+               EData = :func:`Current_EDB`();       // get current edited database
+               Data = :func:`Lock_EDB`(EData);      // lock the database
+               
+               and has been superceded by this construction in all Geosoft GXs.
+               """,
                return_type="DB",
                return_doc=":class:`DB` Object"),
 
         Method('Destruct_DB', module='geoengine.core', version='5.1.1',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Destructs a Database Object. (obsolete)",
+               notes="""
+               This function is is called to destruct database handle object.
+               
+               This method has been superceded by the use of the :class:`EDB` object,
+               which when locked returns a :class:`DB` object that must NOT be destroyed.
+               
+               EData = :func:`Current_EDB`();       // get current edited database
+               Data = :func:`Lock_EDB`(EData);      // lock the database
+               ... (Process using the :class:`DB` object Data)
+               :func:`UnLock_EDB`(EData);           // unlock the database
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2910,6 +3670,12 @@ gx_methods = {
         Method('PutChanVVEx_DB', module='geoengine.core', version='6.0.0',
                availability=Availability.EXTENSION, is_obsolete=True, 
                doc="Place the contents of a :class:`VV` in a channel.",
+               notes="""
+               This method is identical to :func:`PutChanVV_DB` except that it
+               does not have a limit for the Free viewer. It is licensed
+               and cannot be called without a license.
+               """,
+               see_also=":class:`VV` class.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2925,6 +3691,12 @@ gx_methods = {
         Method('SetCurrent_DB', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, 
                doc="Sets the current database to this database (obsolete).",
+               notes="""
+               This method has been superceded by the following usage:
+               
+               :func:`MakeCurrent_EDB`(EData);
+               Data = :func:`Lock_EDB`(EData);      // lock the database
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DB",
@@ -2934,6 +3706,10 @@ gx_methods = {
         Method('iGetLength_DB', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, 
                doc="Returns the # of elements in a channel.",
+               notes="""
+               This method did not account for array channels correctly (you had to divide by the number of columns
+               to get the correct number of rows). Superceded by :func:`iGetChannelLength_DB`.
+               """,
                return_type=Type.INT32_T,
                return_doc="# of elements",
                parameters = [

@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('BIGRID',
                  doc="""
-The Bigrid class is used to grid data using a optimized algorithm that
-assumes data is collected in semi-straight lines.
-""")
+                 The Bigrid class is used to grid data using a optimized algorithm that
+                 assumes data is collected in semi-straight lines.
+                 """)
 
 
 
@@ -25,6 +25,12 @@ gx_methods = {
         Method('Create_BIGRID', module='geogxx', version='5.0.0',
                availability=Availability.EXTENSION, 
                doc="Create a handle to a Brigrid object",
+               notes="""
+               The Bigrid object is initially empty. It will store the
+               control file parameters which the Bigrid program needs
+               to execute. Use the LoadParms_BIGRID method to get the
+               control file parameters into the :class:`BIGRID` object.
+               """,
                return_type="BIGRID",
                return_doc=":class:`BIGRID` Object"),
 
@@ -42,6 +48,13 @@ gx_methods = {
                doc="""
                Retrieves a Bigrid object's control parameters from a file,
                or sets the parameters to default if the file doesn't exist.
+               """,
+               notes="""
+               If the control file name passed into this function is a file
+               which does not exist, then the defaults for a Bigrid control
+               file will be generated and put into the :class:`BIGRID` object.
+               Otherwise, the control file's settings are retrieved from
+               the file and loaded into the :class:`BIGRID` object.
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -117,6 +130,10 @@ gx_methods = {
                doc="""
                Puts the Bigrid object's control parameters back into
                its control file.
+               """,
+               notes="""
+               If the control file did not previously exist, it will be
+               created. Otherwise, the old file will be overwritten.
                """,
                return_type=Type.VOID,
                parameters = [

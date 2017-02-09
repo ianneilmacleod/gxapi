@@ -2,12 +2,12 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MAPL',
                  doc="""
-The :class:`MAPL` class is the interface with the MAPPLOT program,
-which reads a MAPPLOT control file and plots graphical
-entities to a map. The :class:`MAPL` object is created for a given
-control file, then passed to the MAPPLOT program, along
-with the target :class:`MAP` object on which to do the drawing
-""")
+                 The :class:`MAPL` class is the interface with the MAPPLOT program,
+                 which reads a MAPPLOT control file and plots graphical
+                 entities to a map. The :class:`MAPL` object is created for a given
+                 control file, then passed to the MAPPLOT program, along
+                 with the target :class:`MAP` object on which to do the drawing
+                 """)
 
 
 
@@ -19,6 +19,11 @@ gx_methods = {
         Method('Create_MAPL', module='geoengine.map', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a :class:`MAPL`.",
+               notes="""
+               The default map groups will use the reference name with
+               "_Data" and "_Base" added.  If no reference name is specified,
+               the name ":class:`MAPL`" is used
+               """,
                return_type="MAPL",
                return_doc=":class:`MAPL`, aborts if creation fails",
                parameters = [
@@ -33,6 +38,11 @@ gx_methods = {
         Method('CreateREG_MAPL', module='geoengine.map', version='5.0.0',
                availability=Availability.LICENSED, 
                doc="Create a :class:`MAPL` with :class:`REG`.",
+               notes="""
+               The default map groups will use the reference name with
+               "_Data" and "_Base" added.  If no reference name is specified,
+               the name ":class:`MAPL`" is used
+               """,
                return_type="MAPL",
                return_doc=":class:`MAPL`, aborts if creation fails",
                parameters = [

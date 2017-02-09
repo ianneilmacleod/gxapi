@@ -2,9 +2,9 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('MXD',
                  doc="""
-A :class:`MXD` wraps and provides manipulation and usage for
-the content of an ArcGIS :class:`MXD` file.
-""")
+                 A :class:`MXD` wraps and provides manipulation and usage for
+                 the content of an ArcGIS :class:`MXD` file.
+                 """)
 
 
 

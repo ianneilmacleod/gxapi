@@ -61,6 +61,7 @@ gx_methods = {
         Method('GetFeatures_GEOSTRING', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Get the features",
+               notes="List items are returned with feature GUID in name and feature name in value.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GEOSTRING",
@@ -72,6 +73,7 @@ gx_methods = {
         Method('GetSections_GEOSTRING', module='geoengine.core', version='8.4.0',
                availability=Availability.PUBLIC, 
                doc="Get the sections",
+               notes="List items are returned with section GUID in name and section name in value.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="GEOSTRING",

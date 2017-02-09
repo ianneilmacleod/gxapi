@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('GUI',
                  doc="""
-These are graphical functions that typically create a
-dialog-style window for a specific function. Examples include
-file import wizards, and the Histogram and Scatter tools.
-""")
+                 These are graphical functions that typically create a
+                 dialog-style window for a specific function. Examples include
+                 file import wizards, and the Histogram and Scatter tools.
+                 """)
 
 
 gx_defines = [
@@ -387,6 +387,10 @@ gx_methods = {
         Method('CreateWNDFromHWND_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, no_gxh=True, 
                doc="Create a standard WND object from an HWND.",
+               notes="""
+               The object returned must be destroyed by the
+               destroy object call.
+               """,
                return_type="WND",
                return_doc="x - WND object created",
                parameters = [
@@ -472,6 +476,16 @@ gx_methods = {
         Method('GetWindowArea_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, 
                doc="Get the location of the oasis montaj window.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the top
+               left corner of the Screen.
+               
+               if the max values are equal or less than the min values
+               the window will be mimimized. If any Min values are :def_val:`GS_S4MN`
+               or any Max values are :def_val:`GS_S4MX`, the window is maximized.
+               
+               See also :func:`GetClientWindowArea_GUI`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T, is_ref=True,
@@ -487,6 +501,11 @@ gx_methods = {
         Method('GetClientWindowArea_GUI', module='None', version='9.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Get the location of the oasis montaj client window.",
+               notes="""
+               Returns the coordinates of the client window area (where MDI document windows are placed).
+               The returned coordinates are 0,0 for the minimum X and Y and the window width
+               width and height for the maximum X and Y.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T, is_ref=True,
@@ -520,6 +539,18 @@ gx_methods = {
         Method('iColorForm_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Select a colour.",
+               notes="""
+               Colour value is set on input, and new value returned.
+               If the input colour type is :def_val:`C_TRANSPARENT`, then the color
+               is set to white, if any other type is input the output is
+               guaranteed to be of the same type.
+               
+               If the third flag is :def_val:`GS_TRUE` is used, then on exit, if white is
+               selected, the user is prompted: 'Do you want white (Yes) or
+               "None" (No) ?' and the colour is converted as requested.
+               If this is not the case, the :def_val:`C_TRANSPARENT` is converted
+               to white (if "Ok" is selected) and no choice is offered.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -535,6 +566,11 @@ gx_methods = {
         Method('iColorTransform_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Define an :class:`ITR` of up to 8 zones.",
+               notes="""
+               The statistics object is required in order to determine
+               data ranges, percentiles, etc. Create it using
+               :func:`CreateExact_ST`, or be sure to enable histogram statistics.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if OK
@@ -550,6 +586,13 @@ gx_methods = {
         Method('iCoordSysWizard_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Launch the coordinate system definition/display :class:`GUI`.",
+               notes="""
+               Launches the new GX.Net single-dialog coordinate system
+               definition dialog. The input :class:`IPJ` is modified on return
+               if OK is selected (and the editable parameter is 1).
+               The "Data source label" and "Data source" is information displayed
+               in the dialog for the user to know where the :class:`IPJ` came from (e.g. "Grid: X.grd")
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -571,6 +614,10 @@ gx_methods = {
         Method('iCoordSysWizardLicensed_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Launch the coordinate system definition/display :class:`GUI`.",
+               notes="""
+               Same as :func:`iCoordSysWizardLicensed_GUI` but will always be editable. The other
+               method is not editable in the viewer while this one is.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -592,6 +639,12 @@ gx_methods = {
         Method('iCoordSysWizardGrid_GUI', module='None', version='9.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Launch the coordinate system definition/display :class:`GUI`.",
+               notes="""
+               Same as :func:`iCoordSysWizardLicensed_GUI` but allows the original grid info to be adjusted
+               when projections on section or oriented plan grids are modified.
+               In the tool, it is the "modified" orientation required to keep the edited projection's grid
+               in the same location as it was in the target projection.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -629,6 +682,12 @@ gx_methods = {
         Method('iDatabaseType_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Returns the type string of an external DAO database.",
+               notes="""
+               If the file extension is "mdb", then an MSJET (Microsoft Access)
+               database is assumed. If the file name is "ODBC", then "ODBC" is
+               returned as the type. Otherwise, a dialog appears listing the
+               other valid DAO database types.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -647,6 +706,21 @@ gx_methods = {
         Method('iDatamineType_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Returns the type of a Datamine file.",
+               notes="""
+               Often, a Datamine file can be opened a number of different ways
+               (e.g. as a string file or a as wireframe (point) file.
+               The following function checks to see if there is a choice to be made
+               between types supported by Geosoft for import. If not, it just returns
+               the original type "hint" from Datamine. If there is a choice, it puts up
+               a dialog with the choices for the user to pick from.
+               Do a bit-wise AND with the returned type to determine the file type
+               (or the type selected).
+               
+               Currently supported overlapping types/choices:
+               
+               dmString
+               dmWireframePoint
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -664,6 +738,13 @@ gx_methods = {
                Allows the user to edit XYZ export template
                using a complex dialog. The Template name
                may change during editing.
+               """,
+               notes="""
+               Only uses the current :class:`DB`. This function does
+               not exactly work as supposed to. Instead of using
+               the :class:`EDB` handle passed to it, it only will use
+               the current :class:`DB`. Please see ExportXYXTemplateEditorEx_GUI
+               for an updated function.
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -686,6 +767,12 @@ gx_methods = {
                using a complex dialog. The template name
                may change during editing.
                """,
+               notes="""
+               Will use the :class:`EDB` passed in. This function replaces
+               the 'buggy' function :func:`ExportXYZTemplateEditor_GUI`.
+               This extended function actually uses the :class:`EDB` handle
+               passed to it and not just the current :class:`DB`.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -703,6 +790,10 @@ gx_methods = {
         Method('iFileFilterIndex_GUI', module='geoguilib', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Return the FILE_FILTER_XXX value for a file filter string.",
+               notes="""
+               For example, if "Database (*.gdb)" is input,
+               then the :def_val:`FILE_FILTER_GDB` value is returned.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`FILE_FILTER`, -1 if not found",
                parameters = [
@@ -713,6 +804,7 @@ gx_methods = {
         Method('iGCSDatumWarningSHP_GUI', module='geoguilib', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Launch the GCS Datum Warning dialogue for :class:`SHP` files.",
+               notes="Runs the GCS Warning dialogue with one data source",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -728,6 +820,7 @@ gx_methods = {
         Method('iGCSDatumWarningSHPDBEx_GUI', module='geoguilib', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Launch the GCS Datum Warning dialogue for :class:`SHP` files (Database).",
+               notes="Runs the GCS Warning dialogue with multiple data sources (Database)",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -746,6 +839,7 @@ gx_methods = {
         Method('iGCSDatumWarningSHPEx_GUI', module='geoguilib', version='7.1.0',
                availability=Availability.PUBLIC, 
                doc="Launch the GCS Datum Warning dialogue for :class:`SHP` files.",
+               notes="Runs the GCS Warning dialogue with multiple data sources",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -764,6 +858,11 @@ gx_methods = {
         Method('iGetAreaOfInterest_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Get the current area of interest from the application.",
+               notes="""
+               Depending on what is currently visible on screen and
+               the defined coordinate system the user may be prompted
+               by a warning and optionaly cancel the process.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`AOI_RETURN_STATE`",
                parameters = [
@@ -784,6 +883,11 @@ gx_methods = {
         Method('iGetAreaOfInterest3D_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Get the current area of interest from the application in 3D.",
+               notes="""
+               Depending on what is currently visible on screen and
+               the defined coordinate system the user may be prompted
+               by a warning and optionaly cancel the process.
+               """,
                return_type=Type.INT32_T,
                return_doc=":def:`AOI_RETURN_STATE`",
                parameters = [
@@ -808,6 +912,14 @@ gx_methods = {
         Method('IGetDATDefaults_GUI', module='geoguilib', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Return the user default extension and qualifier for grids/images.",
+               notes="""
+               The default grid/image filters are normally stored in
+               "MONTAJ.DEFAULT_XGD_IN" and "MONTAJ.DEFAULT_XGD_OUT"
+               
+               If no filter is defined, or the filter is not found
+               then "grd" and "GRD" are returned as the default extension
+               and qualifier.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -827,6 +939,18 @@ gx_methods = {
         Method('IGetFileFilter_GUI', module='geoguilib', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Return the defined filter, mask, extension and directory for an input filter.",
+               notes="""
+               Returns the four parts of the file filter;
+               e.g. for :def_val:`FILE_FILTER_GDB` it returns:
+               
+               Filter:    "Database (*.gdb)"
+               Mask:      "*.gdb"
+               Extension: "gdb"
+               Directory: ":def_val:`GS_DIRECTORY_NONE`"
+               
+               This function is useful for constuction open/save dialog
+               file filters, especially in GX.Net functions.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -850,6 +974,14 @@ gx_methods = {
         Method('IGetGSDirectory_GUI', module='geoguilib', version='7.0.0',
                availability=Availability.PUBLIC, 
                doc="Return the directory path for value of :def:`GS_DIRECTORY`.",
+               notes="""
+               Works along with the :func:`IGetFileFilter_GUI` function. Note that
+               most values of FILE_FILTER_XXX will return :def_val:`GS_DIRECTORY_NONE`,
+               and give the current workspace directory.
+               
+               This function is useful for constuction open/save dialog
+               file filters, especially in GX.Net functions.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -892,6 +1024,14 @@ gx_methods = {
         Method('IiColorTransformEx_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Define an :class:`ITR` of up to 12 zones, with file load/save buttons.",
+               notes="""
+               The statistics object is required in order to determine
+               data ranges, percentiles, etc. Create it using
+               :func:`CreateExact_ST`, or be sure to enable histogram statistics.
+               The colour transform file name is used as the default when the save
+               button is pushed, and is updated both after the load and save buttons
+               are pushed by the value input or selected by the user.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if OK
@@ -915,6 +1055,22 @@ gx_methods = {
         Method('IiCumulativePercent_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Define a percent-based :class:`ITR` of up to 12 zones.",
+               notes="""
+               The :class:`ITR` values are interpreted as cumulative percent values, using
+               the "PERCENT=1" value in the :class:`ITR`'s :class:`REG`.
+               
+               Note that processes using ITRs do not automatically know to convert between
+               percent values and "actual" data values. The :class:`REG` "PERCENT" value is simply
+               a flag to indicate to a user that the values are intended to be in the range
+               from 0 < x < 100. The :class:`ITR` should not, therefore, be applied directly to data
+               unless that data is already given in percent.
+               
+               If the file name is defined on input, the initial :class:`ITR` will be loaded from it.
+               If it is left blank, a default 5-colour transform with
+               The colour transform file name is used as the default when the save
+               button is pushed, and is updated both after the load and save buttons
+               are pushed by the value input or selected by the user.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 if OK
@@ -932,6 +1088,16 @@ gx_methods = {
         Method('IiDatFileForm_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Grid and Image file Open/Save Form for Multiple/Single file selections",
+               notes="""
+               Remember to make the string size big enough for multiple file
+               selections. In the case of multiple selections the names will be separated
+               by a semicolon and only the first file will contain the full path.
+               
+               When using the multiple flag on any of these functions please be aware that
+               the string returned will be in the format:
+               drive:\\path1\\path2\\name.grid|name2.grid|name3.grid(QUALIFIERS)
+               All grids are required to be of the same type.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -957,6 +1123,19 @@ gx_methods = {
         Method('IiGenFileForm_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="General file Open/Save Form for Multiple/Single file selections and multiple filter capability",
+               notes="""
+               Remember to make the string size big enough for multiple file
+               selections. In the case of multiple selections the names will be separated
+               by a semicolon and only the first file will contain the full path.
+               
+               Defined Functions     The following four functions are handy defines and simply pass the appropriate
+               parameter.
+               
+               iFileOpen_GUI
+               iFileSave_GUI
+               iMultiFileOpen_GUI
+               iMultiFileSave_GUI
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -984,6 +1163,11 @@ gx_methods = {
         Method('IiImportDrillDatabaseADO2_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Same as :func:`iImportDrillDatabaseADO_GUI`, but template name is returned.",
+               notes="""
+               If it is not defined on input, the template name is set
+               to be the Wholeplot table name; e.g.
+               "HOLESURVEY.i4" for "Project_HOLESURVEY"
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1009,6 +1193,11 @@ gx_methods = {
         Method('IiImportDrillDatabaseESRI_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Same as iImportDrillDatabaseADO2_GUI, but from an ArcGIS Geodatabase",
+               notes="""
+               If it is not defined on input, the template name is set
+               to be the Wholeplot table name; e.g.
+               "HOLESURVEY.i4" for "Project_HOLESURVEY"
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1039,6 +1228,15 @@ gx_methods = {
                Generate a template file for importing drill holes
                from ODBC database data.
                """,
+               notes="""
+               If the input connection string is empty (""), then the ODBC connection dialogs
+               will appear (e.g. to connect to a machine database) before the import wizard
+               is run. The connect string used for this connection is then returned.
+               This string can then be used on input to skip the ODBC connection dialogs and
+               go straight to the Wholeplot import wizard.
+               Because the name of the database is not necessarily known, the template name is created
+               from the name of the table opened - e.g. "HOLELOCATION.i4".
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1066,6 +1264,7 @@ gx_methods = {
         Method('IiImportDrillDatabaseODBCMaxwell_GUI', module='None', version='8.3.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Same as :func:`IiImportDrillDatabaseODBC_GUI` but customized for Maxwell.",
+               notes="Same as :func:`IiImportDrillDatabaseODBC_GUI` but customized for Maxwell.",
                return_type=Type.INT32_T,
                return_doc="0-OK 1-Cancel",
                parameters = [
@@ -1126,6 +1325,11 @@ gx_methods = {
         Method('iImportChemDatabaseADO_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Improved template creation for importing geochem database (ADO).",
+               notes="""
+               This is an improved version of ImportChemDatabase_GUI using the
+               new ADO technology, as opposed to DAO. Use in conjuction with
+               :func:`ImportADO_DU`. See also ImportDatabaseADO_GUI.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1147,6 +1351,15 @@ gx_methods = {
         Method('iImportDatabase_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Create template to import an external database table.",
+               notes="""
+               This is used to select a single database table, and
+               selected fields from that table. If the database is not
+               Microsoft Access (type .mdb), an introductory dialog
+               requests the file type.
+               This function DOES NOT import the table itself, but
+               creates an import template which may be used to import
+               the table (see :func:`ImportDAO_DU`()).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1166,6 +1379,17 @@ gx_methods = {
         Method('iImportDatabaseADO_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Create template to import an external database table (ADO Version).",
+               notes="""
+               1. This is used to select a single database table, and
+                  selected fields from that table.
+               
+               2. This function DOES NOT import the table itself, but
+                  creates an import template which may be used to import
+                  the table (see :func:`ImportADO_DU`()).
+               
+               3. If connection string is of type "FILENAME=..." the connection will attempt to resolve
+                  it as a file database. (see also ODBCFileConnect_GUI)
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1187,6 +1411,37 @@ gx_methods = {
                doc="""
                Create template to import an external database table,
                created using SQL.
+               """,
+               notes="""
+               1. This is used to build an Oasis montaj group (line) from
+                  one or more database tables and fields, by selecting from
+                  one or more SQL selection queries. The list of queries
+                  is read from a text file with the following syntax:
+               
+                  Query_Name_1
+                  Query...
+                  Query... (continued)
+                  ...
+                  ...
+                  END_QUERY
+                  Query_Name_2
+                  etc.
+               
+               2. Each query has a title line, the query itself, then the
+                  "END_QUERY" line to finish.  The title of a subsequent query
+                  is on the line after an "END_QUERY" line.
+               
+               3. If the text file parameter is left blank (""), then
+                  selection queries in the database itself are listed.
+                  In addition to the pre-defined queries, there is a
+                  "User Defined" query which may be filled in by the user.
+               
+               4. This function DOES NOT import the table itself, but
+                  creates an import template which may be used to import
+                  the data (see :func:`ImportDAO_DU`()).
+               
+               5. If connection string is of type "FILENAME=..." the connection will attempt to resolve
+                  it as a file database. (see also ODBCFileConnect_GUI)
                """,
                return_type=Type.INT32_T,
                return_doc="""
@@ -1212,6 +1467,34 @@ gx_methods = {
                Create template to import an external database table,
                created using SQL (New ADO Version).
                """,
+               notes="""
+               This is used to build an Oasis montaj group (line) from
+               one or more database tables and fields, by selecting from
+               one or more SQL selection queries. The list of queries
+               is read from a text file with the following syntax:
+               
+               Query_Name_1
+               Query...
+               Query... (continued)
+               ...
+               ...
+               END_QUERY
+               Query_Name_2
+               etc.
+               
+               Each query has a title line, the query itself, then the
+               "END_QUERY" line to finish.  The title of a subsequent query
+               is on the line after an "END_QUERY" line.
+               
+               If the text file parameter is left blank (""), then
+               selection queries in the database itself are listed.
+               In addition to the pre-defined queries, there is a
+               "User Defined" query which may be filled in by the user.
+               
+               This function DOES NOT import the table itself, but
+               creates an import template which may be used to import
+               the data (see :func:`ImportDAO_DU`()).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1233,6 +1516,11 @@ gx_methods = {
         Method('iImportDrillDatabaseADO_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Generate a template file for importing drill holes.",
+               notes="""
+               This is an improved version of ImportDrillDatabase_GUI using the
+               new ADO technology, as opposed to DAO. Use in conjuction with
+               :func:`ImportADO_DU`. See also ImportDatabaseADO_GUI.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1256,6 +1544,15 @@ gx_methods = {
         Method('iImportTemplateSQL_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Create template to import an external database table; provide query.",
+               notes="""
+               This is similar to ImportDatabaseSQL_GUI, but dispenses with
+               the dialog offering a selection of queries. Instead, the
+               user supplies the query as a string.
+               
+               This function DOES NOT import the table itself, but
+               creates an import template which may be used to import
+               the data (see :func:`ImportDAO_DU`()).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1276,6 +1573,15 @@ gx_methods = {
         Method('iImportTemplateSQLADO_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Create template to import an external database table; provide query.",
+               notes="""
+               This is similar to ImportDatabaseSQL_GUI, but dispenses with
+               the dialog offering a selection of queries. Instead, the
+               user supplies the query as a string.
+               
+               This function DOES NOT import the table itself, but
+               creates an import template which may be used to import
+               the data (see :func:`ImportADO_DU`()).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1319,6 +1625,14 @@ gx_methods = {
         Method('IiODBCFileConnect_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_app=True, is_gui=True, 
                doc="Get the connection string for a file database as well as optional table name and FileUsage attribute",
+               notes="""
+               If the file extension is "mdb" or "xls" then a Microsoft Access
+               or Excel database is assumed. Otherwise, a dialog appears listing
+               the installed ODBC file database drivers. If the driver takes a
+               directory as a database (FileUsage==1) the table name is also
+               returned. This is needed because the table name may or may not include
+               the file extension.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1343,6 +1657,7 @@ gx_methods = {
         Method('IiSymbolForm_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="- Select a symbol.",
+               notes="Symbols are set on input, and new values returned.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1426,6 +1741,20 @@ gx_methods = {
         Method('iPatternForm_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="- Select a pattern.",
+               notes="""
+               Pattern values set on input, and new values returned.
+               Solid fill is indicated by Pattern number 0.
+               
+               Returned Values (not set on input)
+               
+               Size:    pattern tile size in mm.
+               Thick:   pattern line thickness in percent of the tile size.
+                        valid range is 0-100.
+               Density: Tile spacing. A value of 1 means tiles are laid with no overlap.
+                        A value of 2 means they overlap each other.
+               
+               The pattern Angle and Style parameters are not user-definable.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1449,6 +1778,7 @@ gx_methods = {
         Method('iLinePatternForm_GUI', module='None', version='8.1.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Select a line pattern.",
+               notes="Same as :func:`iPatternForm_GUI` but for line patterns.",
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1468,6 +1798,25 @@ gx_methods = {
         Method('iTwoPanelSelection_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="General purpose two-panel selection.",
+               notes="""
+               Takes as input two LSTs, one contains all available items,
+               the second currently selected items. These are processed,
+               and in the left panel are displayed all items in the first
+               :class:`LST` not in the selection :class:`LST`, and on the right all items
+               in the first :class:`LST` which are in the selection :class:`LST`. (Items in
+               the selection :class:`LST` NOT in the first :class:`LST` are ignored).
+               Once the user has finalized the selections, the final selections
+               are returned in the selection :class:`LST`.
+               
+               Selections and display are based on the :def_val:`LST_ITEM_NAME` part of the
+               :class:`LST` item, but on export both the :def_val:`LST_ITEM_NAME` and :def_val:`LST_ITEM_VALUE`
+               elements of the selected items from the first :class:`LST` are transferred
+               to the second list for output.
+               
+               The sConvertToCSV_LST and sConvertFromCSV_LST functions in lst.h
+               can be used to convert the selection LSTs to forms that can be
+               stored and retrieved from GX parameters (or :class:`REG` or INI, etc.).
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1485,6 +1834,12 @@ gx_methods = {
         Method('iTwoPanelSelection2_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Two-panel selection, items not sorted alphabetically.",
+               notes="""
+               Same as :func:`iTwoPanelSelection_GUI`, but the items in the
+               two lists are not sorted alphabetically, but are ordered
+               exactly as input, and when an item is selected it is
+               added at the end of the lists.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1502,6 +1857,12 @@ gx_methods = {
         Method('iTwoPanelSelectionEx_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Two-panel selection; options for sort and ability to select no items.",
+               notes="""
+               Same as :func:`iTwoPanelSelection_GUI`, but the items in the
+               two lists are not sorted alphabetically, but are ordered
+               exactly as input, and when an item is selected it is
+               added at the end of the lists.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1523,6 +1884,10 @@ gx_methods = {
         Method('iTwoPanelSelectionEx2_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="Two-panel selection; extended options including a help link.",
+               notes="""
+               Same as :func:`iTwoPanelSelectionEx_GUI`, but user can specify a help
+               link.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1670,6 +2035,7 @@ gx_methods = {
         Method('RenderPattern_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, no_gxh=True, 
                doc="- Render a pattern.",
+               notes="Renders a Geosoft pattern to a Windows DC.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="HDC", is_val=True,
@@ -1705,6 +2071,7 @@ gx_methods = {
         Method('RenderLinePattern_GUI', module='None', version='8.1.0',
                availability=Availability.PUBLIC, is_app=True, no_gxh=True, 
                doc="Render a line pattern.",
+               notes="Same as :func:`RenderPattern_GUI` but for line patterns.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="HDC", is_val=True,
@@ -1736,6 +2103,10 @@ gx_methods = {
         Method('SetParentWND_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, no_gxh=True, 
                doc="Set the current parent WND",
+               notes="""
+               The parent WND is used by all modal dialogs as a
+               parent to ensure the dialog is correctly modal.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="WND",
@@ -1757,6 +2128,11 @@ gx_methods = {
                Ability to set the progress bar to stay visible even
                if main application is processing messages
                """,
+               notes="""
+               In montaj the progress bar is hidden when the main window
+               start processing messages. This is not always desirable
+               in some 3rd party apps, hence this function.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -1766,6 +2142,15 @@ gx_methods = {
         Method('SetWindowArea_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, 
                doc="Set the location of the oasis montaj window.",
+               notes="""
+               The Coordinates are pixels with 0,0 being the top
+               left corner of the Screen.
+               
+               If the window is minimized, the max values will be
+               equal to the min values. If the window is maximized
+               X Min and Y min will be :def_val:`GS_S4MN` and X max and Y max
+               will be :def_val:`GS_S4MX`.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
@@ -1811,6 +2196,10 @@ gx_methods = {
         Method('SimpleMapDialog_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, is_gui=True, 
                doc="General purpose map display :class:`GUI` with no interaction.",
+               notes="""
+               This function displays a map in a simple resizable dialog that fits the map into it.
+               It is generally useful to display temporary maps as graphs (e.g. variograms).
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="MAP",
@@ -1824,6 +2213,12 @@ gx_methods = {
         Method('ThematicVoxelInfo_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_app=True, 
                doc="Display GX.Net thematic voxel info :class:`GUI`.",
+               notes="""
+               Displays the thematic voxel codes, colours, total volume for
+               each code, and number of valid items (cubes) for each code.
+               This is a replacement for the numeric stats done on normal
+               numerical voxel grids.
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="VOX",
@@ -1833,6 +2228,7 @@ gx_methods = {
         Method('Show3DViewerDialog_GUI', module='None', version='9.2.0',
                availability=Availability.LICENSED, is_app=True, 
                doc="Display a 3D viewer dialog",
+               notes="Any changes made to the map will be persisted.",
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type=Type.STRING,
@@ -1848,6 +2244,13 @@ gx_methods = {
         Method('DefineDrillITR_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, 
                doc="Define colour zones for gridded data.",
+               notes="""
+               The :class:`ITR` for Wholeplot gridded data is now defined inside the tabbed
+               dialog for the Plan or Section maps. Calls to this function now bring
+               up an error message.
+               
+               Obsolete
+               """,
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DH",
@@ -1865,6 +2268,7 @@ gx_methods = {
                using a complex dialog. The Template name
                may change during editing.
                """,
+               notes="Obsolete, use :func:`iExportXYZTemplateEditor_GUI`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1886,6 +2290,7 @@ gx_methods = {
                using a complex dialog. The Template name
                may change during editing.
                """,
+               notes="Obsolete, use :func:`iExportXYZTemplateEditorEx_GUI`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1924,6 +2329,12 @@ gx_methods = {
         Method('IiBrowseDirEdit_GUI', module='None', version='5.0.0',
                availability=Availability.PUBLIC, is_obsolete=True, is_app=True, is_gui=True, 
                doc="Browses for a specific directory, user editable.",
+               notes="""
+               Allows the user to edit the directory name in an edit window,
+               as well as browse for an existing directory, so it is possible
+               to specify a new directory name. It remains up to the caller to
+               test to see if the directory exists, and if not, to create it.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - Ok
@@ -1943,6 +2354,7 @@ gx_methods = {
         Method('iImportDrillDatabase_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, 
                doc="Generate a template file for importing drill holes.",
+               notes="Obsolete, use ImportDrillDatabaseADO_GUI",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1966,6 +2378,7 @@ gx_methods = {
         Method('ImportAsciiWizard_GUI', module='None', version='5.0.0',
                availability=Availability.LICENSED, is_obsolete=True, is_app=True, is_gui=True, 
                doc="Generate a template file from a gui.",
+               notes="Obsolete, use :func:`ImportAsciiWizard_GUI`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -1985,6 +2398,7 @@ gx_methods = {
                using a complex dialog. The Template name
                may change during editing.
                """,
+               notes="Obsolete, use :func:`iImportXYZTemplateEditor_GUI`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK
@@ -2007,6 +2421,7 @@ gx_methods = {
                Get the connection string for a file database as well as
                optional table name and FileUsage attribute
                """,
+               notes="Obsolete, use :func:`IODBCFileConnect_GUI`",
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK

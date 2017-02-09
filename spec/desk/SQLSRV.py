@@ -25,6 +25,10 @@ gx_methods = {
         Method('iAttachMDF_SQLSRV', module='geoguilib', version='5.1.8',
                availability=Availability.LICENSED, 
                doc="Attaches an MDF SQL server file to a server.",
+               notes="""
+               The file's path need to be visible as local files on the server.
+               Network drives and substitutes may not work.
+               """,
                return_type=Type.INT32_T,
                return_doc="""
                0 - OK

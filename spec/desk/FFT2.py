@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('FFT2',
                  doc="""
-2-D Fast Fourier Transforms
-These methods now work with an :class:`IMG` object, instead of creating
-their own :class:`FFT2` object.
-""")
+                 2-D Fast Fourier Transforms
+                 These methods now work with an :class:`IMG` object, instead of creating
+                 their own :class:`FFT2` object.
+                 """)
 
 
 gx_defines = [

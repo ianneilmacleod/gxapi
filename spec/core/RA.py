@@ -2,10 +2,10 @@ from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('RA',
                  doc="""
-The :class:`RA` class is used to access ASCII files sequentially or
-by line number. The files are opened in read-only mode, so no
-write operations are defined
-""")
+                 The :class:`RA` class is used to access ASCII files sequentially or
+                 by line number. The files are opened in read-only mode, so no
+                 write operations are defined
+                 """)
 
 
 
@@ -27,6 +27,14 @@ gx_methods = {
         Method('CreateSBF_RA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Creates :class:`RA` on an :class:`SBF`",
+               notes="""
+               This method allows you to open an :class:`RA` in a structured file
+               storage (an :class:`SBF`).  SBFs can be created inside other data
+               containers, such as workspaces, maps, images and databases.
+               This lets you store application specific information together
+               with the data to which it applies.
+               """,
+               see_also="sbf.gxh",
                return_type="RA",
                return_doc=":class:`RA` Object",
                parameters = [
@@ -75,6 +83,7 @@ gx_methods = {
         Method('iLine_RA', module='geoengine.core', version='5.0.0',
                availability=Availability.PUBLIC, 
                doc="Returns current line #, 0 is the first",
+               notes="This will be the next line read.",
                return_type=Type.INT32_T,
                return_doc="The current read line location.",
                parameters = [
