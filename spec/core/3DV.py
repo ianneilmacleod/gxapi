@@ -54,11 +54,11 @@ gx_methods = {
                              doc="Y maximum in mm"),
                    Parameter('p8', type=Type.INT32_T,
                              doc="(0 - Produce errors for conflicting unpacked files, 1 - Force overwrites of conflicting unpacked files)"),
-                   Parameter('p9', type=Type.STRING, is_ref=True, size_of_param='9',
+                   Parameter('p9', type=Type.STRING, is_ref=True, size_of_param='p10',
                              doc="New view name created"),
                    Parameter('p10', type=Type.INT32_T, default_length='MVIEW_NAME_LENGTH',
                              doc="Length of new view name"),
-                   Parameter('p11', type=Type.STRING, is_ref=True, size_of_param='11',
+                   Parameter('p11', type=Type.STRING, is_ref=True, size_of_param='p12',
                              doc="List of files that are problematic returned"),
                    Parameter('p12', type=Type.INT32_T, default_length='STR_MULTI_FILE',
                              doc="Length of problematic files buffer")

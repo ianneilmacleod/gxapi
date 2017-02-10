@@ -523,7 +523,7 @@ gx_methods = {
                              doc="input Targets database name"),
                    Parameter('p2', type=Type.STRING,
                              doc="input Targets group (line) name"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="output group name string"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_GROUP',
                              doc="output buffer lengths (maximum 32)")

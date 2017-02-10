@@ -140,7 +140,7 @@ gx_methods = {
                              doc=":class:`LAYOUT` Object"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="Rectangle to get info for (-1 for parent)"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Buffer for name of the rectangle"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the Buffer")

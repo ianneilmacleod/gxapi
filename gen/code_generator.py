@@ -46,18 +46,18 @@ for file in itertools.chain(_core_files, _desk_files):
 
     _class_method_groups[gx_cl] = groups
 
-
-def do_comment(s, prefix='// ', commentfirst=False, extra_spaces=0):
+def do_comment(s, prefix='// ', comment_first_line=False, extra_spaces=0):
     if extra_spaces > 0:
         prefix += u' ' * extra_spaces
     rv = (u'\n' + prefix).join(s.splitlines())
-    if commentfirst:
+    if comment_first_line:
         rv = prefix + rv
     return rv
 
 
 def _opt_derive(instance, derive_type):
     return derive_type(instance) if derive_type else copy.deepcopy(instance)
+
 
 class CodeGeneratorBase:
     # This class provide a set of dicts from an API spec that is perfectly suited for

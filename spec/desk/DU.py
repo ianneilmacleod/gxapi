@@ -1721,7 +1721,7 @@ gx_methods = {
                              doc="import data file name"),
                    Parameter('p3', type=Type.STRING,
                              doc="import template name"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Optional Line name (on return, the actual line)"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Buffer size for line name"),

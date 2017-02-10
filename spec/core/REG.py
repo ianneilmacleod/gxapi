@@ -7,7 +7,8 @@ gx_class = Class('REG',
                  information particular to the class.  The :class:`META` class supersedes
                  the :class:`REG` class and is gradually replacing the use of the
                  :class:`REG` class in newer applications.
-                 """)
+                 """,
+                 verbatim_gxh_defines="#define GetString_REG(A,B,C) Get_REG(A,B,C,sizeof(C))")
 
 
 gx_defines = [
@@ -82,7 +83,7 @@ gx_methods = {
                              doc="Handle to :class:`REG` object (stores control parameters)"),
                    Parameter('p2', type=Type.STRING,
                              doc="Name of the parameter"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="String to get"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of destination string")
@@ -111,11 +112,11 @@ gx_methods = {
                              doc="Handle to :class:`REG` object (stores control parameters)"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="sequential number of :class:`REG` entry"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="String to put parameter name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of parameter String"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="String to put data into."),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of Data String")
@@ -165,7 +166,7 @@ gx_methods = {
                              doc="Handle to :class:`REG` object (stores control parameters)"),
                    Parameter('p2', type=Type.STRING,
                              doc="String to Replace"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Output Buffer"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the Output Buffer")

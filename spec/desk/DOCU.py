@@ -97,7 +97,7 @@ gx_methods = {
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="buffer to fill with document name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of buffer")
@@ -109,7 +109,7 @@ gx_methods = {
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="DOCU"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="buffer to fill with document file name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of buffer")

@@ -37,10 +37,40 @@ class GXHDefine(Define):
 
 """).render(define=self)
 
+def get_gxh_type(type):
+    if type == Type.DOUBLE:
+        return "real"
+    elif type == Type.INT32_T:
+        return "int"
+    elif type == Type.STRING:
+        return "string"
+    else:
+        if '0' <= type[0] and type[0] <= '9':
+            return "H" + type
+        else:
+            return type
+
 
 class GXHParameter(Parameter):
     def __init__(self, other):
         super().construct_copy(other)
+
+    @property
+    def gxh_type(self):
+        if self.is_ref:
+            return 'var {}'.format(get_gxh_type(self.type))
+        else:
+            return get_gxh_type(self.type)
+
+    def render_gxh_doc(self, indent_spaces):
+        if self.doc:
+            return self.generator.get_template(
+                '{% set type_len = param.gxh_type|length %}{{ param.doc | doc_sanitize | comment(comment_first_line=True) | indent(indent_spaces-type_len, True) | indent(indent_spaces+1) }}'
+            ).render(param=self, indent_spaces=indent_spaces)
+        else:
+            return self.generator.get_template(
+                '{% set type_len = param.gxh_type|length %}{{ "//" | indent(indent_spaces-type_len, True) }}').render(param=self, indent_spaces=indent_spaces)
+
 
 
 class GXHMethod(Method):
@@ -48,22 +78,82 @@ class GXHMethod(Method):
         super().construct_copy(other)
 
     def render(self):
-        return self.generator.get_template("""
+        return self.generator.get_template("""{% set name_len = method.exposed_name|length %} {% set ret_len = method.gxh_return_type|length %} {% set avail_len = method.availability_prefix|length %}
 //-----------------------------------------------------------------------------------------------------------
-// {{ method.name }} {%if method.doc %}{{ method.doc | doc_sanitize | comment(extra_spaces=method.name|length+1) }}{% endif %}
-{% if method.see_also %}//-----------------------------------------------------------------------------------------------------------
-// See also
-//
-// {{ method.see_also | doc_sanitize | comment }}
-//
-{% endif %}{% if method.notes %}//-----------------------------------------------------------------------------------------------------------
-// Notes
-//
-// {{ method.notes | doc_sanitize | comment }}
-//
-{% endif %}//-----------------------------------------------------------------------------------------------------------
-""").render(method=self)
+// {{ method.exposed_name }} {%if method.doc %}{{ method.doc | doc_sanitize | comment(extra_spaces=name_len+1) }}{% endif %}
+{% if method.return_doc %}//
+// Returns {{ ' ' * (name_len - 7) }}{{ method.return_doc | doc_sanitize | comment(extra_spaces=name_len+1) }}
+{% endif %}{% if method.notes %}//
+// Notes {{ ' ' * (name_len - 5) }}{{ method.notes | doc_sanitize | comment(extra_spaces=name_len+1) }}
+{% endif %}{% if method.see_also %}//
+// See also {{ ' ' * (name_len - 8) }}{{ method.see_also | doc_sanitize | comment(extra_spaces=name_len+1) }}
+{% endif %}//
+// Available {{ ' ' * (name_len - 9) }}{{ method.version }}
+//-----------------------------------------------------------------------------------------------------------
 
+{{ method.availability_prefix }} {{ method.gxh_return_type }} {{ method.exposed_name }}{{ method.render_parameters() | indent(avail_len+name_len + ret_len + 2) }}
+{{ method.string_macro }}""").render(method=self)
+
+    @property
+    def exposed_name(self):
+        if self.external_name:
+            return self.external_name
+        else:
+            return self.name
+
+    @property
+    def string_macro(self):
+        method_name = self.exposed_name
+        param_replacements = {p.size_of_param: p.name for p in self.parameters if p.size_of_param}
+        if len(param_replacements) > 0:
+
+            if method_name.startswith('I') or method_name.startswith('_'):
+                macro_name = method_name[1:]
+            elif method_name.startswith('iI'):
+                macro_name = 'i{}'.format(method_name[2:])
+            elif method_name.startswith('Gt'):
+                macro_name = 'Get{}'.format(method_name[2:])
+            else:
+                macro_name = '_{}'.format(method_name)
+            macro_params = ''
+            method_params = ''
+
+            for param in self.parameters:
+                if method_params:
+                    method_params += ', '
+                if param.name in param_replacements:
+                    method_params += 'sizeof({})'.format(param_replacements[param.name])
+                else:
+                    if macro_params:
+                        macro_params += ', '
+                    macro_params += param.name
+                    method_params += param.name
+            return '#define {}({}) {}({})\n'.format(macro_name, macro_params, method_name, method_params)
+        else:
+            return ''
+
+    def render_parameters(self):
+        max_type_len = 0
+        for param in self.parameters:
+            max_type_len = max(max_type_len, len(param.gxh_type))
+        return self.generator.get_template("""{% for param in parameters %}{% if loop.first %}({% else %} {% endif %}{{ param.gxh_type }}{% if not loop.last %}, {{ param.render_gxh_doc(max_type_len + 2) }}
+{% else %});{{ param.render_gxh_doc(max_type_len + 2) }}{% endif %}{% else %}();{% endfor %}""").render(parameters=self.parameters, max_type_len=max_type_len)
+
+    @property
+    def gxh_return_type(self):
+        return get_gxh_type(self.return_type)
+
+    @property
+    def availability_prefix(self):
+        if self.availability == Availability.PUBLIC:
+            prefix = 'public'
+        elif self.availability == Availability.EXTENSION:
+            prefix = 'extended'
+        else:
+            prefix = 'licensed'
+        if self.is_app:
+            prefix += '_app'
+        return '[_{}]'.format(prefix)
 
 
 class GXHClass(Class):
@@ -139,6 +229,7 @@ class GXHClass(Class):
 {{ method.render() }}
 {% endfor %}
 """).render(methods=method_group)
+
 
 class GXHCodeGenerator(CodeGeneratorBase):
     def doc_sanitize(self, s):

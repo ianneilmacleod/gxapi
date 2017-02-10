@@ -1,5 +1,5 @@
 from .gxdefs import Type, Availability, SpecBase
-
+from distutils.version import StrictVersion
 
 class Parameter(SpecBase):
     def __init__(self, name, type=Type.UNKNOWN, is_ref=False, is_val=False,
@@ -24,7 +24,7 @@ class Method(SpecBase):
 
         self.name = name
         self.module = module
-        self.version = version
+        self.version = StrictVersion(version)
         self.external_name = external_name
         self.availability = availability
         self.is_obsolete = is_obsolete

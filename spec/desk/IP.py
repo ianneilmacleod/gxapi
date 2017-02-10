@@ -882,11 +882,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input channel"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Returned label"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Label length"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Returned units"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Units label length")

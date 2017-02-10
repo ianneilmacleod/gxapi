@@ -812,7 +812,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="name returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="maximum name size")
@@ -829,7 +829,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="ESRI projection string returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="string length, should be at least 1024")
@@ -847,15 +847,15 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="projection name"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="datum name, major axis, elipticity"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="method name, parameters"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="unit name, factor"),
-                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="local transform name,dX,dY,dZ,rX,rY,rZ,Scale"),
                    Parameter('p7', type=Type.INT32_T, default_length='STR_GXF',
                              doc="maximum length of all strings")
@@ -868,11 +868,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="MapInfo coordsys string returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="coordsys string length"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="MapInfo unit string returned"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="unit string length")
@@ -887,7 +887,7 @@ gx_methods = {
                              doc=":class:`IPJ` object"),
                    Parameter('p2', type=Type.INT32_T,
                              doc=":def:`IPJ_NAME`"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="name returned"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="maximum name size")
@@ -914,7 +914,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="name returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="maximum name size")
@@ -928,7 +928,7 @@ gx_methods = {
                    Parameter('p1', type="IPJ"),
                    Parameter('p2', type=Type.DOUBLE, is_ref=True,
                              doc="factor to meters"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="abbreviation"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="length of string")
@@ -941,7 +941,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="IPJ",
                              doc=":class:`IPJ` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="XML string returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="string length, should be at least 1024")
@@ -1148,7 +1148,7 @@ gx_methods = {
                              doc="factor to meters"),
                    Parameter('p2', type=Type.INT32_T,
                              doc=":def:`IPJ_UNIT`"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc='name returned, "" if cannot find unit'),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="length of string")

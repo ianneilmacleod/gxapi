@@ -64,7 +64,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="RA",
                              doc=":class:`RA` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="buffer in which to place string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum length of the string buffer")

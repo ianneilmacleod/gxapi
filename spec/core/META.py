@@ -342,7 +342,7 @@ gx_methods = {
                              doc="Object"),
                    Parameter('p3', type="META_TOKEN",
                              doc="Attribute"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="String value to get"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of string")
@@ -730,7 +730,7 @@ gx_methods = {
                    Parameter('p1', type="META"),
                    Parameter('p2', type="META_TOKEN",
                              doc="Object"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of object"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of name buffer")

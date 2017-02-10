@@ -92,11 +92,11 @@ gx_methods = {
                doc="Get some info on the current :class:`MXD` in ArcMap and selected layer (if any)",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc=":class:`MXD` filename"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Selected Layer name (If a layer is selected)"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Dataframe name containing selected layer (If a layer is selected)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of strings")
@@ -109,9 +109,9 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc="Selected layer number"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Selected Layer name"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Dataframe name containing selected layer"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of strings")

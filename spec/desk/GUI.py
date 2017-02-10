@@ -5,7 +5,24 @@ gx_class = Class('GUI',
                  These are graphical functions that typically create a
                  dialog-style window for a specific function. Examples include
                  file import wizards, and the Histogram and Scatter tools.
-                 """)
+                 """,
+                 verbatim_gxh_defines="""
+#define ImportChemDatabase_GUI(A,B,C,D) {if (iImportChemDatabase_GUI(A,B,C,sizeof(C),D) Cancel_SYS();}	  
+#define ImportChemDatabaseADO_GUI(A,B,C,D) {if (iImportChemDatabaseADO_GUI(A,B,C,sizeof(C),D)) Cancel_SYS();}
+#define ImportDrillDatabaseADO_GUI(A,B,C,D,E) {if (iImportDrillDatabaseADO_GUI(A,B,C,sizeof(C),D,E)) Cancel_SYS();}
+#define ImportDatabase_GUI(A,B,C) {if (iImportDatabase_GUI(A,B,C,sizeof(C))) Cancel_SYS();}
+#define ImportDatabaseADO_GUI(A,B,C) {if (iImportDatabaseADO_GUI(A,B,C,sizeof(C))) Cancel_SYS();}
+#define ImportDatabaseSQL_GUI(A,B,C,D) {if (iImportDatabaseSQL_GUI(A,B,C,D,sizeof(D))) Cancel_SYS();}
+#define ImportDatabaseSQLADO_GUI(A,B,C,D) {if (iImportDatabaseSQLADO_GUI(A,B,C,D,sizeof(D))) Cancel_SYS();}
+#define ImportTemplateSQL_GUI(A,B,C,D) {if (iImportTemplateSQL_GUI(A,B,C,D)) Cancel_SYS();}
+#define ImportTemplateSQLADO_GUI(A,B,C,D) {if (iImportTemplateSQLADO_GUI(A,B,C,D)) Cancel_SYS();}
+#define DatabaseType_GUI(A,B) {if (iDatabaseType_GUI(A,B,sizeof(B)) Cancel_SYS();}
+
+#define iFileOpen_GUI(A,B,C,D)          IiGenFileForm_GUI(A,(VV) 0,B,C,D,sizeof(D),FILE_FORM_OPEN,FALSE)
+#define iMultiFileOpen_GUI(A,B,C,D)     IiGenFileForm_GUI(A,(VV) 0,B,C,D,sizeof(D),FILE_FORM_OPEN,TRUE)
+#define iFileSave_GUI(A,B,C,D)          IiGenFileForm_GUI(A,(VV) 0,B,C,D,sizeof(D),FILE_FORM_SAVE,FALSE)
+#define iMultiFileSave_GUI(A,B,C,D)     IiGenFileForm_GUI(A,(VV) 0,B,C,D,sizeof(D),FILE_FORM_SAVE,TRUE)
+""")
 
 
 gx_defines = [
@@ -697,7 +714,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="File Name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="database type (returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of type string")
@@ -781,7 +798,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Template name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of name")
@@ -926,11 +943,11 @@ gx_methods = {
                              doc=":def:`DAT_TYPE`"),
                    Parameter('p2', type=Type.INT32_T,
                              doc=":def:`FILE_FORM`"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc='Returned default extension (e.g. "grd")'),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer size for extension"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc='Returned default qualifier (e.g. "GRD")'),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer size for the qualifier")
@@ -955,15 +972,15 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc=":def:`FILE_FILTER`"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Returned file filter string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="Size of the file filter buffer"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Returned file mask string"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="Size of the file mask buffer"),
-                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="Returned file extension"),
                    Parameter('p7', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="Size of the file extension buffer"),
@@ -986,7 +1003,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc=":def:`GS_DIRECTORY` Returned directory."),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Returned directory path"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the directory path buffer")
@@ -1015,7 +1032,7 @@ gx_methods = {
                              doc="Title of the Form"),
                    Parameter('p2', type=Type.STRING,
                              doc='Default path (Can be "")'),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Result Path Buffer (default on input)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Path Buffer Size")
@@ -1046,7 +1063,7 @@ gx_methods = {
                              doc="Max number of zones (8 or 12)"),
                    Parameter('p4', type=Type.INT32_T,
                              doc="Show file load/save buttons (TRUE or FALSE)?"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Default colour transform file name"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer size for the file name")
@@ -1077,7 +1094,7 @@ gx_methods = {
                1 if user cancels
                """,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Default colour transform file name"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer size for the file name"),
@@ -1108,7 +1125,7 @@ gx_methods = {
                              doc="Title of the Form"),
                    Parameter('p2', type=Type.STRING,
                              doc="Default value"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Where the file name(s) is returned"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_MULTI_FILE',
                              doc="Size of the File Name Buffer"),
@@ -1150,7 +1167,7 @@ gx_methods = {
                              doc=":def:`FILE_FILTER` (ignored if parameter above is not zero)"),
                    Parameter('p4', type=Type.STRING,
                              doc="Default value"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Where the file name(s) is returned"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_MULTI_FILE',
                              doc="Size of the File Name Buffer"),
@@ -1176,11 +1193,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="External database connection string (Blank for OLEDB Wizard)"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="template to make (if left blank, the created template name is returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the template name string"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Name of table"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1206,11 +1223,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc='External database connection string  (e.g. "d:\\Personal\\test.mdb|Table" or "d:\\File\\test.gdb|TableX|FeatureClassY)"'),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="template to make (if left blank, the created template name is returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the template name string"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Name of table"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1243,15 +1260,15 @@ gx_methods = {
                -1 - Cancel
                """,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="connection string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of connection string returned"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="template to make"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of template string returned"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Name of table"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1268,15 +1285,15 @@ gx_methods = {
                return_type=Type.INT32_T,
                return_doc="0-OK 1-Cancel",
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="connection string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of connection string returned"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="template to make"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of template string returned"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Name of table"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1314,7 +1331,7 @@ gx_methods = {
                              doc="data file name"),
                    Parameter('p2', type=Type.STRING,
                              doc="template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1340,7 +1357,7 @@ gx_methods = {
                              doc="External database connection string (Blank for OLEDB Wizard)"),
                    Parameter('p2', type=Type.STRING,
                              doc="template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1370,7 +1387,7 @@ gx_methods = {
                              doc="External database file name"),
                    Parameter('p2', type=Type.STRING,
                              doc="Template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table imported (returned)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table string")
@@ -1400,7 +1417,7 @@ gx_methods = {
                              doc="External database connection string (Blank for OLEDB Wizard)"),
                    Parameter('p2', type=Type.STRING,
                              doc="Template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table imported (returned)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table string")
@@ -1455,7 +1472,7 @@ gx_methods = {
                              doc='Text file with SQL queries to use, ("" - get from database)'),
                    Parameter('p3', type=Type.STRING,
                              doc="Import template to make"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Name of table imported (returned)"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table string")
@@ -1507,7 +1524,7 @@ gx_methods = {
                              doc='Text file with SQL queries to use, ("" - get from database)'),
                    Parameter('p3', type=Type.STRING,
                              doc="Import template to make"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Name of table imported (returned)"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table string")
@@ -1531,7 +1548,7 @@ gx_methods = {
                              doc="External database connection string (Blank for OLEDB Wizard)"),
                    Parameter('p2', type=Type.STRING,
                              doc="template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of table name string"),
@@ -1642,13 +1659,13 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="File Name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Connection string (returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of connection string"),
                    Parameter('p4', type=Type.INT32_T,
                              doc="File Usage (0 - ODBC drivers not queried, 1 - Directory containing tables, 2 - File containing tables)"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Table name of file (returned if plUsage==1)"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of table name")
@@ -1664,7 +1681,7 @@ gx_methods = {
                1 - Cancel
                """,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Symbol font file name"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_FILE',
                              doc="buffer size for symbol font face name"),
@@ -2299,7 +2316,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Template name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of name")
@@ -2345,7 +2362,7 @@ gx_methods = {
                              doc="Title of the Form"),
                    Parameter('p2', type=Type.STRING,
                              doc='Default path (Can be "")'),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Result Path Buffer (default on input)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Path Buffer Size")
@@ -2365,7 +2382,7 @@ gx_methods = {
                              doc="data file name"),
                    Parameter('p2', type=Type.STRING,
                              doc="template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Name of table"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of table name string"),
@@ -2430,13 +2447,13 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="File Name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Connection string (returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of connection string"),
                    Parameter('p4', type=Type.INT32_T,
                              doc="File Usage (0 - ODBC drivers not queried, 1 - Directory containing tables, 2 - File containing tables)"),
-                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='5',
+                   Parameter('p5', type=Type.STRING, is_ref=True, size_of_param='p6',
                              doc="Table name of file (returned if plUsage==1)"),
                    Parameter('p6', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of table name")
@@ -2465,7 +2482,7 @@ gx_methods = {
                              doc=":class:`DB` obj"),
                    Parameter('p3', type=Type.STRING,
                              doc="Current line"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Selected channel (returned)"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="size of channel buffer")

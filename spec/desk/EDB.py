@@ -628,7 +628,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` Object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Where to put the name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Length of the Buffer")
@@ -644,7 +644,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="String returned here"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Size")
@@ -657,7 +657,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` Object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Where to put the name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Length of the Buffer")
@@ -696,19 +696,19 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EDB",
                              doc=":class:`EDB` Object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Database name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Length of the database name"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Name of Selected channel"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Length of the channel name"),
-                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="Selected lines buffer"),
                    Parameter('p7', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Length of the lines buffer"),
-                   Parameter('p8', type=Type.STRING, is_ref=True, size_of_param='8',
+                   Parameter('p8', type=Type.STRING, is_ref=True, size_of_param='p9',
                              doc="Fiducial range"),
                    Parameter('p9', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Length of the range buffer")
@@ -785,7 +785,7 @@ gx_methods = {
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EDB"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Name returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the String")

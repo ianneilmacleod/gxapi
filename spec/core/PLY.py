@@ -260,7 +260,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="PLY",
                              doc=":class:`PLY` Object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="polygon description"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="string size")

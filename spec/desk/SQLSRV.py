@@ -110,11 +110,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="SQL server to use"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="User name (default & returned)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Length of User name"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Password (default & returned)"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Length of Password"),

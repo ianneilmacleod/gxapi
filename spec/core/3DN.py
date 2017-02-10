@@ -88,7 +88,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="3DN",
                              doc=":class:`3DN` Handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Font name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Font Buffer Size")
@@ -115,15 +115,15 @@ gx_methods = {
                              doc="Render Bounding Box (0 or 1)"),
                    Parameter('p3', type=Type.INT32_T, is_ref=True,
                              doc="Render Axis (0 or 1)"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Label for X axis"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of X Buffer"),
-                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="Label for Y axis"),
                    Parameter('p7', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of Y Buffer"),
-                   Parameter('p8', type=Type.STRING, is_ref=True, size_of_param='8',
+                   Parameter('p8', type=Type.STRING, is_ref=True, size_of_param='p9',
                              doc="Label for Z axis"),
                    Parameter('p9', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of Z Buffer")

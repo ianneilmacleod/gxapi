@@ -645,7 +645,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="setting"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="value string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="sizeof string")
@@ -689,7 +689,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc="the error index (0 to N-1, where N=number of registered errors)"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to return message in"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of buffer")
@@ -1095,7 +1095,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input file name to resolve"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output name, can be the same as input"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of output name")
@@ -1246,7 +1246,7 @@ gx_methods = {
                              doc="File to get path name for"),
                    Parameter('p2', type=Type.INT32_T,
                              doc=":def:`SYS_SEARCH_PATH`"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Buffer to place path name into"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of Buffer")
@@ -1280,7 +1280,7 @@ gx_methods = {
                              doc=":def:`SYS_SEARCH_PATH`"),
                    Parameter('p3', type=Type.INT32_T,
                              doc=":def:`GEO_DIRECTORY`"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Buffer to place path name into"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of Buffer")
@@ -1294,7 +1294,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc=":def:`SYS_DIR`"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned directory path string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the string")
@@ -1308,7 +1308,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc=":def:`SYS_PATH`"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string in which to place path"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Maximum string size")
@@ -1319,7 +1319,7 @@ gx_methods = {
                doc="Get the Windows directory path",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Buff for directory path string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the buff")
@@ -1375,7 +1375,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input file name to resolve"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output name, can be the same as input"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of output name")
@@ -1388,7 +1388,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input file name to resolve"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output name, can be the same as input"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of output name")
@@ -1402,7 +1402,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input Extesion (without .)"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of output name")
@@ -1422,7 +1422,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input file name to resolve (path is removed)"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output name, can be the same as input"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of output name")
@@ -1439,7 +1439,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="input file path/name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="output file name with path transfered"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="maximum length of output string")
@@ -1606,7 +1606,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Name of the Parameter"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Setting returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the buffer")
@@ -1646,7 +1646,7 @@ gx_methods = {
                return_type=Type.INT32_T,
                return_doc=":def:`ARC_LICENSE`",
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Version String"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="Size of Version String")
@@ -1686,7 +1686,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Class String"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of Class String")
@@ -1697,11 +1697,11 @@ gx_methods = {
                doc="Get the licensed user name and Company",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="User Name"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of user name"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Company Name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of Company name")
@@ -1769,7 +1769,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="File Name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to place the target name into"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the Buffer")
@@ -1906,7 +1906,7 @@ gx_methods = {
                doc="Genrates a GUID string (e.g. {4FEDE8BF-CDAB-430A-8026-1CCC0EC0A2EB})",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="GUID"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="Size of GUID buffer.")
@@ -2013,7 +2013,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="name of .NET GX assembly"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="buffer to place list of entries in"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="sizeof buffer")
@@ -2210,7 +2210,7 @@ gx_methods = {
                              doc="Group Name"),
                    Parameter('p2', type=Type.STRING,
                              doc="Parameter Name"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Buffer to place the string into"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the Buffer")
@@ -2300,7 +2300,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="String to filter replace"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Output string length"),
@@ -2534,7 +2534,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc=":def:`SYS_INFO`"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned setting"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="size of string")
@@ -2555,7 +2555,7 @@ gx_methods = {
                              doc="Key to set"),
                    Parameter('p3', type=Type.STRING,
                              doc="Value name within key"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="String for value data"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of String")
@@ -2836,7 +2836,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Title of the window"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to place the user's string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the buffer")
@@ -2962,7 +2962,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input string for encryption."),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output buffer for encrypted result."),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of output buffer."),
@@ -2978,7 +2978,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Input string for decryption."),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Output buffer for decrypted result."),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of output buffer."),
@@ -3120,7 +3120,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc="SYS_LIC"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to place string into"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of Buffer")
@@ -3157,7 +3157,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Title of the window"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to place the user's string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the buffer")

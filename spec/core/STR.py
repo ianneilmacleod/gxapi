@@ -7,7 +7,11 @@ gx_class = Class('STR',
                  GX Programming Language does not provide string literal
                  tokens, you must use these functions for any string operations
                  you want to perform.
-                 """)
+                 """,
+                 verbatim_gxh_defines="""
+#define iCharComp_STR(A,B) (iChar_STR(A)==iChar_STR(B))
+#define iCharN_STR(A,B) IiCharN_STR(A,(B),sizeof(A))
+""")
 
 
 gx_defines = [
@@ -150,7 +154,7 @@ gx_methods = {
                              doc="extension"),
                    Parameter('p5', type=Type.STRING,
                              doc="qualifiers"),
-                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='6',
+                   Parameter('p6', type=Type.STRING, is_ref=True, size_of_param='p7',
                              doc="destination string, can be same as input"),
                    Parameter('p7', type=Type.INT32_T, default_length='STR_FILE',
                              doc="string length")
@@ -165,7 +169,7 @@ gx_methods = {
                              doc="file name to extend"),
                    Parameter('p2', type=Type.STRING,
                              doc="extension if \"\", extenstion and '.' are stripped."),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="extended file name (can be same as input)"),
                    Parameter('p4', type=Type.INT32_T,
                              doc=":def:`FILE_EXT`"),
@@ -180,7 +184,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="file name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="destination string, can be same as input"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="string length"),
@@ -199,7 +203,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="input multifile string"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="output filepath string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="sizeof output filepath string"),
@@ -214,7 +218,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="input file name"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="output file name (can be same as input)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="length of buffer")
@@ -229,7 +233,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="CRC",
                              doc="CRC value to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -244,7 +248,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.DOUBLE,
                              doc="date value in decimal years to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -261,7 +265,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc="value to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -276,7 +280,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.DOUBLE,
                              doc="value to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -293,7 +297,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.DOUBLE,
                              doc="value to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -310,7 +314,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.DOUBLE,
                              doc="value to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -329,7 +333,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.DOUBLE,
                              doc="time value in decimal hours to format"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Resulting string"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="Size of the Resulting String"),
@@ -368,7 +372,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="string to modify"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="string size"),
@@ -413,7 +417,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="string to justify"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="result string, can be same as input"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="justification width"),
@@ -433,7 +437,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Destination String"),
                    Parameter('p2', type=Type.STRING,
                              doc="match string to replace"),
@@ -453,7 +457,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Destination String"),
                    Parameter('p2', type=Type.STRING,
                              doc="match string to replace"),
@@ -468,7 +472,7 @@ gx_methods = {
                doc="Set the n'th character of a string using an ASCII value",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="character to set"),
@@ -499,7 +503,7 @@ gx_methods = {
                              doc="original string"),
                    Parameter('p2', type=Type.STRING,
                              doc="split character (first character of string)"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="split string past split character."),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum length of split string.")
@@ -510,7 +514,7 @@ gx_methods = {
                doc="This method contatinates a string.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Destination String"),
                    Parameter('p2', type=Type.STRING,
                              doc="String to add"),
@@ -541,7 +545,7 @@ gx_methods = {
                doc="This method copies a string into another string.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="destination string"),
                    Parameter('p2', type=Type.STRING,
                              doc="origin string"),
@@ -580,7 +584,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Destination String"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="Insert Position"),
@@ -696,7 +700,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="destination string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of output string buffer"),
@@ -713,7 +717,7 @@ gx_methods = {
                doc="Convert a string to lower case.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="String"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Maximum Size")
@@ -724,7 +728,7 @@ gx_methods = {
                doc="Convert a string to upper case.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="String"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Maximum Size")
@@ -737,7 +741,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="line name to convert"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="buffer to hold new line name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="length of buffer")
@@ -758,7 +762,7 @@ gx_methods = {
                doc="Variable Argument PrintF function",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="destination string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="size of the destination string"),
@@ -920,7 +924,7 @@ gx_methods = {
                              doc="input db string"),
                    Parameter('p3', type=Type.STRING,
                              doc="input ch string (could be 0 length)"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="output group name string"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_GROUP',
                              doc="output buffer lengths (maximum 32)")
@@ -964,7 +968,7 @@ gx_methods = {
                see_also=":func:`iTokens_STR`, GetToken_STR",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="destination string"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum destination string length"),
@@ -1110,7 +1114,7 @@ gx_methods = {
                """,
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="destination string"),
                    Parameter('p2', type=Type.STRING,
                              doc="origin string"),

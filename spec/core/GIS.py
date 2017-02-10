@@ -188,7 +188,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="GIS",
                              doc=":class:`GIS` Handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned file name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of file name string")
@@ -309,7 +309,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="Name of input file"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Name of Raster file (an :class:`IMG` :class:`DAT`)"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer length for Raster file name"),

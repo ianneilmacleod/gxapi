@@ -478,7 +478,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="File to check"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Error message registered if unable to open"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Error message Buffer Size")

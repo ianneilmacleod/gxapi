@@ -311,7 +311,7 @@ gx_methods = {
                              doc=":class:`LTB` object"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="field number"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="returned field name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="maximum field name string length")
@@ -349,7 +349,7 @@ gx_methods = {
                              doc="record number"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="field number"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="returned field token"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum field token string length")
@@ -370,7 +370,7 @@ gx_methods = {
                              doc="record number"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="field number"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="returned field token"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum field token string length")

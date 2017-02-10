@@ -233,7 +233,7 @@ gx_methods = {
                              doc=":def:`LST_ITEM` data to retrieve"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="Item Number to Get"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Buffer to Place Item Into"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the Buffer")
@@ -255,7 +255,7 @@ gx_methods = {
                              doc=":class:`LST` Handle"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="Item number to get"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Buffer to Place Symbol name into"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Size of the buffer"),
@@ -274,7 +274,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="LST",
                              doc=":class:`LST` to get items from"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Buffer to add items to"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of buffer")

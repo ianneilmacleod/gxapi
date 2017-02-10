@@ -228,7 +228,7 @@ gx_methods = {
                return_type=Type.VOID,
                return_doc="Nothing.",
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="name"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="maximum name length")

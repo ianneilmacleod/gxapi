@@ -527,7 +527,7 @@ gx_methods = {
                              doc=":class:`MAP` object"),
                    Parameter('p2', type=Type.STRING,
                              doc="Name of view to duplicate"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc='Name of new view created (pass in "" and the new name is returned)'),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VIEW',
                              doc="Length of view name buffer"),
@@ -572,7 +572,7 @@ gx_methods = {
                              doc=":class:`MAP` handle"),
                    Parameter('p2', type=Type.STRING,
                              doc="class"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT',
                              doc="maximum name length")
@@ -585,7 +585,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="MAP",
                              doc=":class:`MAP` Handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned map file name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of map name string")
@@ -598,7 +598,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="MAP",
                              doc=":class:`MAP` Handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned map name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of map name string")
@@ -629,7 +629,7 @@ gx_methods = {
                              doc=":class:`MAP` object"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="(0 - Produce errors, 1 - Force overwrites)"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="List of files that are problematic returned"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_MULTI_FILE',
                              doc="Length of Error name buffer")
@@ -646,7 +646,7 @@ gx_methods = {
                              doc="(0 - Produce errors, 1 - Force overwrites)"),
                    Parameter('p3', type=Type.STRING,
                              doc="Directory to place unpacked files in."),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="List of files that are problematic returned"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_MULTI_FILE',
                              doc="Length of Error name buffer")

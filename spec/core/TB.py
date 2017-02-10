@@ -113,7 +113,7 @@ gx_methods = {
                              doc="Row of element to Get"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="Column of element to Get"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="returned string"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum string size")
@@ -140,7 +140,7 @@ gx_methods = {
                              doc="Table handle"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="Index of column to find"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Buffer for column name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DEFAULT_LONG',
                              doc="Size of buffer")

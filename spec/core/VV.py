@@ -634,7 +634,7 @@ gx_methods = {
                    Parameter('p1', type="VV"),
                    Parameter('p2', type=Type.INT32_T,
                              doc="element wanted"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="string in which to place element"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum length of the string")

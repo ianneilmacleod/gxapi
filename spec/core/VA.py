@@ -14,7 +14,8 @@ gx_class = Class('VA',
                  A :class:`VA` is used to store an array of data in which each element may have
                  multiple elements.  For example, 256-channel radiometric data can
                  be stored in a :class:`VA` that is 256 elements wide.
-                 """)
+                 """,
+                 verbatim_gxh_defines="#define SetLen_VA(A,B) SetLn_VA(A,B)")
 
 
 gx_defines = [
@@ -311,7 +312,7 @@ gx_methods = {
                              doc="Row"),
                    Parameter('p3', type=Type.INT32_T,
                              doc="Column"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="string in which to place element"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="maximum length of the string")

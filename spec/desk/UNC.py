@@ -57,7 +57,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.INT32_T,
                              doc="UTF-16 value (32-bit int, lower 16 bits used, upper bits reserved for future use)"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Converted string"),
                    Parameter('p3', type=Type.INT32_T, default_length='UTF8_MAX_CHAR',
                              doc=":def:`UTF8` Size of string.")

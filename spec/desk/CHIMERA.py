@@ -359,11 +359,11 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type=Type.STRING,
                              doc="string to test"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned channel name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="buffer size for channel name"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="returned units"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_DEFAULT_SHORT',
                              doc="buffer size for units"),

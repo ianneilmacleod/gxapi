@@ -238,7 +238,7 @@ gx_methods = {
                              doc="Number of bytes to read"),
                    Parameter('p3', type=Type.INT32_T,
                              doc=":def:`BF_ENCODE`"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="data"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of the string buffer")
@@ -511,7 +511,7 @@ gx_methods = {
                              doc=":class:`BF` handle"),
                    Parameter('p2', type=Type.INT32_T,
                              doc=":def:`GS_TYPES` and :def:`BF_BYTEORDER`"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="data"),
                    Parameter('p4', type=Type.INT32_T,
                              doc="Length of string to read, NULL will be added so the string length must be at least int+1.")

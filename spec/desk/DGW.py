@@ -167,7 +167,7 @@ gx_methods = {
                              doc="Handle to the TEXT Object"),
                    Parameter('p3', type=Type.INT32_T,
                              doc=":def:`DGW_OBJECT`"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Where to place the String"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Size of the String")

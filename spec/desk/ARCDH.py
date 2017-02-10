@@ -58,7 +58,7 @@ gx_methods = {
                doc="Gets the current Geostring File Geodatabase.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="name returned"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_FILE',
                              doc="string size")
@@ -93,7 +93,7 @@ gx_methods = {
                              doc='Initial symbol that you want displayed when the dialog is launched (use "" if none)'),
                    Parameter('p3', type=Type.INT32_T,
                              doc="(This parameter is ignored if an initial symbol was specified) Initial symbol type that you want displayed when the dialog is launched (0 for Fill, 1 for Line)"),
-                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='4',
+                   Parameter('p4', type=Type.STRING, is_ref=True, size_of_param='p5',
                              doc="Returned XML string representing the symbol that was chosen by the user"),
                    Parameter('p5', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of output XML string"),

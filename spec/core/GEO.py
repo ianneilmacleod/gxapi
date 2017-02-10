@@ -60,11 +60,11 @@ gx_methods = {
                1 - error found
                """,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="Module name buffer (should be at least 64 bytes)"),
                    Parameter('p2', type=Type.INT32_T, is_val=True, default_length='STR_DEFAULT',
                              doc="Size of module name buffer"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="Error buffer (should be at least 2048 bytes)"),
                    Parameter('p4', type=Type.INT32_T, is_val=True, default_length='STR_ERROR',
                              doc="Size of error buffer"),

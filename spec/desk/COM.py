@@ -129,7 +129,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="COM",
                              doc=":class:`COM` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string for line"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of Line to read, CT-LF is not stipped, NULL will be added so the Line length must be at least int+1.")
@@ -146,7 +146,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="COM",
                              doc=":class:`COM` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string for characters"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="number of characters to read (string size must be +1) to silence all message reporting enter the nevative value of the number of chars to read")
@@ -159,7 +159,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="COM",
                              doc=":class:`COM` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string for line"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="Length of Line to read, NULL will be added so the Line length must be at least int+1.")
@@ -196,7 +196,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="COM",
                              doc=":class:`COM` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="string for characters"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="number of characters to read (string size must be +1)")

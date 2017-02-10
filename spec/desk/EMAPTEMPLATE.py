@@ -167,7 +167,7 @@ gx_methods = {
                return_type=Type.VOID,
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Name returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Size of the String")
@@ -195,7 +195,7 @@ gx_methods = {
                              doc=":class:`REG` field name"),
                    Parameter('p2', type=Type.STRING,
                              doc=":class:`REG` field value to find"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="buffer for map name"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="Buffer size")
@@ -503,7 +503,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="EMAPTEMPLATE",
                              doc=":class:`EMAPTEMPLATE` object"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="returned item name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="size of item name")

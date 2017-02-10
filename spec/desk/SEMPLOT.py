@@ -1,7 +1,8 @@
 from .. import Availability, Class, Constant, Define, Method, Parameter, Type
 
 gx_class = Class('SEMPLOT',
-                 doc="Oasis montaj implementation of RTE :class:`SEMPLOT`")
+                 doc="Oasis montaj implementation of RTE :class:`SEMPLOT`",
+                 verbatim_gxh_defines="#define ImportAscWizard_SEMPLOT(A,B,C) IImportAsciiWizard_SEMPLOT(A, B, C, sizeof(C))")
 
 
 gx_defines = [
@@ -463,7 +464,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="DB",
                              doc="Database handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="Mineral channel name"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="Size of the Buffer")
@@ -482,7 +483,7 @@ gx_methods = {
                              doc="data file name"),
                    Parameter('p2', type=Type.STRING,
                              doc="template to make"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc='anomaly name (can be "")'),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_DB_SYMBOL',
                              doc="buffer size")
@@ -493,11 +494,11 @@ gx_methods = {
                doc="Generate a template file for importing ODBC databases.",
                return_type=Type.VOID,
                parameters = [
-                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='1',
+                   Parameter('p1', type=Type.STRING, is_ref=True, size_of_param='p2',
                              doc="connection string (input and returned)"),
                    Parameter('p2', type=Type.INT32_T, default_length='STR_VERY_LONG',
                              doc="connection string buffer size"),
-                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='3',
+                   Parameter('p3', type=Type.STRING, is_ref=True, size_of_param='p4',
                              doc="template file (returned)"),
                    Parameter('p4', type=Type.INT32_T, default_length='STR_FILE',
                              doc="templage file buffer size")

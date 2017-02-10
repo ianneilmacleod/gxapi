@@ -109,7 +109,7 @@ gx_methods = {
                parameters = [
                    Parameter('p1', type="VOXD",
                              doc=":class:`VOXD` handle"),
-                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='2',
+                   Parameter('p2', type=Type.STRING, is_ref=True, size_of_param='p3',
                              doc="file name returned"),
                    Parameter('p3', type=Type.INT32_T, default_length='STR_FILE',
                              doc="file name string size")
