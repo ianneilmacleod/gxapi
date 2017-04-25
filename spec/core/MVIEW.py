@@ -452,6 +452,9 @@ gx_methods = {
                The flags determine if the cylinder is open and what
                end are closed. Note that you can create cones by
                specifying a 0 radius for one of the ends.
+               
+               Cones can be created by setting the start or end radius to 0.
+               
                """,
                return_type=Type.VOID,
                parameters = [
@@ -469,9 +472,9 @@ gx_methods = {
                    Parameter('p7', type=Type.DOUBLE,
                              doc="End Z"),
                    Parameter('p8', type=Type.DOUBLE,
-                             doc="Start Radius (can be zero)"),
+                             doc="Start Radius (can be zero for a cone, or the same as the end radius)"),
                    Parameter('p9', type=Type.DOUBLE,
-                             doc="End Radius (can be zero)"),
+                             doc="End Radius (can be zero for a cone, or the same as the start radius)"),
                    Parameter('p10', type=Type.INT32_T,
                              doc=":def:`MVIEW_CYLINDER3D`")
                ]),
